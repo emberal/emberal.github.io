@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmartials_website=self.webpackChunkmartials_website||[]).push([[678],{6558:function(e,t,l){l.r(t);var n=l(7294),a=l(1680);t.default=function(){return n.createElement(a.Z,{title:"Hjem",headline:"Velkommen!",children:n.createElement("div",null,"Hallo dær!")})}}}]);
+//# sourceMappingURL=component---src-pages-index-js-2fe7ed991de8af2cbc23.js.map
