@@ -5,12 +5,15 @@ module.exports = {
   },
   plugins: [
       "gatsby-plugin-mdx",
+      `gatsby-plugin-image`,
+      `gatsby-plugin-sharp`,
+      `gatsby-transformer-sharp`, // Needed for dynamic images
       `gatsby-plugin-react-helmet`,
       {
         resolve: 'gatsby-source-filesystem',
         options: {
-          "name": "pages",
-          "path": "./src/pages/"
+          "name": "projects",
+          "path": `${__dirname}/projects`
         },
         __key: "pages"
       },

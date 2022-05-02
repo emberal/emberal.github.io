@@ -8,7 +8,7 @@ const IndexPage = () => {
           headline={"Velkommen!"}
           children={
               <div>
-                  Text here!
+                  Hallo dær!
               </div>
           }/>
   )
