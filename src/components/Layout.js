@@ -10,7 +10,7 @@ const layoutStyle = {
     color: "white",
     fontFamily: "sans-serif",
     height: "100vh",
-    overflow: "hidden",
+    overflow: "auto",
 }
 const titleStyle = {
     paddingTop: "50px",
@@ -18,12 +18,16 @@ const titleStyle = {
     color: "#9e6ecf",
 }
 const container = {
-    width: "600px",
+    maxWidth: "600px",
     margin: "auto",
+}
+const footerPlacement = {
+    position: "relative",
+    minHeight: "75vh",
 }
 
 const Layout = ({title, headline, description, children}) => {
-    return(
+    return (
         <div style={layoutStyle}>
             <Helmet>
                 <html lang={"no"}/>
@@ -35,15 +39,16 @@ const Layout = ({title, headline, description, children}) => {
                 <ul className={navLinksStyle}>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>Hjem</Link></li>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
-                    <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
+                    <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link>
+                    </li>
                 </ul>
-                <main>
+                <main style={footerPlacement}>
                     {children}
                     <Footer/>
                 </main>
             </div>
         </div>
-    )
+    );
 }
 
 export default Layout
