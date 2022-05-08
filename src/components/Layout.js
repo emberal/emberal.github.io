@@ -46,6 +46,7 @@ const pageStyle = {
 const buttonStyle = {
     background: "none",
     border: "none",
+    cursor: "pointer",
 }
 
 const Layout = ({title, headline, description, children}) => {
