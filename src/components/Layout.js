@@ -1,8 +1,10 @@
 import * as React from "react";
 import {graphql, Link, useStaticQuery} from "gatsby";
 import {Helmet} from "react-helmet";
+import FeatherIcon from "feather-icons-react";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
+import {githubIcon} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
 
 const colorModes = [
@@ -39,7 +41,11 @@ const pageStyle = {
     position: "relative",
     minHeight: "100vh",
     marginLeft: "5px",
-    marginRight: "5px"
+    marginRight: "5px",
+}
+const buttonStyle = {
+    background: "none",
+    border: "none",
 }
 
 const Layout = ({title, headline, description, children}) => {
@@ -60,7 +66,7 @@ const Layout = ({title, headline, description, children}) => {
     }
     React.useEffect(() => {
         toggleDarkMode()
-    }, [])
+    }, []) //Must be empty, otherwise the function is called non-stop
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
     function toggleDarkMode() {
@@ -69,12 +75,16 @@ const Layout = ({title, headline, description, children}) => {
         root.style.color = colorModes[isDark].text;
 
         document.getElementById("title").style.color = colorModes[isDark].importantText;
-        let links = document.getElementsByClassName(linkStyle);
+        const links = document.getElementsByClassName(linkStyle);
         for (let i = 0; i < links.length; i++) {
             links[i].style.color = colorModes[isDark].importantText;
         }
+        const githubLinks = document.getElementsByClassName(githubIcon);
+        for (let i = 0; i < githubLinks.length; i++) {
+            githubLinks[i].style.color = colorModes[isDark].text;
+        }
         setIsDark((isDark + 1) % 2);
-        localStorage.darkMode = isDark;
+        localStorage.darkMode = isDark; //Saves the preference in local storage
     }
 
     return (
@@ -91,7 +101,10 @@ const Layout = ({title, headline, description, children}) => {
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
                     <li className={navLinkPadding}>
-                        <button onClick={toggleDarkMode}>{(isDark) ? "Light mode" : "Dark mode"}</button>
+                        <button title={"Toggle dark-mode"} onClick={toggleDarkMode} style={buttonStyle}>
+                            {(isDark) ? <FeatherIcon style={{color: "white"}} icon={"sun"}/> : <FeatherIcon icon={"moon"}/>}
+                            <p style={{display: "none"}}>Toggle dark-mode</p>
+                        </button>
                     </li>
                 </ul>
                 <main style={pageStyle}>

@@ -37,6 +37,7 @@ module.exports = {
       `gatsby-plugin-react-helmet`,
       'gatsby-plugin-robots-txt',
       `gatsby-plugin-sitemap`,
+      "feather-icons-react",
       {
         resolve: 'gatsby-source-filesystem',
         options: {

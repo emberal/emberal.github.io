@@ -1,8 +1,10 @@
 import * as React from "react";
 import Layout from "../../components/Layout";
 import {graphql, Link} from "gatsby";
+import FeatherIcon from "feather-icons-react";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
-import {linkStyle} from "../../stylesheets/text.module.css"
+import {githubIcon} from "../../stylesheets/media.module.css";
+import {linkStyle} from "../../stylesheets/text.module.css";
 
 const projectCard = {
     border: "solid grey",
@@ -11,6 +13,18 @@ const projectCard = {
 }
 const marginLeftSide = {
     marginLeft: "5px",
+    width: "fit-content",
+}
+const projectTitle = {
+    display: "flex",
+    alignItems: "center",
+    maxHeight: "60px"
+}
+const projectData = {
+    display: "grid",
+    gridColumn: "auto auto",
+    gridAutoFlow: "column",
+    justifyContent: "space-between",
 }
 
 const Index = ({data}) => {
@@ -19,14 +33,24 @@ const Index = ({data}) => {
             title={"Prosjekter"}
             headline={"Mine prosjekter"}
             children={
-                <div style={{paddingBottom: "50px"}}>
+                <div style={{paddingBottom: "100px"}}>
                     {
                         data.allMdx.nodes.map(node => (
-                            <div style={projectCard} key={node.id}> {/*TODO add github link (icon) and category*/}
-                                <Link className={linkStyle} to={node.slug}>
-                                    <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
-                                </Link>
-                                <p style={marginLeftSide}>Tid å lese: {node.timeToRead} minutt</p>
+                            <div style={projectCard} key={node.id}> {/*TODO add type*/}
+                                <div style={projectTitle}>
+                                    <Link className={linkStyle} to={node.slug}>
+                                        <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
+                                    </Link>
+                                    <a className={githubIcon} href={node.frontmatter.source}>
+                                        <FeatherIcon icon={"github"}/>
+                                    </a>
+                                </div>
+                                <div style={projectData}>
+                                    <p style={marginLeftSide}>
+                                        Tid å lese: {node.timeToRead} {(node.timeToRead === 1) ? "minutt" : "minutter"}
+                                    </p>
+                                    <p style={{marginRight: "5px"}}>Type: {node.frontmatter.type}</p>
+                                </div>
                                 <GatsbyImage
                                     alt={node.frontmatter.hero_image_alt}
                                     image={getImage(node.frontmatter.hero_image.childImageSharp.gatsbyImageData)}/>
@@ -48,6 +72,8 @@ query {
       frontmatter {
         title
         description
+        type
+        source
         hero_image_alt
         hero_image {
           childImageSharp {
