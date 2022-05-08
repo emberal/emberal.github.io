@@ -14,6 +14,7 @@ const ProjectPost = ({data}) => {
                     <GatsbyImage
                         alt={data.mdx.frontmatter.hero_image_alt}
                         image={getImage(data.mdx.frontmatter.hero_image.childImageSharp.gatsbyImageData)}/>
+                    <p>{data.mdx.frontmatter.description}</p>
                     <MDXRenderer children={data.mdx.body}/>
                 </div>
             }
@@ -31,6 +32,7 @@ query($id: String) {
         }
       }
       title
+      description
       hero_image_alt
     }
     timeToRead

@@ -1,7 +1,7 @@
 .nav-links-style {
     list-style: none;
     display: flex;
-    padding-left: 0;
+    padding-left: 5px;
     padding-bottom: 25px;
 }
 .nav-link-padding {
@@ -9,4 +9,9 @@
 }
 .link-style {
     color: #c17aff;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.link-style:hover {
+    text-decoration-line: none;
 }

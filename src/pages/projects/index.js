@@ -6,7 +6,8 @@ import {MDXRenderer} from "gatsby-plugin-mdx";
 import {linkStyle} from "../../stylesheets/text.module.css"
 
 const projectCard = {
-    border: "solid white",
+    border: "solid grey",
+    borderRadius: "10px",
     marginBottom: "25px",
 }
 const marginLeftSide = {
@@ -31,23 +32,23 @@ const Index = ({data}) => {
                                     alt={node.frontmatter.hero_image_alt}
                                     image={getImage(node.frontmatter.hero_image.childImageSharp.gatsbyImageData)}/>
                                 <div style={marginLeftSide}>
-                                    <MDXRenderer children={node.body}></MDXRenderer>
+                                    <p>{node.frontmatter.description}</p>
                                 </div>
                             </div>
                         ))
                     }
                 </div>
             }/>
-    );
+    )
 }
 
 export const query = graphql `
 query {
   allMdx {
     nodes {
-      body
       frontmatter {
         title
+        description
         hero_image_alt
         hero_image {
           childImageSharp {
