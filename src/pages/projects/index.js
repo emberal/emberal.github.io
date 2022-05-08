@@ -2,7 +2,6 @@ import * as React from "react";
 import Layout from "../../components/Layout";
 import {graphql, Link} from "gatsby";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
-import {MDXRenderer} from "gatsby-plugin-mdx";
 import {linkStyle} from "../../stylesheets/text.module.css"
 
 const projectCard = {
@@ -23,7 +22,7 @@ const Index = ({data}) => {
                 <div style={{paddingBottom: "50px"}}>
                     {
                         data.allMdx.nodes.map(node => (
-                            <div style={projectCard} key={node.id}>
+                            <div style={projectCard} key={node.id}> {/*TODO add github link (icon) and category*/}
                                 <Link className={linkStyle} to={node.slug}>
                                     <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
                                 </Link>

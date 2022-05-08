@@ -28,6 +28,7 @@ const titleStyle = {
     paddingTop: "50px",
     paddingBottom: "25px",
     marginLeft: "5px",
+    fontWeight: "700",
     color: colorModes[0].importantText,
 }
 const container = {
@@ -53,7 +54,15 @@ const Layout = ({title, headline, description, children}) => {
         }
     `);
 
-    const [isDark, setIsDark] = React.useState(1); //Dark mode=0, light mode=1
+    let wasDark = 1;
+    if (typeof(Storage) !== "undefined" && localStorage.darkMode) {
+        wasDark = Number(localStorage.darkMode);
+    }
+    React.useEffect(() => {
+        toggleDarkMode()
+    }, [])
+
+    const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
     function toggleDarkMode() {
         const root = document.getElementById("root");
         root.style.backgroundColor = colorModes[isDark].background;
@@ -65,6 +74,7 @@ const Layout = ({title, headline, description, children}) => {
             links[i].style.color = colorModes[isDark].importantText;
         }
         setIsDark((isDark + 1) % 2);
+        localStorage.darkMode = isDark;
     }
 
     return (
