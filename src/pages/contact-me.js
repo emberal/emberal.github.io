@@ -15,10 +15,10 @@ const inputStyle = {
 
 const ContactMe = () => {
 
-    const handleChange = () => {
+    function handleChange() {
         console.log("Changed"); //TODO
     }
-    const handleSubmit = () => {
+    function handleSubmit() {
         console.log("Submitted"); //TODO
     }
 
@@ -28,7 +28,7 @@ const ContactMe = () => {
             headline={"Kontakt meg"}
             children={
                 <>
-                    <form acceptCharset={"UTF-8"} method={"post"} action={"https://formspree.io/f/mknykgbn"}
+                    <form style={{marginRight: "10px"}} acceptCharset={"UTF-8"} method={"post"} action={"https://formspree.io/f/mknykgbn"}
                           onSubmit={handleSubmit}>
                         <div className={formNameSubject}>
                             <label>

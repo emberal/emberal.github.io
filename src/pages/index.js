@@ -8,10 +8,11 @@ const IndexPage = () => {
             headline={"Velkommen!"}
             children={
                 <div>
-                    Hallo dær!
+                    <p>Hei, jeg heter Martin og studerer for tiden Informasjonsteknologi på Høgskulen på Vestlandet i
+                        Bergen.</p>
                 </div>
             }/>
-    );
+    )
 }
 
 export default IndexPage

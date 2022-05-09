@@ -1,4 +1,3 @@
-const site = require("./gatsby-config");
 module.exports = {
   siteMetadata: {
     title: `Martin Berg Alstads hjemmeside`,

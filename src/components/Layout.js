@@ -39,7 +39,7 @@ const container = {
 }
 const pageStyle = {
     position: "relative",
-    minHeight: "100vh",
+    minHeight: "85vh",
     marginLeft: "5px",
     marginRight: "5px",
 }
@@ -57,7 +57,7 @@ const Layout = ({title, headline, description, children}) => {
     `);
 
     let wasDark;
-    if (typeof (Storage) !== "undefined" && localStorage.darkMode) { //TODO get dark mode from browser or OS
+    if (typeof (Storage) !== "undefined" && localStorage.darkMode) { //If storage is defined and localStorage is not empty
         wasDark = Number(localStorage.darkMode); //Gets theme from local storage
     }
     else { // If storage is empty get dark-theme preference from browser
@@ -66,10 +66,9 @@ const Layout = ({title, headline, description, children}) => {
         }
     }
 
-    // Is only called after first render
     React.useEffect(() => {
         toggleDarkMode();
-    }, []); //Must be empty, otherwise the function is called non-stop
+    }, []); //Must be empty, so the function is called once after the first render
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
 
