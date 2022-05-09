@@ -61,13 +61,20 @@ const Layout = ({title, headline, description, children}) => {
         }
     `);
 
-    let wasDark = 1;
-    if (typeof(Storage) !== "undefined" && localStorage.darkMode) {
-        wasDark = Number(localStorage.darkMode);
+    let wasDark;
+    if (typeof (Storage) !== "undefined" && localStorage.darkMode) { //TODO get dark mode from browser or OS
+        wasDark = Number(localStorage.darkMode); //Gets theme from local storage
     }
+    else { // If storage is empty get dark-theme preference from browser
+        if (typeof window !== "undefined") {
+            wasDark = Number(window.matchMedia("(prefers-color-scheme: light)").matches); //Gets theme from browser
+        }
+    }
+
+    // Is only called after first render
     React.useEffect(() => {
         toggleDarkMode()
-    }, []) //Must be empty, otherwise the function is called non-stop
+    }, []); //Must be empty, otherwise the function is called non-stop
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
     function toggleDarkMode() {
@@ -75,7 +82,7 @@ const Layout = ({title, headline, description, children}) => {
         root.style.backgroundColor = colorModes[isDark].background;
         root.style.color = colorModes[isDark].text;
 
-        document.getElementById("title").style.color = colorModes[isDark].importantText;
+        document.getElementById("title").style.color = colorModes[isDark].importantText; //Title and links
         const links = document.getElementsByClassName(linkStyle);
         for (let i = 0; i < links.length; i++) {
             links[i].style.color = colorModes[isDark].importantText;
@@ -102,7 +109,7 @@ const Layout = ({title, headline, description, children}) => {
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
                     <li className={navLinkPadding}>
-                        <button title={"Toggle dark-mode"} onClick={toggleDarkMode} style={buttonStyle}>
+                        <button title={"Veksle dark-mode"} onClick={toggleDarkMode} style={buttonStyle}>
                             {(isDark) ? <FeatherIcon style={{color: "white"}} icon={"sun"}/> : <FeatherIcon icon={"moon"}/>}
                             <p style={{display: "none"}}>Toggle dark-mode</p>
                         </button>

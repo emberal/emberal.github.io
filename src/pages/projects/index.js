@@ -41,7 +41,7 @@ const Index = ({data}) => {
                                     <Link className={linkStyle} to={node.slug}>
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
                                     </Link>
-                                    <a className={githubIcon} href={node.frontmatter.source}>
+                                    <a title={"Åpne i GitHub"} className={githubIcon} href={node.frontmatter.source}>
                                         <FeatherIcon icon={"github"}/>
                                     </a>
                                 </div>
