@@ -35,8 +35,15 @@ module.exports = {
       `gatsby-plugin-sharp`,
       `gatsby-transformer-sharp`, // Needed for dynamic images
       `gatsby-plugin-react-helmet`,
-      'gatsby-plugin-robots-txt',
       `gatsby-plugin-sitemap`,
+      {
+          resolve: 'gatsby-plugin-robots-txt',
+          options: {
+              host: `https://h600878.github.io/`,
+              sitemap: `\`https://h600878.github.io/sitemap/sitemap-index.xml`,
+              policy: [{userAgent: `*`, allow: `/`}]
+          }
+      },
       "feather-icons-react",
       {
         resolve: 'gatsby-source-filesystem',
