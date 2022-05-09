@@ -4,6 +4,8 @@ import {linkStyle} from "../stylesheets/text.module.css";
 const footerStyle = {
     position: "absolute",
     bottom: 0,
+    width: "100%",
+    textAlign: "center",
     marginBottom: "10px",
 }
 

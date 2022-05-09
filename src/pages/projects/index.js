@@ -36,7 +36,7 @@ const Index = ({data}) => {
                 <div style={{paddingBottom: "100px"}}>
                     {
                         data.allMdx.nodes.map(node => (
-                            <div style={projectCard} key={node.id}> {/*TODO add type*/}
+                            <div style={projectCard} key={node.id}>
                                 <div style={projectTitle}>
                                     <Link className={linkStyle} to={node.slug}>
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>

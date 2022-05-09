@@ -4,7 +4,7 @@ import {Helmet} from "react-helmet";
 import FeatherIcon from "feather-icons-react";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
-import {githubIcon} from "../stylesheets/media.module.css";
+import {githubIcon, buttonStyle, iconStyle} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
 
 const colorModes = [
@@ -43,11 +43,6 @@ const pageStyle = {
     marginLeft: "5px",
     marginRight: "5px",
 }
-const buttonStyle = {
-    background: "none",
-    border: "none",
-    cursor: "pointer",
-}
 
 const Layout = ({title, headline, description, children}) => {
     const query = useStaticQuery(graphql`
@@ -73,10 +68,11 @@ const Layout = ({title, headline, description, children}) => {
 
     // Is only called after first render
     React.useEffect(() => {
-        toggleDarkMode()
+        toggleDarkMode();
     }, []); //Must be empty, otherwise the function is called non-stop
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
+
     function toggleDarkMode() {
         const root = document.getElementById("root");
         root.style.backgroundColor = colorModes[isDark].background;
@@ -87,9 +83,13 @@ const Layout = ({title, headline, description, children}) => {
         for (let i = 0; i < links.length; i++) {
             links[i].style.color = colorModes[isDark].importantText;
         }
-        const githubLinks = document.getElementsByClassName(githubIcon);
-        for (let i = 0; i < githubLinks.length; i++) {
-            githubLinks[i].style.color = colorModes[isDark].text;
+        setStyles(githubIcon);
+        setStyles(iconStyle);
+        function setStyles(className) {
+            const objects = document.getElementsByClassName(className);
+            for (let i = 0; i < objects.length; i++) {
+                objects[i].style.color = colorModes[isDark].text;
+            }
         }
         setIsDark((isDark + 1) % 2);
         localStorage.darkMode = isDark; //Saves the preference in local storage
@@ -109,7 +109,7 @@ const Layout = ({title, headline, description, children}) => {
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
                     <li className={navLinkPadding}>
-                        <button title={"Veksle dark-mode"} onClick={toggleDarkMode} style={buttonStyle}>
+                        <button title={"Veksle dark-mode"} onClick={toggleDarkMode} className={buttonStyle}>
                             {(isDark) ? <FeatherIcon style={{color: "white"}} icon={"sun"}/> : <FeatherIcon icon={"moon"}/>}
                             <p style={{display: "none"}}>Toggle dark-mode</p>
                         </button>
