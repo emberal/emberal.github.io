@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkmartials_website=self.webpackChunkmartials_website||[]).push([[678],{6558:function(e,t,n){n.r(t);var l=n(7294),r=n(6392);t.default=function(){return l.createElement(r.Z,{title:"Hjem",headline:"Velkommen!",children:l.createElement("div",null,l.createElement("p",null,"Hei, jeg heter Martin og studerer for tiden Informasjonsteknologi på Høgskulen på Vestlandet i Bergen."))})}}}]);
+//# sourceMappingURL=component---src-pages-index-js-205eb0d579885ed0bf0f.js.map
