@@ -16,7 +16,7 @@ const inputStyle = {
 const ContactMe = () => {
 
     const handleChange = () => {
-        console.log("Changed"); //TODO check contents for legal characters
+        console.log("Changed"); //TODO
     }
     const handleSubmit = () => {
         console.log("Submitted"); //TODO

@@ -78,17 +78,15 @@ const Layout = ({title, headline, description, children}) => {
         root.style.backgroundColor = colorModes[isDark].background;
         root.style.color = colorModes[isDark].text;
 
-        document.getElementById("title").style.color = colorModes[isDark].importantText; //Title and links
-        const links = document.getElementsByClassName(linkStyle);
-        for (let i = 0; i < links.length; i++) {
-            links[i].style.color = colorModes[isDark].importantText;
-        }
-        setStyles(githubIcon);
-        setStyles(iconStyle);
-        function setStyles(className) {
+        document.getElementById("title").style.color = colorModes[isDark].importantText; //Titles
+
+        setStyles(linkStyle, colorModes[isDark].importantText);
+        setStyles(githubIcon, colorModes[isDark].text);
+        setStyles(iconStyle, colorModes[isDark].text);
+        function setStyles(className, attribute) {
             const objects = document.getElementsByClassName(className);
             for (let i = 0; i < objects.length; i++) {
-                objects[i].style.color = colorModes[isDark].text;
+                objects[i].style.color = attribute;
             }
         }
         setIsDark((isDark + 1) % 2);

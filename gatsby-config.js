@@ -37,6 +37,12 @@ module.exports = {
       `gatsby-plugin-react-helmet`,
       `gatsby-plugin-sitemap`,
       {
+          resolve: `gatsby-plugin-offline`,
+          options: {
+              precachePages: [`/`, `/projects/*`],
+          },
+      },
+      {
           resolve: 'gatsby-plugin-robots-txt',
           options: {
               host: `https://h600878.github.io/`,
