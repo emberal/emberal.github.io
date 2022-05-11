@@ -1,6 +1,7 @@
 import * as React from "react";
 import Layout from "../components/Layout";
 import FeatherIcon from "feather-icons-react";
+import {useForm} from "@formspree/react";
 import {buttonStyle, iconStyle} from "../stylesheets/media.module.css";
 import {formNameSubject} from "../stylesheets/text.module.css";
 
@@ -15,12 +16,23 @@ const inputStyle = {
 
 const ContactMe = () => {
 
-    function handleChange() {
-        console.log("Changed"); //TODO
+    const [state, handelSubmit] = useForm("mknykgbn");
+    if (state.succeeded) {
+        Array.from(document.querySelectorAll("input")).forEach( input => input.value = ""); //Clears inputs
+        document.getElementById("contact-me-text-area").value = ""; //Clears textArea
     }
-    function handleSubmit() {
-        console.log("Submitted"); //TODO
-    }
+    React.useEffect(() => {
+        const submitKeys = (e) => {
+            if (e.ctrlKey) {
+                //Activates button if ctrl and enter is clicked at the same time
+                document.getElementById("submit-button").click();
+            }
+        }
+        document.addEventListener("keyup", (e) => submitKeys(e))
+        return () => {
+            document.removeEventListener("keyup", (e) => submitKeys(e));
+        }
+    })
 
     return (
         <Layout
@@ -28,39 +40,42 @@ const ContactMe = () => {
             headline={"Kontakt meg"}
             children={
                 <>
-                    <form style={{marginRight: "10px"}} acceptCharset={"UTF-8"} method={"post"} action={"https://formspree.io/f/mknykgbn"}
-                          onSubmit={handleSubmit}>
+                    <form style={{marginRight: "10px"}} acceptCharset={"UTF-8"}
+                          onSubmit={handelSubmit}>
                         <div className={formNameSubject}>
                             <label>
-                                <p>Navn</p>
-                                <input style={inputStyle} name={"name"} type={"text"} placeholder={"Navn"} onChange={handleChange} required/>
+                                <p>Ditt navn</p>
+                                <input style={inputStyle} name={"name"} type={"text"} placeholder={"Navn"}
+                                       required/>
                             </label>
                             <label>
                                 <p>Emne</p>
-                                <input style={inputStyle} name={"Subject"} type={"text"} placeholder={"Emne"} onChange={handleChange}
+                                <input style={inputStyle} name={"Subject"} type={"text"} placeholder={"Emne"}
                                        required/>
                             </label>
                         </div>
                         <label>
                             <p>Din epostadresse</p>
-                            <input style={inputStyle} name={"_replyto"} type={"email"} placeholder={"Epostadresse"} onChange={handleChange}
+                            <input style={inputStyle} name={"email"} type={"email"} placeholder={"Epostadresse"}
                                    required/>
                         </label>
                         <label>
                             <p>Melding</p>
-                            <textarea style={inputStyle} name={"message"} placeholder={"Melding"} onChange={handleChange}
-                                   required/>
+                            <textarea id={"contact-me-text-area"} style={inputStyle} name={"message"}
+                                      placeholder={"Melding"} required/>
                         </label>
                         <input name="_gotcha" type="text" style={{display: "none"}}/> {/*Honeypot spam filter*/}
                         <p></p>
-                        <button style={{float: "right"}} className={buttonStyle} title={"Send"} type={"submit"}>
+                        <button id={"submit-button"} style={{float: "right"}} className={buttonStyle} title={"Send"}
+                                type={"submit"} disabled={state.submitting}>
                             <FeatherIcon className={iconStyle} icon={"send"}/><p style={{display: "none"}}>Send</p>
                         </button>
+                        {(state.succeeded) ? <p>Melding sent!</p> : null}
                     </form>
                 </>
             }
         />
-    )
+    );
 }
 
 export default ContactMe
