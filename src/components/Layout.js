@@ -1,7 +1,7 @@
 import * as React from "react";
 import {graphql, Link, useStaticQuery} from "gatsby";
 import {Helmet} from "react-helmet";
-import FeatherIcon from "feather-icons-react";
+import {Sun, Moon} from "react-feather";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
 import {githubIcon, buttonStyle, iconStyle} from "../stylesheets/media.module.css";
@@ -107,7 +107,7 @@ const Layout = ({title, headline, description, children}) => {
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
                     <li className={navLinkPadding}>
                         <button title={"Veksle dark-mode"} onClick={toggleDarkMode} className={buttonStyle}>
-                            {(isDark) ? <FeatherIcon style={{color: "white"}} icon={"sun"}/> : <FeatherIcon icon={"moon"}/>}
+                            {(isDark) ? <Sun style={{color: "white"}}/> : <Moon/>}
                             <p style={{display: "none"}}>Toggle dark-mode</p>
                         </button>
                     </li>

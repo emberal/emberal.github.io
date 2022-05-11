@@ -49,7 +49,7 @@ module.exports = {
               policy: [{userAgent: `*`, allow: `/`}]
           }
       },
-      "feather-icons-react",
+      "react-feather",
       {
         resolve: 'gatsby-source-filesystem',
         options: {

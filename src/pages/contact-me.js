@@ -1,6 +1,6 @@
 import * as React from "react";
 import Layout from "../components/Layout";
-import FeatherIcon from "feather-icons-react";
+import {Send} from "react-feather";
 import {useForm} from "@formspree/react";
 import {buttonStyle, iconStyle} from "../stylesheets/media.module.css";
 import {formNameSubject} from "../stylesheets/text.module.css";
@@ -68,7 +68,7 @@ const ContactMe = () => {
                         <p></p>
                         <button id={"submit-button"} style={{float: "right"}} className={buttonStyle} title={"Send"}
                                 type={"submit"} disabled={state.submitting}>
-                            <FeatherIcon className={iconStyle} icon={"send"}/><p style={{display: "none"}}>Send</p>
+                            <Send className={iconStyle}/><p style={{display: "none"}}>Send</p>
                         </button>
                         {(state.succeeded) ? <p>Melding sent!</p> : null}
                     </form>

@@ -1,7 +1,7 @@
 import * as React from "react";
 import Layout from "../../components/Layout";
 import {graphql, Link} from "gatsby";
-import FeatherIcon from "feather-icons-react";
+import {GitHub} from "react-feather";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
 import {githubIcon} from "../../stylesheets/media.module.css";
 import {linkStyle} from "../../stylesheets/text.module.css";
@@ -42,7 +42,7 @@ const Index = ({data}) => {
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
                                     </Link>
                                     <a title={"Åpne i GitHub"} className={githubIcon} href={node.frontmatter.source}>
-                                        <FeatherIcon icon={"github"}/>
+                                        <GitHub/>
                                     </a>
                                 </div>
                                 <div style={projectData}>

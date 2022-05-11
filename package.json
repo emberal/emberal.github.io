@@ -20,7 +20,6 @@
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "classnames": "^2.3.1",
-    "feather-icons-react": "^0.5.0",
     "gatsby": "^4.13.0",
     "gatsby-plugin-image": "^2.13.0",
     "gatsby-plugin-manifest": "^4.13.0",
@@ -34,6 +33,7 @@
     "gatsby-transformer-sharp": "^4.13.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-feather": "^2.0.9",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
