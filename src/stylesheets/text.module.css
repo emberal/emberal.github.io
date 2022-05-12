@@ -7,6 +7,7 @@
 }
 .nav-link-padding {
     padding-right: 2rem;
+    width: fit-content;
 }
 .link-style {
     color: #c17aff;

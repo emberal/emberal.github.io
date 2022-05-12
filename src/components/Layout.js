@@ -1,10 +1,10 @@
 import * as React from "react";
 import {graphql, Link, useStaticQuery} from "gatsby";
 import {Helmet} from "react-helmet";
-import {Sun, Moon} from "react-feather";
+import {Sun, Moon, ArrowUp} from "react-feather";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
-import {githubIcon, buttonStyle, iconStyle} from "../stylesheets/media.module.css";
+import {githubIcon, buttonStyle} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
 
 const colorModes = [
@@ -43,7 +43,21 @@ const pageStyle = {
     marginLeft: "5px",
     marginRight: "5px",
 }
+const backUpButton = {
+    color: "inherit",
+    position: "fixed",
+    bottom: "50px", right: "25px",
+}
 
+/**
+ * The default layout used on all pages of the website
+ * @param title The title in the browsers tab
+ * @param headline The title at the top of the screen, if undefined will use title instead
+ * @param description Description used for metadata of the page
+ * @param children The contents of the page
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Layout = ({title, headline, description, children}) => {
     const query = useStaticQuery(graphql`
         query {
@@ -57,18 +71,18 @@ const Layout = ({title, headline, description, children}) => {
     `);
 
     let wasDark;
-    if (typeof (Storage) !== "undefined" && localStorage.darkMode) { //If storage is defined and localStorage is not empty
-        wasDark = Number(localStorage.darkMode); //Gets theme from local storage
-    }
-    else { // If storage is empty get dark-theme preference from browser
-        if (typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
+        if (localStorage.darkMode) { //If storage is defined and localStorage is not empty
+            wasDark = Number(localStorage.darkMode); //Gets theme from local storage
+        }
+        else { // If storage is empty get dark-theme preference from browser
             wasDark = Number(window.matchMedia("(prefers-color-scheme: light)").matches); //Gets theme from browser
         }
     }
 
     React.useEffect(() => {
         toggleDarkMode();
-    }, []); //Must be empty, so the function is called once after the first render
+    }, []); //Must be empty, so the function is called only once after the first render
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
 
@@ -81,7 +95,6 @@ const Layout = ({title, headline, description, children}) => {
 
         setStyles(linkStyle, colorModes[isDark].importantText);
         setStyles(githubIcon, colorModes[isDark].text);
-        setStyles(iconStyle, colorModes[isDark].text);
         function setStyles(className, attribute) {
             const objects = document.getElementsByClassName(className);
             for (let i = 0; i < objects.length; i++) {
@@ -92,6 +105,32 @@ const Layout = ({title, headline, description, children}) => {
         localStorage.darkMode = isDark; //Saves the preference in local storage
     }
 
+    function backUp() {
+        document.documentElement.scrollTop = 0; //Firefox, chromium, opera and the others
+        document.body.scrollTop = 0; //Safari
+    }
+
+    const [isTop, setIsTop] = React.useState(true);
+
+    React.useEffect(() => {
+        let isMounted = true;
+        const onScroll = () => {
+            if (isMounted) {
+                const show = window.scrollY < 50;
+                if (show !== isTop) {
+                    setIsTop(show);
+                }
+            }
+        }
+        const _ = require("lodash")
+        document.addEventListener("scroll", _.throttle(onScroll, 100));
+
+        return () => {
+            document.removeEventListener("scroll", onScroll);
+            isMounted = false;
+        };
+    }, [isTop]);
+
     return (
         <div id={"root"} style={layoutStyle}>
             <Helmet>
@@ -100,7 +139,7 @@ const Layout = ({title, headline, description, children}) => {
                 <title>{title} | {query.site.siteMetadata.title}</title>
             </Helmet>
             <div style={container}>
-                <h1 id={"title"} style={titleStyle}>{headline}</h1>
+                <h1 id={"title"} style={titleStyle}>{(headline !== undefined) ? headline : title}</h1>
                 <ul id={"links"} className={navLinksStyle}>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>Hjem</Link></li>
                     <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
@@ -117,6 +156,11 @@ const Layout = ({title, headline, description, children}) => {
                     <Footer/>
                 </main>
             </div>
+            {(isTop) ? null : (
+                <button style={backUpButton} className={buttonStyle} title={"Til toppen"} onClick={backUp}>
+                    <ArrowUp/>
+                </button>
+            )}
         </div>
     )
 }

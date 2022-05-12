@@ -12,8 +12,8 @@ const footerStyle = {
 const Footer = () => {
     return(
         <div style={footerStyle}>
-            <p>Created using <a className={linkStyle} href={"https://www.gatsbyjs.com/"}>Gatsby.js</a></p>
-            <p>Icons from <a className={linkStyle} href={"https://feathericons.com/"}>FeatherIcons</a></p>
+            <p>Laget med <a className={linkStyle} href={"https://www.gatsbyjs.com/"}>Gatsby.js</a></p>
+            <p>Ikoner fra <a className={linkStyle} href={"https://feathericons.com/"}>FeatherIcons</a></p>
         </div>
     )
 }

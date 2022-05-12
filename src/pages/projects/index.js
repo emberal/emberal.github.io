@@ -27,6 +27,12 @@ const projectData = {
     justifyContent: "space-between",
 }
 
+/**
+ * Contains cards of all projects with some information, and links to the posts
+ * @param data A query containing data from the posts
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Index = ({data}) => {
     return (
         <Layout
@@ -41,8 +47,8 @@ const Index = ({data}) => {
                                     <Link className={linkStyle} to={node.slug}>
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
                                     </Link>
-                                    <a title={"Åpne i GitHub"} className={githubIcon} href={node.frontmatter.source}>
-                                        <GitHub/>
+                                    <a title={"Åpne i GitHub"} className={githubIcon} href={node.frontmatter.source}
+                                       target={"_blank"} rel={"noreferrer"}><GitHub/>
                                     </a>
                                 </div>
                                 <div style={projectData}>
@@ -62,7 +68,7 @@ const Index = ({data}) => {
                     }
                 </div>
             }/>
-    )
+    );
 }
 
 export const query = graphql `
