@@ -8,3 +8,8 @@
     border: none;
     cursor: pointer;
 }
+.back-up-button {
+    color: inherit;
+    position: fixed;
+    bottom: 50px; right: 25px;
+}

@@ -36,7 +36,7 @@ const ContactMe = () => {
                 document.getElementById("submit-button").click();
             }
         }
-        document.addEventListener("keyup", (e) => submitKeys(e))
+        document.addEventListener("keyup", (e) => submitKeys(e));
         return () => {
             document.removeEventListener("keyup", (e) => submitKeys(e));
         }

@@ -17,7 +17,7 @@ const ProjectPost = ({data}) => {
             title={data.mdx.frontmatter.title}
             headline={data.mdx.frontmatter.title}
             children={
-                <>
+                <article>
                     <GatsbyImage
                         alt={data.mdx.frontmatter.hero_image_alt}
                         image={getImage(data.mdx.frontmatter.hero_image.childImageSharp.gatsbyImageData)}/>
@@ -27,7 +27,7 @@ const ProjectPost = ({data}) => {
                         <a className={linkStyle} href={data.mdx.frontmatter.source} target={"_blank"} rel={"noreferrer"}>GitHub</a>
                     </p>
                     <MDXRenderer children={data.mdx.body}/>
-                </>
+                </article>
             }
         />
     );

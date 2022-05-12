@@ -1,12 +1,12 @@
 .nav-links-style {
     list-style: none;
     display: flex;
-    padding-left: 5px;
+    padding-left: 10px;
     padding-bottom: 25px;
     font-size: large;
 }
 .nav-link-padding {
-    padding-right: 2rem;
+    padding-right: 1.5rem;
     width: fit-content;
 }
 .link-style {

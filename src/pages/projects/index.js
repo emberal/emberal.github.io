@@ -42,7 +42,7 @@ const Index = ({data}) => {
                 <div style={{paddingBottom: "100px"}}>
                     {
                         data.allMdx.nodes.map(node => (
-                            <div style={projectCard} key={node.id}>
+                            <article style={projectCard} key={node.id}>
                                 <div style={projectTitle}>
                                     <Link className={linkStyle} to={node.slug}>
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
@@ -63,7 +63,7 @@ const Index = ({data}) => {
                                 <div style={marginLeftSide}>
                                     <p>{node.frontmatter.description}</p>
                                 </div>
-                            </div>
+                            </article>
                         ))
                     }
                 </div>

@@ -4,8 +4,9 @@ import {Helmet} from "react-helmet";
 import {Sun, Moon, ArrowUp} from "react-feather";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
-import {githubIcon, buttonStyle} from "../stylesheets/media.module.css";
+import {githubIcon, buttonStyle, backUpButton} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
+import classNames from "classnames";
 
 const colorModes = [
     { //Dark mode
@@ -29,7 +30,7 @@ const layoutStyle = {
 const titleStyle = {
     paddingTop: "50px",
     paddingBottom: "25px",
-    marginLeft: "5px",
+    marginLeft: "10px",
     fontWeight: "700",
     color: colorModes[0].importantText,
 }
@@ -39,14 +40,9 @@ const container = {
 }
 const pageStyle = {
     position: "relative",
-    minHeight: "85vh",
-    marginLeft: "5px",
-    marginRight: "5px",
-}
-const backUpButton = {
-    color: "inherit",
-    position: "fixed",
-    bottom: "50px", right: "25px",
+    minHeight: "100vh",
+    marginLeft: "10px",
+    marginRight: "10px",
 }
 
 /**
@@ -81,7 +77,7 @@ const Layout = ({title, headline, description, children}) => {
     }
 
     React.useEffect(() => {
-        toggleDarkMode();
+        toggleDarkMode(); //TODO Improve
     }, []); //Must be empty, so the function is called only once after the first render
 
     const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
@@ -93,21 +89,18 @@ const Layout = ({title, headline, description, children}) => {
 
         document.getElementById("title").style.color = colorModes[isDark].importantText; //Titles
 
-        setStyles(linkStyle, colorModes[isDark].importantText);
-        setStyles(githubIcon, colorModes[isDark].text);
+        setStyles(linkStyle, colorModes[isDark].importantText); //Links
+        setStyles(githubIcon, colorModes[isDark].text); //GitHub icons
         function setStyles(className, attribute) {
-            const objects = document.getElementsByClassName(className);
-            for (let i = 0; i < objects.length; i++) {
-                objects[i].style.color = attribute;
-            }
+            Array.from(document.getElementsByClassName(className)).forEach( element => element.style.color = attribute);
         }
         setIsDark((isDark + 1) % 2);
         localStorage.darkMode = isDark; //Saves the preference in local storage
     }
 
     function backUp() {
-        document.documentElement.scrollTop = 0; //Firefox, chromium, opera and the others
         document.body.scrollTop = 0; //Safari
+        document.documentElement.scrollTop = 0; //Firefox, chromium, opera and the others
     }
 
     const [isTop, setIsTop] = React.useState(true);
@@ -122,7 +115,7 @@ const Layout = ({title, headline, description, children}) => {
                 }
             }
         }
-        const _ = require("lodash")
+        const _ = require("lodash");
         document.addEventListener("scroll", _.throttle(onScroll, 100));
 
         return () => {
@@ -140,24 +133,26 @@ const Layout = ({title, headline, description, children}) => {
             </Helmet>
             <div style={container}>
                 <h1 id={"title"} style={titleStyle}>{(headline !== undefined) ? headline : title}</h1>
-                <ul id={"links"} className={navLinksStyle}>
-                    <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>Hjem</Link></li>
-                    <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
-                    <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
-                    <li className={navLinkPadding}>
-                        <button title={"Veksle dark-mode"} onClick={toggleDarkMode} className={buttonStyle}>
-                            {(isDark) ? <Sun style={{color: "white"}}/> : <Moon/>}
-                            <p style={{display: "none"}}>Toggle dark-mode</p>
-                        </button>
-                    </li>
-                </ul>
+                <nav>
+                    <ul id={"links"} className={navLinksStyle}>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>Hjem</Link></li>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
+                        <li className={navLinkPadding}>
+                            <button title={"Veksle dark-mode"} onClick={toggleDarkMode} className={buttonStyle}>
+                                {(isDark) ? <Sun style={{color: "white"}}/> : <Moon/>}
+                                <p style={{display: "none"}}>Toggle dark-mode</p>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
                 <main style={pageStyle}>
                     {children}
                     <Footer/>
                 </main>
             </div>
             {(isTop) ? null : (
-                <button style={backUpButton} className={buttonStyle} title={"Til toppen"} onClick={backUp}>
+                <button className={classNames(buttonStyle, backUpButton)} title={"Til toppen"} onClick={backUp}>
                     <ArrowUp/>
                 </button>
             )}
