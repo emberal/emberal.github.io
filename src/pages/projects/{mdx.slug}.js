@@ -23,7 +23,7 @@ const ProjectPost = ({data}) => {
                         image={getImage(data.mdx.frontmatter.hero_image.childImageSharp.gatsbyImageData)}/>
                     <p>{data.mdx.frontmatter.description}</p>
                     <p>
-                        Kildekoden på
+                        Kildekoden på{" "}
                         <a className={linkStyle} href={data.mdx.frontmatter.source} target={"_blank"} rel={"noreferrer"}>GitHub</a>
                     </p>
                     <MDXRenderer children={data.mdx.body}/>
