@@ -5,6 +5,7 @@ import {GitHub} from "react-feather";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
 import {githubIcon} from "../../stylesheets/media.module.css";
 import {linkStyle} from "../../stylesheets/text.module.css";
+import {useTranslation} from "gatsby-plugin-react-i18next";
 
 const projectCard = {
     border: "solid grey",
@@ -34,12 +35,15 @@ const projectData = {
  * @constructor
  */
 const Index = ({data}) => {
+
+    const {t} = useTranslation();
+
     return (
         <Layout
-            title={"Prosjekter"}
-            headline={"Mine prosjekter"}
+            title={t("projects")}
+            headline={t("myProjects")}
             children={
-                <div style={{paddingBottom: "100px"}}>
+                <div style={{paddingBottom: "120px"}}>
                     {
                         data.allMdx.nodes.map(node => (
                             <article style={projectCard} key={node.id}>
@@ -47,13 +51,13 @@ const Index = ({data}) => {
                                     <Link className={linkStyle} to={node.slug}>
                                         <h2 style={marginLeftSide}>{node.frontmatter.title}</h2>
                                     </Link>
-                                    <a title={"Åpne i GitHub"} className={githubIcon} href={node.frontmatter.source}
+                                    <a title={t("openInGitHub")} className={githubIcon} href={node.frontmatter.source}
                                        target={"_blank"} rel={"noreferrer"}><GitHub/>
                                     </a>
                                 </div>
                                 <div style={projectData}>
                                     <p style={marginLeftSide}>
-                                        Tid å lese: {node.timeToRead} {(node.timeToRead === 1) ? "minutt" : "minutter"}
+                                        {t("timeToRead")}{node.timeToRead} {(node.timeToRead === 1) ? t("minute") : t("minutes")}
                                     </p>
                                     <p style={{marginRight: "5px"}}>Type: {node.frontmatter.type}</p>
                                 </div>
@@ -72,28 +76,36 @@ const Index = ({data}) => {
 }
 
 export const query = graphql `
-query {
-  allMdx {
-    nodes {
-      frontmatter {
-        title
-        description
-        type
-        source
-        hero_image_alt
-        hero_image {
-          childImageSharp {
-            gatsbyImageData
-          }
+    query($language: String!) {
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                    ns
+                    data
+                    language
+                }
+            }
         }
-      }
-      id
-      slug
-      timeToRead
+        allMdx {
+            nodes {
+                frontmatter {
+                    title
+                    description
+                    type
+                    source
+                    hero_image_alt
+                    hero_image {
+                        childImageSharp {
+                            gatsbyImageData
+                        }
+                    }
+                }
+                id
+                slug
+                timeToRead
+            }
+        }
     }
-  }
-}
-
 `
 
 export default Index

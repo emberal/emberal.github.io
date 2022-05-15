@@ -1,18 +1,18 @@
 module.exports = {
   siteMetadata: {
-    title: `Martin Berg Alstads hjemmeside`,
-    description: `Martin Berg Alstad sin personlige hjemmeside.`,
-    lang: `no`,
+    title: `Martin Berg Alstad's website`,
+    description: `Martin Berg Alstad's personal website`,
+    lang: `en`,
     siteUrl: `https://h600878.github.io/`,
   },
   plugins: [
       {
           resolve: `gatsby-plugin-manifest`,
           options: {
-              name: `Martin Berg Alstads hjemmeside`,
+              name: `Martin Berg Alstad's website`,
               short_name: `Martin Berg Alstad`,
-              description: `Martin Berg Alstad sin personlige hjemmeside.`,
-              lang: `no`,
+              description: `Martin Berg Alstad's personal website`,
+              lang: `en`,
               start_url: `/`,
               background_color: `#181a1b`,
               theme_color: `#9e6ecf`,
@@ -20,11 +20,11 @@ module.exports = {
               icon: `src/images/icon.png`,
               localize: [
                   {
-                      start_url: `/en/`,
-                      lang: `en`,
-                      name: `Martin Berg Alstad's website`,
+                      start_url: `/no/`,
+                      lang: `no`,
+                      name: `Martin Berg Alstads hjemmeside`,
                       short_name: `Martin Berg Alstad`,
-                      description: `Martin Berg Alstad's personal website`,
+                      description: `Martin Berg Alstad sin personlige hjemmeside.`,
                   },
               ]
           },
@@ -45,7 +45,7 @@ module.exports = {
           resolve: 'gatsby-plugin-robots-txt',
           options: {
               host: `https://h600878.github.io/`,
-              sitemap: `\`https://h600878.github.io/sitemap/sitemap-index.xml`,
+              sitemap: `https://h600878.github.io/sitemap/sitemap-index.xml`,
               policy: [{userAgent: `*`, allow: `/`}]
           }
       },
@@ -54,9 +54,34 @@ module.exports = {
         resolve: 'gatsby-source-filesystem',
         options: {
           "name": "projects",
-          "path": `${__dirname}/projects`
+          "path": `${__dirname}/projects`,
         },
         __key: "pages"
       },
+      {
+          resolve: 'gatsby-source-filesystem',
+          options: {
+              "name": "locale",
+              "path": `${__dirname}/locales`,
+          }
+      },
+      "i18next",
+      {
+          resolve: `gatsby-plugin-react-i18next`,
+          options: {
+              localeJsonSourceName: `locale`,
+              languages: [`en`, `no`],
+              defaultLanguage: `en`,
+              siteUrl: `https://h600878.github.io/`,
+              i18nextOptions: {
+                  interpolation: {
+                      escapeValue: false
+                  },
+                  keySeparator: false,
+                  nsSeparator: false
+              },
+              pages: []
+          }
+      }
   ]
 };

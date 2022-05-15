@@ -1,6 +1,8 @@
 import * as React from "react"
 import Layout from "../components/Layout";
 import {StaticImage} from "gatsby-plugin-image";
+import {graphql} from "gatsby";
+import {useTranslation} from "gatsby-plugin-react-i18next";
 
 const pictureStyle = {
     maxWidth: "300px",
@@ -18,22 +20,38 @@ const picturePlacement = {
  * @constructor
  */
 const IndexPage = () => {
+
+    const {t} = useTranslation();
+
     return (
         <Layout
-            title={"Hjem"}
-            headline={"Velkommen!"}
+            title={t("home")}
+            headline={t("welcome")}
             children={
                 <div>
                     <div style={picturePlacement}>
-                        <StaticImage style={pictureStyle} src={"../images/me.jpg"} alt={"Et bilde av meg på fjelltur"}/>
+                        <StaticImage style={pictureStyle} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
                     </div>
                     <p>
-                        Hei, jeg heter Martin og studerer for tiden Informasjonsteknologi på Høgskulen på Vestlandet i
-                        Bergen.
+                        {t("aboutMeDesc")}
                     </p>
                 </div>
             }/>
     )
 }
+
+export const query = graphql`
+    query($language: String!) {
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                    ns
+                    data
+                    language
+                }
+            }
+        }
+    }
+`;
 
 export default IndexPage

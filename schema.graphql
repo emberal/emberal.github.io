@@ -235,11 +235,15 @@ type File implements Node {
     ): Date!
     "Returns the first child node of type ImageSharp or null if there are no children of given type on this node"
     childImageSharp: ImageSharp
+    "Returns the first child node of type Locale or null if there are no children of given type on this node"
+    childLocale: Locale
     "Returns the first child node of type Mdx or null if there are no children of given type on this node"
     childMdx: Mdx
     children: [Node!]!
     "Returns all children nodes filtered by type ImageSharp"
     childrenImageSharp: [ImageSharp]
+    "Returns all children nodes filtered by type Locale"
+    childrenLocale: [Locale]
     "Returns all children nodes filtered by type Mdx"
     childrenMdx: [Mdx]
     ctime(
@@ -536,6 +540,49 @@ type Internal {
     type: String!
 }
 
+type Locale implements Node {
+    children: [Node!]!
+    data: String
+    fileAbsolutePath: String
+    id: ID!
+    internal: Internal!
+    language: String
+    ns: String
+    parent: Node
+}
+
+type LocaleConnection {
+    distinct(field: LocaleFieldsEnum!): [String!]!
+    edges: [LocaleEdge!]!
+    group(field: LocaleFieldsEnum!, limit: Int, skip: Int): [LocaleGroupConnection!]!
+    max(field: LocaleFieldsEnum!): Float
+    min(field: LocaleFieldsEnum!): Float
+    nodes: [Locale!]!
+    pageInfo: PageInfo!
+    sum(field: LocaleFieldsEnum!): Float
+    totalCount: Int!
+}
+
+type LocaleEdge {
+    next: Locale
+    node: Locale!
+    previous: Locale
+}
+
+type LocaleGroupConnection {
+    distinct(field: LocaleFieldsEnum!): [String!]!
+    edges: [LocaleEdge!]!
+    field: String!
+    fieldValue: String
+    group(field: LocaleFieldsEnum!, limit: Int, skip: Int): [LocaleGroupConnection!]!
+    max(field: LocaleFieldsEnum!): Float
+    min(field: LocaleFieldsEnum!): Float
+    nodes: [Locale!]!
+    pageInfo: PageInfo!
+    sum(field: LocaleFieldsEnum!): Float
+    totalCount: Int!
+}
+
 type Mdx implements Node {
     body: String!
     children: [Node!]!
@@ -622,21 +669,25 @@ type Query {
     allDirectory(filter: DirectoryFilterInput, limit: Int, skip: Int, sort: DirectorySortInput): DirectoryConnection!
     allFile(filter: FileFilterInput, limit: Int, skip: Int, sort: FileSortInput): FileConnection!
     allImageSharp(filter: ImageSharpFilterInput, limit: Int, skip: Int, sort: ImageSharpSortInput): ImageSharpConnection!
+    allLocale(filter: LocaleFilterInput, limit: Int, skip: Int, sort: LocaleSortInput): LocaleConnection!
     allMdx(filter: MdxFilterInput, limit: Int, skip: Int, sort: MdxSortInput): MdxConnection!
     allSite(filter: SiteFilterInput, limit: Int, skip: Int, sort: SiteSortInput): SiteConnection!
     allSiteBuildMetadata(filter: SiteBuildMetadataFilterInput, limit: Int, skip: Int, sort: SiteBuildMetadataSortInput): SiteBuildMetadataConnection!
     allSiteFunction(filter: SiteFunctionFilterInput, limit: Int, skip: Int, sort: SiteFunctionSortInput): SiteFunctionConnection!
     allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
     allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
+    allStaticImage(filter: StaticImageFilterInput, limit: Int, skip: Int, sort: StaticImageSortInput): StaticImageConnection!
     directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
-    file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childImageSharp: ImageSharpFilterInput, childMdx: MdxFilterInput, children: NodeFilterListInput, childrenImageSharp: ImageSharpFilterListInput, childrenMdx: MdxFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
+    file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childImageSharp: ImageSharpFilterInput, childLocale: LocaleFilterInput, childMdx: MdxFilterInput, children: NodeFilterListInput, childrenImageSharp: ImageSharpFilterListInput, childrenLocale: LocaleFilterListInput, childrenMdx: MdxFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
     imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, gatsbyImageData: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput): ImageSharp
+    locale(children: NodeFilterListInput, data: StringQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, language: StringQueryOperatorInput, ns: StringQueryOperatorInput, parent: NodeFilterInput): Locale
     mdx(body: StringQueryOperatorInput, children: NodeFilterListInput, excerpt: StringQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MdxFrontmatterFilterInput, gatsbyPath: StringQueryOperatorInput, headings: MdxHeadingMdxFilterListInput, html: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, mdxAST: JSONQueryOperatorInput, parent: NodeFilterInput, rawBody: StringQueryOperatorInput, slug: StringQueryOperatorInput, tableOfContents: JSONQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MdxWordCountFilterInput): Mdx
     site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, jsxRuntime: StringQueryOperatorInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput, trailingSlash: StringQueryOperatorInput): Site
     siteBuildMetadata(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): SiteBuildMetadata
     siteFunction(absoluteCompiledFilePath: StringQueryOperatorInput, children: NodeFilterListInput, functionRoute: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, matchPath: StringQueryOperatorInput, originalAbsoluteFilePath: StringQueryOperatorInput, originalRelativeFilePath: StringQueryOperatorInput, parent: NodeFilterInput, pluginName: StringQueryOperatorInput, relativeCompiledFilePath: StringQueryOperatorInput): SiteFunction
     sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, matchPath: StringQueryOperatorInput, pageContext: JSONQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput): SitePage
     sitePlugin(browserAPIs: StringQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, name: StringQueryOperatorInput, nodeAPIs: StringQueryOperatorInput, packageJson: JSONQueryOperatorInput, parent: NodeFilterInput, pluginFilepath: StringQueryOperatorInput, pluginOptions: JSONQueryOperatorInput, resolve: StringQueryOperatorInput, ssrAPIs: StringQueryOperatorInput, version: StringQueryOperatorInput): SitePlugin
+    staticImage(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, id: StringQueryOperatorInput, ino: IntQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): StaticImage
 }
 
 type Site implements Node {
@@ -891,6 +942,149 @@ type SiteSiteMetadata {
     title: String
 }
 
+type StaticImage implements Node {
+    absolutePath: String
+    accessTime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    atime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    atimeMs: Float
+    base: String
+    birthTime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    birthtime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    birthtimeMs: Float
+    blksize: Int
+    blocks: Int
+    changeTime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    children: [Node!]!
+    ctime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    ctimeMs: Float
+    dev: Int
+    dir: String
+    ext: String
+    extension: String
+    id: ID!
+    ino: Int
+    internal: Internal!
+    mode: Int
+    modifiedTime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    mtime(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
+    mtimeMs: Float
+    name: String
+    nlink: Int
+    parent: Node
+    prettySize: String
+    rdev: Int
+    relativeDirectory: String
+    relativePath: String
+    root: String
+    size: Int
+    sourceInstanceName: String
+    uid: Int
+}
+
+type StaticImageConnection {
+    distinct(field: StaticImageFieldsEnum!): [String!]!
+    edges: [StaticImageEdge!]!
+    group(field: StaticImageFieldsEnum!, limit: Int, skip: Int): [StaticImageGroupConnection!]!
+    max(field: StaticImageFieldsEnum!): Float
+    min(field: StaticImageFieldsEnum!): Float
+    nodes: [StaticImage!]!
+    pageInfo: PageInfo!
+    sum(field: StaticImageFieldsEnum!): Float
+    totalCount: Int!
+}
+
+type StaticImageEdge {
+    next: StaticImage
+    node: StaticImage!
+    previous: StaticImage
+}
+
+type StaticImageGroupConnection {
+    distinct(field: StaticImageFieldsEnum!): [String!]!
+    edges: [StaticImageEdge!]!
+    field: String!
+    fieldValue: String
+    group(field: StaticImageFieldsEnum!, limit: Int, skip: Int): [StaticImageGroupConnection!]!
+    max(field: StaticImageFieldsEnum!): Float
+    min(field: StaticImageFieldsEnum!): Float
+    nodes: [StaticImage!]!
+    pageInfo: PageInfo!
+    sum(field: StaticImageFieldsEnum!): Float
+    totalCount: Int!
+}
+
 enum DirectoryFieldsEnum {
     absolutePath
     accessTime
@@ -1093,6 +1287,48 @@ enum FileFieldsEnum {
     childImageSharp___resize___src @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     childImageSharp___resize___tracedSVG @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     childImageSharp___resize___width @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
+    childLocale___children
+    childLocale___children___children
+    childLocale___children___children___children
+    childLocale___children___children___id
+    childLocale___children___id
+    childLocale___children___internal___content
+    childLocale___children___internal___contentDigest
+    childLocale___children___internal___description
+    childLocale___children___internal___fieldOwners
+    childLocale___children___internal___ignoreType
+    childLocale___children___internal___mediaType
+    childLocale___children___internal___owner
+    childLocale___children___internal___type
+    childLocale___children___parent___children
+    childLocale___children___parent___id
+    childLocale___data
+    childLocale___fileAbsolutePath
+    childLocale___id
+    childLocale___internal___content
+    childLocale___internal___contentDigest
+    childLocale___internal___description
+    childLocale___internal___fieldOwners
+    childLocale___internal___ignoreType
+    childLocale___internal___mediaType
+    childLocale___internal___owner
+    childLocale___internal___type
+    childLocale___language
+    childLocale___ns
+    childLocale___parent___children
+    childLocale___parent___children___children
+    childLocale___parent___children___id
+    childLocale___parent___id
+    childLocale___parent___internal___content
+    childLocale___parent___internal___contentDigest
+    childLocale___parent___internal___description
+    childLocale___parent___internal___fieldOwners
+    childLocale___parent___internal___ignoreType
+    childLocale___parent___internal___mediaType
+    childLocale___parent___internal___owner
+    childLocale___parent___internal___type
+    childLocale___parent___parent___children
+    childLocale___parent___parent___id
     childMdx___body
     childMdx___children
     childMdx___children___children
@@ -1125,6 +1361,7 @@ enum FileFieldsEnum {
     childMdx___frontmatter___hero_image___changeTime
     childMdx___frontmatter___hero_image___children
     childMdx___frontmatter___hero_image___childrenImageSharp
+    childMdx___frontmatter___hero_image___childrenLocale
     childMdx___frontmatter___hero_image___childrenMdx
     childMdx___frontmatter___hero_image___ctime
     childMdx___frontmatter___hero_image___ctimeMs
@@ -1262,6 +1499,49 @@ enum FileFieldsEnum {
     childrenImageSharp___resize___src @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     childrenImageSharp___resize___tracedSVG @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     childrenImageSharp___resize___width @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
+    childrenLocale
+    childrenLocale___children
+    childrenLocale___children___children
+    childrenLocale___children___children___children
+    childrenLocale___children___children___id
+    childrenLocale___children___id
+    childrenLocale___children___internal___content
+    childrenLocale___children___internal___contentDigest
+    childrenLocale___children___internal___description
+    childrenLocale___children___internal___fieldOwners
+    childrenLocale___children___internal___ignoreType
+    childrenLocale___children___internal___mediaType
+    childrenLocale___children___internal___owner
+    childrenLocale___children___internal___type
+    childrenLocale___children___parent___children
+    childrenLocale___children___parent___id
+    childrenLocale___data
+    childrenLocale___fileAbsolutePath
+    childrenLocale___id
+    childrenLocale___internal___content
+    childrenLocale___internal___contentDigest
+    childrenLocale___internal___description
+    childrenLocale___internal___fieldOwners
+    childrenLocale___internal___ignoreType
+    childrenLocale___internal___mediaType
+    childrenLocale___internal___owner
+    childrenLocale___internal___type
+    childrenLocale___language
+    childrenLocale___ns
+    childrenLocale___parent___children
+    childrenLocale___parent___children___children
+    childrenLocale___parent___children___id
+    childrenLocale___parent___id
+    childrenLocale___parent___internal___content
+    childrenLocale___parent___internal___contentDigest
+    childrenLocale___parent___internal___description
+    childrenLocale___parent___internal___fieldOwners
+    childrenLocale___parent___internal___ignoreType
+    childrenLocale___parent___internal___mediaType
+    childrenLocale___parent___internal___owner
+    childrenLocale___parent___internal___type
+    childrenLocale___parent___parent___children
+    childrenLocale___parent___parent___id
     childrenMdx
     childrenMdx___body
     childrenMdx___children
@@ -1295,6 +1575,7 @@ enum FileFieldsEnum {
     childrenMdx___frontmatter___hero_image___changeTime
     childrenMdx___frontmatter___hero_image___children
     childrenMdx___frontmatter___hero_image___childrenImageSharp
+    childrenMdx___frontmatter___hero_image___childrenLocale
     childrenMdx___frontmatter___hero_image___childrenMdx
     childrenMdx___frontmatter___hero_image___ctime
     childrenMdx___frontmatter___hero_image___ctimeMs
@@ -1666,6 +1947,99 @@ enum ImageSharpFieldsEnum {
     resize___width @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
 }
 
+enum LocaleFieldsEnum {
+    children
+    children___children
+    children___children___children
+    children___children___children___children
+    children___children___children___id
+    children___children___id
+    children___children___internal___content
+    children___children___internal___contentDigest
+    children___children___internal___description
+    children___children___internal___fieldOwners
+    children___children___internal___ignoreType
+    children___children___internal___mediaType
+    children___children___internal___owner
+    children___children___internal___type
+    children___children___parent___children
+    children___children___parent___id
+    children___id
+    children___internal___content
+    children___internal___contentDigest
+    children___internal___description
+    children___internal___fieldOwners
+    children___internal___ignoreType
+    children___internal___mediaType
+    children___internal___owner
+    children___internal___type
+    children___parent___children
+    children___parent___children___children
+    children___parent___children___id
+    children___parent___id
+    children___parent___internal___content
+    children___parent___internal___contentDigest
+    children___parent___internal___description
+    children___parent___internal___fieldOwners
+    children___parent___internal___ignoreType
+    children___parent___internal___mediaType
+    children___parent___internal___owner
+    children___parent___internal___type
+    children___parent___parent___children
+    children___parent___parent___id
+    data
+    fileAbsolutePath
+    id
+    internal___content
+    internal___contentDigest
+    internal___description
+    internal___fieldOwners
+    internal___ignoreType
+    internal___mediaType
+    internal___owner
+    internal___type
+    language
+    ns
+    parent___children
+    parent___children___children
+    parent___children___children___children
+    parent___children___children___id
+    parent___children___id
+    parent___children___internal___content
+    parent___children___internal___contentDigest
+    parent___children___internal___description
+    parent___children___internal___fieldOwners
+    parent___children___internal___ignoreType
+    parent___children___internal___mediaType
+    parent___children___internal___owner
+    parent___children___internal___type
+    parent___children___parent___children
+    parent___children___parent___id
+    parent___id
+    parent___internal___content
+    parent___internal___contentDigest
+    parent___internal___description
+    parent___internal___fieldOwners
+    parent___internal___ignoreType
+    parent___internal___mediaType
+    parent___internal___owner
+    parent___internal___type
+    parent___parent___children
+    parent___parent___children___children
+    parent___parent___children___id
+    parent___parent___id
+    parent___parent___internal___content
+    parent___parent___internal___contentDigest
+    parent___parent___internal___description
+    parent___parent___internal___fieldOwners
+    parent___parent___internal___ignoreType
+    parent___parent___internal___mediaType
+    parent___parent___internal___owner
+    parent___parent___internal___type
+    parent___parent___parent___children
+    parent___parent___parent___id
+}
+
 enum MdxFieldsEnum {
     body
     children
@@ -1724,6 +2098,12 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___childImageSharp___children
     frontmatter___hero_image___childImageSharp___gatsbyImageData @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     frontmatter___hero_image___childImageSharp___id
+    frontmatter___hero_image___childLocale___children
+    frontmatter___hero_image___childLocale___data
+    frontmatter___hero_image___childLocale___fileAbsolutePath
+    frontmatter___hero_image___childLocale___id
+    frontmatter___hero_image___childLocale___language
+    frontmatter___hero_image___childLocale___ns
     frontmatter___hero_image___childMdx___body
     frontmatter___hero_image___childMdx___children
     frontmatter___hero_image___childMdx___excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
@@ -1742,6 +2122,13 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___childrenImageSharp___children
     frontmatter___hero_image___childrenImageSharp___gatsbyImageData @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
     frontmatter___hero_image___childrenImageSharp___id
+    frontmatter___hero_image___childrenLocale
+    frontmatter___hero_image___childrenLocale___children
+    frontmatter___hero_image___childrenLocale___data
+    frontmatter___hero_image___childrenLocale___fileAbsolutePath
+    frontmatter___hero_image___childrenLocale___id
+    frontmatter___hero_image___childrenLocale___language
+    frontmatter___hero_image___childrenLocale___ns
     frontmatter___hero_image___childrenMdx
     frontmatter___hero_image___childrenMdx___body
     frontmatter___hero_image___childrenMdx___children
@@ -2398,6 +2785,127 @@ enum SortOrderEnum {
     DESC
 }
 
+enum StaticImageFieldsEnum {
+    absolutePath
+    accessTime
+    atime
+    atimeMs
+    base
+    birthTime
+    birthtime
+    birthtimeMs
+    blksize
+    blocks
+    changeTime
+    children
+    children___children
+    children___children___children
+    children___children___children___children
+    children___children___children___id
+    children___children___id
+    children___children___internal___content
+    children___children___internal___contentDigest
+    children___children___internal___description
+    children___children___internal___fieldOwners
+    children___children___internal___ignoreType
+    children___children___internal___mediaType
+    children___children___internal___owner
+    children___children___internal___type
+    children___children___parent___children
+    children___children___parent___id
+    children___id
+    children___internal___content
+    children___internal___contentDigest
+    children___internal___description
+    children___internal___fieldOwners
+    children___internal___ignoreType
+    children___internal___mediaType
+    children___internal___owner
+    children___internal___type
+    children___parent___children
+    children___parent___children___children
+    children___parent___children___id
+    children___parent___id
+    children___parent___internal___content
+    children___parent___internal___contentDigest
+    children___parent___internal___description
+    children___parent___internal___fieldOwners
+    children___parent___internal___ignoreType
+    children___parent___internal___mediaType
+    children___parent___internal___owner
+    children___parent___internal___type
+    children___parent___parent___children
+    children___parent___parent___id
+    ctime
+    ctimeMs
+    dev
+    dir
+    ext
+    extension
+    id
+    ino
+    internal___content
+    internal___contentDigest
+    internal___description
+    internal___fieldOwners
+    internal___ignoreType
+    internal___mediaType
+    internal___owner
+    internal___type
+    mode
+    modifiedTime
+    mtime
+    mtimeMs
+    name
+    nlink
+    parent___children
+    parent___children___children
+    parent___children___children___children
+    parent___children___children___id
+    parent___children___id
+    parent___children___internal___content
+    parent___children___internal___contentDigest
+    parent___children___internal___description
+    parent___children___internal___fieldOwners
+    parent___children___internal___ignoreType
+    parent___children___internal___mediaType
+    parent___children___internal___owner
+    parent___children___internal___type
+    parent___children___parent___children
+    parent___children___parent___id
+    parent___id
+    parent___internal___content
+    parent___internal___contentDigest
+    parent___internal___description
+    parent___internal___fieldOwners
+    parent___internal___ignoreType
+    parent___internal___mediaType
+    parent___internal___owner
+    parent___internal___type
+    parent___parent___children
+    parent___parent___children___children
+    parent___parent___children___id
+    parent___parent___id
+    parent___parent___internal___content
+    parent___parent___internal___contentDigest
+    parent___parent___internal___description
+    parent___parent___internal___fieldOwners
+    parent___parent___internal___ignoreType
+    parent___parent___internal___mediaType
+    parent___parent___internal___owner
+    parent___parent___internal___type
+    parent___parent___parent___children
+    parent___parent___parent___id
+    prettySize
+    rdev
+    relativeDirectory
+    relativePath
+    root
+    size
+    sourceInstanceName
+    uid
+}
+
 "A date string, such as 2007-12-03, compliant with the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
 scalar Date
 
@@ -2497,9 +3005,11 @@ input FileFilterInput {
     blocks: IntQueryOperatorInput
     changeTime: DateQueryOperatorInput
     childImageSharp: ImageSharpFilterInput
+    childLocale: LocaleFilterInput
     childMdx: MdxFilterInput
     children: NodeFilterListInput
     childrenImageSharp: ImageSharpFilterListInput
+    childrenLocale: LocaleFilterListInput
     childrenMdx: MdxFilterListInput
     ctime: DateQueryOperatorInput
     ctimeMs: FloatQueryOperatorInput
@@ -2643,6 +3153,26 @@ input JSONQueryOperatorInput {
     ne: JSON
     nin: [JSON]
     regex: JSON
+}
+
+input LocaleFilterInput {
+    children: NodeFilterListInput
+    data: StringQueryOperatorInput
+    fileAbsolutePath: StringQueryOperatorInput
+    id: StringQueryOperatorInput
+    internal: InternalFilterInput
+    language: StringQueryOperatorInput
+    ns: StringQueryOperatorInput
+    parent: NodeFilterInput
+}
+
+input LocaleFilterListInput {
+    elemMatch: LocaleFilterInput
+}
+
+input LocaleSortInput {
+    fields: [LocaleFieldsEnum]
+    order: [SortOrderEnum] = [ASC]
 }
 
 input MdxFilterInput {
@@ -2822,6 +3352,50 @@ input SiteSiteMetadataFilterInput {
 
 input SiteSortInput {
     fields: [SiteFieldsEnum]
+    order: [SortOrderEnum] = [ASC]
+}
+
+input StaticImageFilterInput {
+    absolutePath: StringQueryOperatorInput
+    accessTime: DateQueryOperatorInput
+    atime: DateQueryOperatorInput
+    atimeMs: FloatQueryOperatorInput
+    base: StringQueryOperatorInput
+    birthTime: DateQueryOperatorInput
+    birthtime: DateQueryOperatorInput
+    birthtimeMs: FloatQueryOperatorInput
+    blksize: IntQueryOperatorInput
+    blocks: IntQueryOperatorInput
+    changeTime: DateQueryOperatorInput
+    children: NodeFilterListInput
+    ctime: DateQueryOperatorInput
+    ctimeMs: FloatQueryOperatorInput
+    dev: IntQueryOperatorInput
+    dir: StringQueryOperatorInput
+    ext: StringQueryOperatorInput
+    extension: StringQueryOperatorInput
+    id: StringQueryOperatorInput
+    ino: IntQueryOperatorInput
+    internal: InternalFilterInput
+    mode: IntQueryOperatorInput
+    modifiedTime: DateQueryOperatorInput
+    mtime: DateQueryOperatorInput
+    mtimeMs: FloatQueryOperatorInput
+    name: StringQueryOperatorInput
+    nlink: IntQueryOperatorInput
+    parent: NodeFilterInput
+    prettySize: StringQueryOperatorInput
+    rdev: IntQueryOperatorInput
+    relativeDirectory: StringQueryOperatorInput
+    relativePath: StringQueryOperatorInput
+    root: StringQueryOperatorInput
+    size: IntQueryOperatorInput
+    sourceInstanceName: StringQueryOperatorInput
+    uid: IntQueryOperatorInput
+}
+
+input StaticImageSortInput {
+    fields: [StaticImageFieldsEnum]
     order: [SortOrderEnum] = [ASC]
 }
 

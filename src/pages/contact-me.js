@@ -2,13 +2,15 @@ import * as React from "react";
 import Layout from "../components/Layout";
 import {Send, Linkedin} from "react-feather";
 import {useForm} from "@formspree/react";
+import {graphql} from "gatsby";
 import {buttonStyle} from "../stylesheets/media.module.css";
 import {formNameSubject} from "../stylesheets/text.module.css";
+import {useTranslation} from "gatsby-plugin-react-i18next";
 
 const inputStyle = {
     width: "100%",
     maxWidth: "100%",
-    minHeight: "3vh",
+    minHeight: "30px",
     maxHeight: "50vh",
     borderRadius: "5px",
     resize: "vertical",
@@ -42,9 +44,11 @@ const ContactMe = () => {
         }
     })
 
+    const {t} = useTranslation();
+
     return (
         <Layout
-            title={"Kontakt meg"}
+            title={t("contactMe")}
             children={
                 <>
                     <div style={socialsStyle}>
@@ -57,25 +61,25 @@ const ContactMe = () => {
                           onSubmit={handelSubmit}>
                         <div className={formNameSubject}>
                             <label>
-                                <p>Ditt navn</p>
-                                <input style={inputStyle} name={"name"} type={"text"} placeholder={"Navn"}
+                                <p>{t("yourName")}</p>
+                                <input style={inputStyle} name={"name"} type={"text"} placeholder={"Ola Nordmann"}
                                        required/>
                             </label>
                             <label>
-                                <p>Emne</p>
-                                <input style={inputStyle} name={"Subject"} type={"text"} placeholder={"Emne"}
+                                <p>{t("subject")}</p>
+                                <input style={inputStyle} name={"Subject"} type={"text"} placeholder={"Heisann!"}
                                        required/>
                             </label>
                         </div>
                         <label>
-                            <p>Din epostadresse</p>
-                            <input style={inputStyle} name={"email"} type={"email"} placeholder={"Epostadresse"}
+                            <p>{t("yourEmail")}</p>
+                            <input style={inputStyle} name={"email"} type={"email"} placeholder={"ola@nordmann.no"}
                                    required/>
                         </label>
                         <label>
-                            <p>Melding</p>
+                            <p>{t("message")}</p>
                             <textarea id={"contact-me-text-area"} style={inputStyle} name={"message"}
-                                      placeholder={"Melding"} required/>
+                                      placeholder={t("message")} required/>
                         </label>
                         <input name="_gotcha" type="text" style={{display: "none"}}/> {/*Honeypot spam filter*/}
                         <p></p>
@@ -84,12 +88,26 @@ const ContactMe = () => {
                                 type={"submit"} disabled={state.submitting}>
                             <Send/><p style={{display: "none"}}>Send</p>
                         </button>
-                        {(state.succeeded) ? <p>Melding sent!</p> : null}
+                        {(state.succeeded) ? <p>{t("messageSent")}</p> : null}
                     </form>
                 </>
             }
         />
     );
 }
+
+export const query = graphql`
+    query($language: String!) {
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                    ns
+                    data
+                    language
+                }
+            }
+        }
+    }
+`;
 
 export default ContactMe

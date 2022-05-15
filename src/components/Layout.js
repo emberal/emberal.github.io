@@ -2,11 +2,12 @@ import * as React from "react";
 import {graphql, Link, useStaticQuery} from "gatsby";
 import {Helmet} from "react-helmet";
 import {Sun, Moon, ArrowUp} from "react-feather";
+import classNames from "classnames";
+import {useTranslation} from "gatsby-plugin-react-i18next";
 import Footer from "./footer";
 import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
 import {githubIcon, buttonStyle, backUpButton} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
-import classNames from "classnames";
 
 const colorModes = [
     { //Dark mode
@@ -55,14 +56,15 @@ const pageStyle = {
  * @constructor
  */
 const Layout = ({title, headline, description, children}) => {
+
     const query = useStaticQuery(graphql`
         query {
-          site {
-            siteMetadata {
-              lang
-              title
+            site {
+                siteMetadata {
+                    lang
+                    title
+                }
             }
-          }
         }
     `);
 
@@ -124,6 +126,8 @@ const Layout = ({title, headline, description, children}) => {
         };
     }, [isTop]);
 
+    const {t} = useTranslation();
+
     return (
         <div id={"root"} style={layoutStyle}>
             <Helmet>
@@ -135,13 +139,13 @@ const Layout = ({title, headline, description, children}) => {
                 <h1 id={"title"} style={titleStyle}>{(headline !== undefined) ? headline : title}</h1>
                 <nav>
                     <ul id={"links"} className={navLinksStyle}>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>Hjem</Link></li>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>Projekter</Link></li>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>Kontakt meg</Link></li>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>{t('home')}</Link></li>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>{t('projects')}</Link></li>
+                        <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>{t('contactMe')}</Link></li>
                         <li className={navLinkPadding}>
-                            <button title={"Veksle dark-mode"} onClick={toggleDarkMode} className={buttonStyle}>
+                            <button title={t('toggleDarkMode')} onClick={toggleDarkMode} className={buttonStyle}>
                                 {(isDark) ? <Sun style={{color: "white"}}/> : <Moon/>}
-                                <p style={{display: "none"}}>Toggle dark-mode</p>
+                                <p style={{display: "none"}}>{t('toggleDarkMode')}</p>
                             </button>
                         </li>
                     </ul>
@@ -152,12 +156,13 @@ const Layout = ({title, headline, description, children}) => {
                 </main>
             </div>
             {(isTop) ? null : (
-                <button className={classNames(buttonStyle, backUpButton)} title={"Til toppen"} onClick={backUp}>
+                <button className={classNames(buttonStyle, backUpButton)} title={t('goBackToTheTop')} onClick={backUp}>
                     <ArrowUp/>
+                    <p style={{display: "none"}}>{t('goBackToTheTop')}</p>
                 </button>
             )}
         </div>
     )
 }
 
-export default Layout
+export default Layout;

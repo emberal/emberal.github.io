@@ -34,23 +34,32 @@ const ProjectPost = ({data}) => {
 }
 
 export const query = graphql `
-query($id: String) {
-  mdx(id: {eq: $id}) {
-    frontmatter {
-      hero_image {
-        childImageSharp {
-          gatsbyImageData
+    query($id: String, $language: String!) {
+        locales: allLocale(filter: {language: {eq: $language}}) {
+            edges {
+                node {
+                    ns
+                    data
+                    language
+                }
+            }
         }
-      }
-      title
-      description
-      source
-      hero_image_alt
+        mdx(id: {eq: $id}) {
+            frontmatter {
+                hero_image {
+                    childImageSharp {
+                        gatsbyImageData
+                    }
+                }
+                title
+                description
+                source
+                hero_image_alt
+            }
+            timeToRead
+            body
+        }
     }
-    timeToRead
-    body
-  }
-}
 `
 
 export default ProjectPost
