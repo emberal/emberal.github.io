@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://h600878.github.io/%60https://h600878.github.io/sitemap/sitemap-index.xml
+Sitemap: https://h600878.github.io/sitemap/sitemap-index.xml
 Host: https://h600878.github.io

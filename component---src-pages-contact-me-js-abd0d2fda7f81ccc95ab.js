@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmartials_website=self.webpackChunkmartials_website||[]).push([[170],{5961:function(e,t,a){a.r(t);var n=a(7294),i=a(6392);t.default=function(){return n.createElement(i.Z,{title:"Kontakt meg",headline:"Kontakt meg",children:n.createElement("div",null,"Her var det tomt gitt!")})}}}]);
-//# sourceMappingURL=component---src-pages-contact-me-js-abd0d2fda7f81ccc95ab.js.map
