@@ -29,9 +29,25 @@ module.exports = {
               ]
           },
       },
-      "gatsby-plugin-mdx",
-      `gatsby-plugin-image`,
       `gatsby-plugin-sharp`,
+      `gatsby-remark-images`,
+      {
+          resolve: `gatsby-plugin-mdx`,
+          options: {
+              gatsbyRemarkPlugins: [
+                  {
+                      resolve: `gatsby-remark-images`,
+                      options: {
+                          // It's important to specify the maxWidth (in pixels) of
+                          // the content container as this plugin uses this as the
+                          // base for generating different widths of each image.
+                          maxWidth: 590,
+                      }
+                  }
+              ]
+          }
+      },
+      `gatsby-plugin-image`,
       `gatsby-transformer-sharp`, // Needed for dynamic images
       `gatsby-plugin-react-helmet`,
       `gatsby-plugin-sitemap`,
