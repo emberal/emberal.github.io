@@ -27,6 +27,10 @@
 
   "pageNotFound": "Page not found",
   "sorry": "Sorry",
-  "pageWasNotFound": "the page you were looking for was not found."
+  "pageWasNotFound": "the page you were looking for was not found.",
+
+  "links": "Links",
+  "myLinks": "My links",
+  "linksDescription": "Martin Berg Alstad social links"
 
 }

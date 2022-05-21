@@ -27,5 +27,9 @@
 
   "pageNotFound": "Siden ble ikke funnet",
   "sorry": "Beklager",
-  "pageWasNotFound": "siden du lette etter fins ikke."
+  "pageWasNotFound": "siden du lette etter fins ikke.",
+
+  "links": "Linker",
+  "myLinks": "Mine linker",
+  "linksDescription": "Martin Berg Alstads linker"
 }

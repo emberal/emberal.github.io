@@ -1,6 +1,6 @@
 import * as React from "react";
 import Layout from "../components/Layout";
-import {Send, Linkedin} from "react-feather";
+import {Send, Linkedin, GitHub} from "react-feather";
 import {useForm} from "@formspree/react";
 import {graphql} from "gatsby";
 import {buttonStyle} from "../stylesheets/media.module.css";
@@ -18,6 +18,11 @@ const inputStyle = {
 const socialsStyle = {
     display: "flex",
     justifyContent: "center",
+}
+const iconStyles = {
+    color: "inherit",
+    marginLeft: "5px",
+    marginRight: "5px",
 }
 /**
  * Contact-me element containing socials and a form linked to Formspree
@@ -41,8 +46,8 @@ const ContactMe = () => {
         document.addEventListener("keyup", (e) => submitKeys(e));
         return () => {
             document.removeEventListener("keyup", (e) => submitKeys(e));
-        }
-    })
+        };
+    });
 
     const {t} = useTranslation();
 
@@ -52,9 +57,13 @@ const ContactMe = () => {
             children={
                 <>
                     <div style={socialsStyle}>
-                        <a style={{color: "inherit"}} title={"LinkedIn"}
+                        <a style={iconStyles} title={"LinkedIn"}
                            href={"https://www.linkedin.com/in/martin-b-2a69391a3"} target={"_blank"} rel={"noreferrer"}>
                             <Linkedin/>
+                        </a>
+                        <a style={iconStyles} title={"GitHub"}
+                            href={"https://github.com/h600878"} target={"_blank"} rel={"noreferrer"}>
+                            <GitHub/>
                         </a>
                     </div>
                     <form style={{marginRight: "10px"}} acceptCharset={"UTF-8"}
