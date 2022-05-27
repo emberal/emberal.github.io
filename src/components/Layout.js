@@ -1,50 +1,11 @@
 import * as React from "react";
-import {graphql, Link, useStaticQuery} from "gatsby";
-import {Helmet} from "react-helmet";
-import {Sun, Moon, ArrowUp} from "react-feather";
-import classNames from "classnames";
+import { graphql, Link, useStaticQuery } from "gatsby";
+import { Helmet } from "react-helmet";
+import { Sun, Moon, ArrowUp } from "react-feather";
+import { Menu } from "@headlessui/react";
 import {useTranslation} from "gatsby-plugin-react-i18next";
 import Footer from "./footer";
-import {navLinksStyle, navLinkPadding, linkStyle} from "../stylesheets/text.module.css";
-import {githubIcon, buttonStyle, backUpButton} from "../stylesheets/media.module.css";
 import "../stylesheets/root.css";
-
-const colorModes = [
-    { //Dark mode
-        background: "#181a1b",
-        text: "white",
-        importantText: "#c17aff",
-    },
-    { //Light mode
-        background: "white",
-        text: "black",
-        importantText: "#9e24ff",
-    }
-]
-
-const layoutStyle = {
-    backgroundColor: colorModes[0].background,
-    color: colorModes[0].text,
-    fontFamily: "sans-serif",
-    overflow: "auto",
-}
-const titleStyle = {
-    paddingTop: "50px",
-    paddingBottom: "25px",
-    marginLeft: "10px",
-    fontWeight: "700",
-    color: colorModes[0].importantText,
-}
-const container = {
-    maxWidth: "600px",
-    margin: "auto",
-}
-const pageStyle = {
-    position: "relative",
-    minHeight: "100vh",
-    marginLeft: "10px",
-    marginRight: "10px",
-}
 
 /**
  * The default layout used on all pages of the website
@@ -68,36 +29,41 @@ const Layout = ({title, headline, description, children}) => {
         }
     `);
 
-    let wasDark;
-    if (typeof window !== "undefined") {
-        if (localStorage.darkMode) { //If storage is defined and localStorage is not empty
-            wasDark = Number(localStorage.darkMode); //Gets theme from local storage
-        }
-        else { // If storage is empty get dark-theme preference from browser
-            wasDark = Number(window.matchMedia("(prefers-color-scheme: light)").matches); //Gets theme from browser
-        }
-    }
+    const [theme, setTheme] = React.useState('auto');
 
     React.useEffect(() => {
-        toggleDarkMode(); //TODO Improve
-    }, []); //Must be empty, so the function is called only once after the first render
-
-    const [isDark, setIsDark] = React.useState(wasDark); //Dark mode=0, light mode=1
-
-    function toggleDarkMode() {
-        const root = document.getElementById("root");
-        root.style.backgroundColor = colorModes[isDark].background;
-        root.style.color = colorModes[isDark].text;
-
-        document.getElementById("title").style.color = colorModes[isDark].importantText; //Titles
-
-        setStyles(linkStyle, colorModes[isDark].importantText); //Links
-        setStyles(githubIcon, colorModes[isDark].text); //GitHub icons
-        function setStyles(className, attribute) {
-            Array.from(document.getElementsByClassName(className)).forEach( element => element.style.color = attribute);
+        if (!('theme' in localStorage) || localStorage.theme === 'auto') {
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) { //TODO auto change theme on browswe change
+                document.documentElement.classList.add('dark');
+            }
+            else {
+                document.documentElement.classList.remove('dark');
+            }
+            localStorage.theme = 'auto'; // Incase theme does not exist yet
         }
-        setIsDark((isDark + 1) % 2);
-        localStorage.darkMode = isDark; //Saves the preference in local storage
+        else if (localStorage.theme === 'dark') {
+            document.documentElement.classList.add('dark');
+        }
+        else if (localStorage.theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        }
+    }, [theme]);
+
+    function toggleDarkMode(theme) {
+        switch (theme) {
+            case 'dark': {
+                localStorage.theme = 'dark';
+                setTheme('dark');
+            } break;
+            case 'light': {
+                localStorage.theme = 'light';
+                setTheme('light');
+            } break;
+            default: {
+                localStorage.theme = 'auto';
+                setTheme('auto');
+            }
+        }
     }
 
     function backUp() {
@@ -128,41 +94,99 @@ const Layout = ({title, headline, description, children}) => {
 
     const {t} = useTranslation();
 
+    const navLinks = [
+        {
+            id: 0,
+            to: "/",
+            name: t('home'),
+        },
+        {
+            id: 1,
+            to: "/projects",
+            name: t('projects'),
+        },
+        {
+            id: 2,
+            to: "/contact-me",
+            name: t('contactMe'),
+        },
+    ];
+    const themeMenu = [
+        {
+            id: "auto",
+            text: t('followBrowser'),
+        },
+        {
+            id: "dark",
+            text: t('dark'),
+        },
+        {
+            id: "light",
+            text: t('light'),
+        },
+    ];
+
     return (
-        <div id={"root"} style={layoutStyle}>
+        <div id={"root"} className={"dark:bg-gray-900 dark:text-white"}>
             <Helmet>
                 <html lang={query.site.siteMetadata.lang}/>
                 <meta name={"description"} content={description}/>
                 <title>{title} | {query.site.siteMetadata.title}</title>
             </Helmet>
-            <div style={container}>
-                <h1 id={"title"} style={titleStyle}>{(headline !== undefined) ? headline : title}</h1>
+            <div className={"max-w-2xl mx-auto"}> {/*Container*/}
+                <h1 id={"title"} className={"text-primaryPink ml-3 font-bold mb-6 pt-6"}>
+                    {(headline !== undefined) ? headline : title}
+                </h1>
                 <nav>
-                    <ul id={"links"} className={navLinksStyle}>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/"}>{t('home')}</Link></li>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/projects"}>{t('projects')}</Link></li>
-                        <li className={navLinkPadding}><Link className={linkStyle} to={"/contact-me"}>{t('contactMe')}</Link></li>
-                        <li className={navLinkPadding}>
-                            <button title={t('toggleDarkMode')} onClick={toggleDarkMode} className={buttonStyle}>
-                                {(isDark) ? <Sun style={{color: "white"}}/> : <Moon/>}
-                                <p style={{display: "none"}}>{t('toggleDarkMode')}</p>
-                            </button>
+                    <ul id={"links"} className={"list-none flex ml-3 mb-2"}>
+                        {
+                            navLinks.map(link => (
+                                <div key={link.id}>
+                                    <li className={"mr-6 w-fit"}>
+                                        <Link className={"text-primaryPink hover:underline"} to={link.to}>
+                                            {link.name}
+                                        </Link>
+                                    </li>
+                                </div>
+                            ))
+                        }
+                        <li className={"mr-6 w-fit"}>
+                            <Menu>
+                                <Menu.Button className={"text-primaryPink"}>{t('theme')}</Menu.Button>
+                                <Menu.Items className={"border rounded-b-2xl pb-2 pl-2 pr-2"}>
+                                    {
+                                        themeMenu.map(item => (
+                                            <div key={item.id}>
+                                                <Menu.Item>
+                                                    {({active}) => (
+                                                        <button onClick={() => toggleDarkMode(item.id)}>
+                                                            <span className={`${active && "bg-black"}`}>
+                                                                {item.text}
+                                                            </span>
+                                                        </button>
+                                                    )}
+                                                </Menu.Item>
+                                            </div>
+                                        ))
+                                    }
+                                </Menu.Items>
+                            </Menu>
                         </li>
                     </ul>
                 </nav>
-                <main style={pageStyle}>
+                <main className={"relative min-h-screen"}>
                     {children}
                     <Footer/>
                 </main>
             </div>
             {(isTop) ? null : (
-                <button className={classNames(buttonStyle, backUpButton)} title={t('goBackToTheTop')} onClick={backUp}>
+                <button className={"fixed right-10 bottom-20"} title={t('goBackToTheTop')} onClick={backUp}>
                     <ArrowUp/>
-                    <p style={{display: "none"}}>{t('goBackToTheTop')}</p>
+                    <p style={{ display: "none" }}>{t('goBackToTheTop')}</p>
                 </button>
             )}
         </div>
-    )
+    );
 }
 
 export default Layout;
