@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useTranslation} from "gatsby-plugin-react-i18next";
 import {GitHub, Hash, MessageSquare, Linkedin} from "react-feather";
-import Layout from "../components/Layout";
+import Layout from "../components/layout";
 import {myLinkStyle} from "../stylesheets/media.module.css";
 import {graphql} from "gatsby";
 
@@ -44,7 +44,7 @@ const linkContent = [
  * @returns {JSX.Element}
  * @constructor
  */
-const Links = () => {
+const Links = () => { //TODO Tailwind
 
     const {t} = useTranslation();
 

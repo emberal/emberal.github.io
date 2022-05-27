@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout from "../../components/Layout";
+import Layout from "../../components/layout";
 import {graphql} from "gatsby";
 import {MDXRenderer} from "gatsby-plugin-mdx";
 import {GatsbyImage, getImage} from "gatsby-plugin-image";
@@ -11,7 +11,7 @@ import {linkStyle} from "../../stylesheets/text.module.css";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({data}) => {
+const ProjectPost = ({data}) => { //TODO Tailwind
     return (
         <Layout
             title={data.mdx.frontmatter.title}

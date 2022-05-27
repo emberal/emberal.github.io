@@ -1,29 +1,27 @@
 import * as React from "react";
-import Layout from "../components/Layout";
-import {Send, Linkedin, GitHub} from "react-feather";
-import {useForm} from "@formspree/react";
-import {graphql} from "gatsby";
-import {buttonStyle} from "../stylesheets/media.module.css";
-import {formNameSubject} from "../stylesheets/text.module.css";
-import {useTranslation} from "gatsby-plugin-react-i18next";
+import Layout from "../components/layout";
+import { Send, Linkedin, GitHub } from "react-feather";
+import { useForm } from "@formspree/react";
+import { graphql } from "gatsby";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
-const inputStyle = {
-    width: "100%",
-    maxWidth: "100%",
-    minHeight: "30px",
-    maxHeight: "50vh",
-    borderRadius: "5px",
-    resize: "vertical",
-}
-const socialsStyle = {
-    display: "flex",
-    justifyContent: "center",
-}
-const iconStyles = {
-    color: "inherit",
-    marginLeft: "5px",
-    marginRight: "5px",
-}
+const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y border rounded-lg mb-2 dark:bg-gray-800 pl-2";
+
+const links = [
+    {
+        id: 0,
+        to: "https://www.linkedin.com/in/martin-b-2a69391a3",
+        name: "LinkedIn",
+        icon: <Linkedin/>
+    },
+    {
+        id: 1,
+        to: "https://github.com/h600878",
+        name: "GitHub",
+        icon: <GitHub/>
+    }
+]
+
 /**
  * Contact-me element containing socials and a form linked to Formspree
  * @returns {JSX.Element}
@@ -56,46 +54,46 @@ const ContactMe = () => {
             title={t("contactMe")}
             children={
                 <>
-                    <div style={socialsStyle}>
-                        <a style={iconStyles} title={"LinkedIn"}
-                           href={"https://www.linkedin.com/in/martin-b-2a69391a3"} target={"_blank"} rel={"noreferrer"}>
-                            <Linkedin/>
-                        </a>
-                        <a style={iconStyles} title={"GitHub"}
-                            href={"https://github.com/h600878"} target={"_blank"} rel={"noreferrer"}>
-                            <GitHub/>
-                        </a>
+                    <div className={"flex justify-center"}>
+                        {
+                            links.map(link => (
+                                <div className={"px-2"} key={link.id}>
+                                    <a title={link.name} href={link.to} target={"_blank"} rel={"noreferrer"}>
+                                        {link.icon}
+                                    </a>
+                                </div>
+                            ))
+                        }
                     </div>
-                    <form style={{marginRight: "10px"}} acceptCharset={"UTF-8"}
-                          onSubmit={handelSubmit}>
-                        <div className={formNameSubject}>
+                    <form acceptCharset={"UTF-8"} onSubmit={handelSubmit}>
+                        <div className={"flex justify-between flex-col sm:flex-row"}>
                             <label>
                                 <p>{t("yourName")}</p>
-                                <input style={inputStyle} name={"name"} type={"text"} placeholder={"Ola Nordmann"}
+                                <input className={inputStyle} name={"name"} type={"text"} placeholder={"Ola Nordmann"}
                                        required/>
                             </label>
                             <label>
                                 <p>{t("subject")}</p>
-                                <input style={inputStyle} name={"Subject"} type={"text"} placeholder={"Heisann!"}
+                                <input className={inputStyle} name={"Subject"} type={"text"} placeholder={"Heisann!"}
                                        required/>
                             </label>
                         </div>
                         <label>
                             <p>{t("yourEmail")}</p>
-                            <input style={inputStyle} name={"email"} type={"email"} placeholder={"ola@nordmann.no"}
+                            <input className={inputStyle} name={"email"} type={"email"} placeholder={"ola@nordmann.no"}
                                    required/>
                         </label>
                         <label>
                             <p>{t("message")}</p>
-                            <textarea id={"contact-me-text-area"} style={inputStyle} name={"message"}
+                            <textarea id={"contact-me-text-area"} className={inputStyle} name={"message"}
                                       placeholder={t("message")} required/>
                         </label>
-                        <input name="_gotcha" type="text" style={{display: "none"}}/> {/*Honeypot spam filter*/}
+                        <input name="_gotcha" type="text" className={"hidden"}/> {/*Honeypot spam filter*/}
                         <p></p>
-                        <button id={"submit-button"} style={{float: "right", color: "inherit"}} className={buttonStyle}
+                        <button id={"submit-button"} className={"float-right"}
                                 title={"Send"}
                                 type={"submit"} disabled={state.submitting}>
-                            <Send/><p style={{display: "none"}}>Send</p>
+                            <Send/><p className={"hidden"}>Send</p>
                         </button>
                         {(state.succeeded) ? <p>{t("messageSent")}</p> : null}
                     </form>
@@ -119,4 +117,4 @@ export const query = graphql`
     }
 `;
 
-export default ContactMe
+export default ContactMe;

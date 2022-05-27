@@ -1,18 +1,8 @@
 import * as React from "react"
-import Layout from "../components/Layout";
-import {StaticImage} from "gatsby-plugin-image";
-import {graphql} from "gatsby";
-import {useTranslation} from "gatsby-plugin-react-i18next";
-
-const pictureStyle = {
-    maxWidth: "300px",
-    border: "solid grey",
-    borderRadius: "20px",
-}
-const picturePlacement = {
-    width: "100%",
-    display: "flex",
-    justifyContent: "center"}
+import Layout from "../components/layout";
+import { StaticImage } from "gatsby-plugin-image";
+import { graphql } from "gatsby";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 /**
  * The front page containing information about yours truly
@@ -29,14 +19,15 @@ const IndexPage = () => {
             headline={t("welcome")}
             children={
                 <div>
-                    <div style={picturePlacement}>
-                        <StaticImage style={pictureStyle} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
+                    <div className={"w-full flex justify-center my-5"}>
+                        <StaticImage className={"max-w-sm border rounded-3xl"} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
                     </div>
                     <p>
                         {t("aboutMeDesc")}
                     </p>
                 </div>
-            }/>
+            }
+        />
     )
 }
 
@@ -54,4 +45,4 @@ export const query = graphql`
     }
 `;
 
-export default IndexPage
+export default IndexPage;
