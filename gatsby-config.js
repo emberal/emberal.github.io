@@ -98,6 +98,7 @@ module.exports = {
               },
               pages: []
           }
-      }
+      },
+      'gatsby-plugin-postcss',
   ]
 };

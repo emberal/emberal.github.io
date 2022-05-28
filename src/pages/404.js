@@ -1,9 +1,8 @@
 import * as React from "react";
-import {graphql, Link} from "gatsby";
-import {Helmet} from "react-helmet";
-import Layout from "../components/Layout";
-import {linkStyle} from "../stylesheets/text.module.css";
-import {useTranslation} from "gatsby-plugin-react-i18next";
+import Layout from "../components/layout";
+import { graphql, Link } from "gatsby";
+import { Helmet } from "react-helmet";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 /**
  * The page that is shown when a page does not exist
@@ -23,7 +22,7 @@ const NotFoundPage = () => {
                 <p> {t("sorry") + " "} <span role="img" aria-label="Pensive emoji">😔</span>
                     {" " + t("pageWasNotFound")}
                     <br/><br/>
-                    <Link className={linkStyle} to="/">{t("home")}</Link>.
+                    <Link className={"dark:text-primaryPink text-primaryPurple hover:underline"} to="/">{t("home")}</Link>.
                 </p>
             </>
         }/>

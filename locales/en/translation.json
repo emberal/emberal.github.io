@@ -31,6 +31,11 @@
 
   "links": "Links",
   "myLinks": "My links",
-  "linksDescription": "Martin Berg Alstad social links"
+  "linksDescription": "Martin Berg Alstad social links",
+
+  "theme": "Theme",
+  "followBrowser": "Follow browser",
+  "dark": "Dark",
+  "light": "Light"
 
 }
