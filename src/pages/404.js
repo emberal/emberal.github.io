@@ -1,9 +1,8 @@
 import * as React from "react";
-import {graphql, Link} from "gatsby";
-import {Helmet} from "react-helmet";
 import Layout from "../components/layout";
-import {linkStyle} from "../stylesheets/text.module.css";
-import {useTranslation} from "gatsby-plugin-react-i18next";
+import { graphql, Link } from "gatsby";
+import { Helmet } from "react-helmet";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 /**
  * The page that is shown when a page does not exist

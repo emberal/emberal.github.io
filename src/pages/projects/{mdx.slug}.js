@@ -1,9 +1,8 @@
 import * as React from "react";
 import Layout from "../../components/layout";
-import {graphql} from "gatsby";
-import {MDXRenderer} from "gatsby-plugin-mdx";
-import {GatsbyImage, getImage} from "gatsby-plugin-image";
-import {linkStyle} from "../../stylesheets/text.module.css";
+import { graphql } from "gatsby";
+import { MDXRenderer } from "gatsby-plugin-mdx";
+import { GatsbyImage, getImage } from "gatsby-plugin-image";
 
 /**
  * A single post containing all the data from an mdx file
@@ -11,7 +10,7 @@ import {linkStyle} from "../../stylesheets/text.module.css";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({data}) => { //TODO Tailwind
+const ProjectPost = ({data}) => {
     return (
         <Layout
             title={data.mdx.frontmatter.title}
@@ -24,9 +23,11 @@ const ProjectPost = ({data}) => { //TODO Tailwind
                     <p>{data.mdx.frontmatter.description}</p>
                     <p>
                         Kildekoden på{" "}
-                        <a className={linkStyle} href={data.mdx.frontmatter.source} target={"_blank"} rel={"noreferrer"}>GitHub</a>
+                        <a className={"text-primaryPurple dark:text-primaryPink hover:underline"} href={data.mdx.frontmatter.source} target={"_blank"} rel={"noreferrer"}>GitHub</a>
                     </p>
-                    <MDXRenderer children={data.mdx.body}/>
+                    <div className={"mt-2"}>
+                        <MDXRenderer children={data.mdx.body}/>
+                    </div>
                 </article>
             }
         />

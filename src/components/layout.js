@@ -28,43 +28,56 @@ const Layout = ({title, headline, description, children}) => {
         }
     `);
 
-    const [theme, setTheme] = React.useState('auto');
+    const themeEnum = {
+        auto: 'auto',
+        dark: 'dark',
+        light: 'light'
+    }
+
+    const [theme, setTheme] = React.useState(themeEnum.auto);
 
     React.useEffect(() => {
-        if (!('theme' in localStorage) || localStorage.theme === 'auto') {
+        if (!('theme' in localStorage) || localStorage.theme === themeEnum.auto) {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { //TODO auto change theme on browswe change
                 document.documentElement.classList.add('dark');
             }
             else {
                 document.documentElement.classList.remove('dark');
             }
-            localStorage.theme = 'auto'; // Incase theme does not exist yet
+            localStorage.theme = themeEnum.auto; // Incase theme does not exist yet
         }
-        else if (localStorage.theme === 'dark') {
+        else if (localStorage.theme === themeEnum.dark) {
             document.documentElement.classList.add('dark');
         }
-        else if (localStorage.theme === 'light') {
+        else if (localStorage.theme === themeEnum.light) {
             document.documentElement.classList.remove('dark');
         }
     }, [theme]);
 
+    /**
+     * Changes the theme to the specified one
+     * @param theme The desired theme, can be 'auto', 'dark' or 'light'
+     */
     function toggleDarkMode(theme) {
         switch (theme) {
-            case 'dark': {
-                localStorage.theme = 'dark';
-                setTheme('dark');
-            } break;
-            case 'light': {
-                localStorage.theme = 'light';
-                setTheme('light');
-            } break;
+            case 'dark':
+                localStorage.theme = themeEnum.dark;
+                setTheme(themeEnum.dark);
+                break;
+            case 'light':
+                localStorage.theme = themeEnum.light;
+                setTheme(themeEnum.light);
+                break;
             default: {
-                localStorage.theme = 'auto';
-                setTheme('auto');
+                localStorage.theme = themeEnum.auto;
+                setTheme(themeEnum.auto);
             }
         }
     }
 
+    /**
+     * Scrolls the window to the top
+     */
     function backUp() {
         document.body.scrollTop = 0; //Safari
         document.documentElement.scrollTop = 0; //Firefox, chromium, opera and the others
@@ -112,17 +125,17 @@ const Layout = ({title, headline, description, children}) => {
     ];
     const themeMenu = [
         {
-            id: "auto",
+            id: themeEnum.auto,
             text: t('followBrowser'),
             icon: <Globe className={"w-4 h-4"}/>
         },
         {
-            id: "dark",
+            id: themeEnum.dark,
             text: t('dark'),
             icon: <Moon className={"w-4 h-4"}/>
         },
         {
-            id: "light",
+            id: themeEnum.light,
             text: t('light'),
             icon: <Sun className={"w-4 h-4"}/>
         },

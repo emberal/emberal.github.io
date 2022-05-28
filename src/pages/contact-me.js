@@ -20,7 +20,7 @@ const links = [
         name: "GitHub",
         icon: <GitHub/>
     }
-]
+];
 
 /**
  * Contact-me element containing socials and a form linked to Formspree

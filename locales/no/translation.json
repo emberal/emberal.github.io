@@ -31,5 +31,10 @@
 
   "links": "Linker",
   "myLinks": "Mine linker",
-  "linksDescription": "Martin Berg Alstads linker"
+  "linksDescription": "Martin Berg Alstads linker",
+
+  "theme": "Tema",
+  "followBrowser": "Følg nettleser",
+  "dark": "Mørk",
+  "light": "Lys"
 }

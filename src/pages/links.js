@@ -1,16 +1,8 @@
 import * as React from "react";
-import {useTranslation} from "gatsby-plugin-react-i18next";
-import {GitHub, Hash, MessageSquare, Linkedin} from "react-feather";
 import Layout from "../components/layout";
-import {myLinkStyle} from "../stylesheets/media.module.css";
-import {graphql} from "gatsby";
-
-const linksPadding = {
-    marginBottom: "10px"
-}
-const iconPadding = {
-    marginRight: "10px",
-};
+import { graphql } from "gatsby";
+import { useTranslation } from "gatsby-plugin-react-i18next";
+import { GitHub, Hash, MessageSquare, Linkedin } from "react-feather";
 
 const linkContent = [
     {
@@ -37,20 +29,20 @@ const linkContent = [
         text: "LinkedIn",
         url: "https://www.linkedin.com/in/martin-b-2a69391a3/"
     }
-]
+];
 
 /**
  * A page containing cards of several social links
  * @returns {JSX.Element}
  * @constructor
  */
-const Links = () => { //TODO Tailwind
+const Links = () => {
 
     const {t} = useTranslation();
 
     return(
         <Layout title={t("links")} headline={t("myLinks")} children={
-            <div style={linksPadding}>
+            <div className={"pb-20"}>
                 {
                     linkContent.map(link => (
                         <div key={link.key}>
@@ -68,8 +60,8 @@ const Links = () => { //TODO Tailwind
 const MyLink = ({icon, text, url}) => {
     return(
         <a href={url} target={"_blank"} rel={"noreferrer"}>
-            <div className={myLinkStyle}>
-                <div style={iconPadding}>{icon}</div>
+            <div className={"bg-primaryPink border rounded-2xl h-16 flex justify-center items-center my-2"}>
+                <div className={"pr-2"}>{icon}</div>
                 <span>{text}</span>
             </div>
         </a>
