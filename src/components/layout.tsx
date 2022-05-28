@@ -65,7 +65,7 @@ const Layout = ({title, headline, description, children}: Props) => {
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function toggleDarkMode(theme: string) {
+    function toggleDarkMode(theme: string) { //TODO create themeType instead
         switch (theme) {
             case 'dark':
                 localStorage.theme = themeEnum.dark;

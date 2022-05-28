@@ -11,10 +11,10 @@ import {useTranslation} from "gatsby-plugin-react-i18next";
  * @returns {JSX.Element}
  * @constructor
  */
-const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePage>) => {
+const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePageQuery>) => {
 
     const {t} = useTranslation();
-    let image: IGatsbyImageData;
+    let image: IGatsbyImageData | undefined;
 
     return (
         <Layout
@@ -41,7 +41,7 @@ const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePage>) => {
                                 </p>
                                 <p>Type: { node.frontmatter?.type }</p>
                             </div>
-                            {(() => { // Used to create the variable image in order to null check it
+                            {(() => { // Used to initiate the variable image in order to null check it
                                     image = getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData)
                                     return true;
                             })()}
