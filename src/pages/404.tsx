@@ -14,7 +14,7 @@ const NotFoundPage = () => {
     const {t} = useTranslation();
 
     return (
-        <Layout title={t("pageNotFound")} children={
+        <Layout title={t("pageNotFound")} description={"Error 404. Page not found!"}>
             <>
                 <Helmet>
                     <meta name="robots" content="noindex"/>
@@ -25,7 +25,7 @@ const NotFoundPage = () => {
                     <Link className={"dark:text-primaryPink text-primaryPurple hover:underline"} to="/">{t("home")}</Link>.
                 </p>
             </>
-        }/>
+        </Layout>
     );
 }
 
