@@ -2,8 +2,8 @@ import * as React from "react";
 import Layout from "../../components/layout";
 import { graphql, Link, PageProps } from "gatsby";
 import { GitHub } from "react-feather";
-import { GatsbyImage, getImage } from "gatsby-plugin-image";
-import { useTranslation } from "gatsby-plugin-react-i18next";
+import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
+import {useTranslation} from "gatsby-plugin-react-i18next";
 
 /**
  * Contains cards of all projects with some information, and links to the posts
@@ -11,9 +11,10 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
  * @returns {JSX.Element}
  * @constructor
  */
-const Index = ({data: {allMdx}}: PageProps<Queries.AllProjects>) => {
+const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePage>) => {
 
     const {t} = useTranslation();
+    let image: IGatsbyImageData;
 
     return (
         <Layout
@@ -35,14 +36,16 @@ const Index = ({data: {allMdx}}: PageProps<Queries.AllProjects>) => {
                             </div>
                             <div className={ "grid grid-flow-col justify-between mx-2 mb-2" }>
                                 <p>
-                                    { t("timeToRead") }{ node.timeToRead } { (node.timeToRead === 1) ?
+                                    { t("timeToRead") } { node.timeToRead } { (node.timeToRead === 1) ?
                                     t("minute") : t("minutes") }
                                 </p>
                                 <p>Type: { node.frontmatter?.type }</p>
                             </div>
-                            <GatsbyImage
-                                alt={ node.frontmatter?.hero_image_alt }
-                                image={ getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData) }/>
+                            {(() => { // Used to create the variable image in order to null check it
+                                    image = getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData)
+                                    return true;
+                            })()}
+                            {image ? <GatsbyImage alt={ node.frontmatter?.hero_image_alt } image={ image }/> : null}
                             <div className={ "mx-2 my-4" }>
                                 <p>{ node.frontmatter?.description }</p>
                             </div>
@@ -55,7 +58,7 @@ const Index = ({data: {allMdx}}: PageProps<Queries.AllProjects>) => {
 }
 
 export const query = graphql `
-    query AllProjects ($language: String!) {
+    query AboutMePage ($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

@@ -3890,20 +3890,20 @@ type WebPOptions = {
   readonly quality: InputMaybe<Scalars['Int']>;
 };
 
-type ProjectQueryVariables = Exact<{
+type ProjectPostQueryVariables = Exact<{
   id: InputMaybe<Scalars['String']>;
   language: Scalars['String'];
 }>;
 
 
-type ProjectQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null } | null };
+type ProjectPostQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null } | null };
 
-type AllProjectsQueryVariables = Exact<{
+type AboutMePageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type AllProjectsQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly slug: string | null, readonly timeToRead: number | null, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly type: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null }> } };
+type AboutMePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly slug: string | null, readonly timeToRead: number | null, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly type: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null }> } };
 
 type GatsbyImageSharpFixedFragment = { readonly base64: string | null, readonly width: number, readonly height: number, readonly src: string, readonly srcSet: string };
 

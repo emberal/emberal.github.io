@@ -10,16 +10,19 @@ import { GatsbyImage, getImage } from "gatsby-plugin-image";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({data: {mdx}}: PageProps<Queries.Project>) => {
+const ProjectPost = ({data: {mdx}}: PageProps<Queries.ProjectPost>) => {
+
+    const heroImage = getImage(mdx?.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData);
+
     return (
         <Layout
             title={ mdx?.frontmatter?.title }
             headline={ mdx?.frontmatter?.title }
             description={ mdx?.frontmatter?.description }>
             <article>
-                <GatsbyImage
-                    alt={ mdx?.frontmatter?.hero_image_alt }
-                    image={ getImage(mdx?.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData) }/>
+                {
+                    heroImage ? <GatsbyImage alt={ mdx?.frontmatter?.hero_image_alt } image={ heroImage }/> : null
+                }
                 <p>{ mdx?.frontmatter?.description }</p>
                 <p>
                     Kildekoden på{ " " }
@@ -37,7 +40,7 @@ const ProjectPost = ({data: {mdx}}: PageProps<Queries.Project>) => {
 export default ProjectPost;
 
 export const query = graphql `
-    query Project($id: String, $language: String!) {
+    query ProjectPost($id: String, $language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {
