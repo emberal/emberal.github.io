@@ -32,9 +32,8 @@ const ContactMe = () => {
     const [state, handelSubmit] = useForm("mknykgbn");
     if (state.succeeded) {
         Array.from(document.querySelectorAll("input")).forEach( input => input.value = ""); //Clears inputs
-        const element = document.getElementById("contact-me-text-area"); //Clears textArea
+        const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
         if (element !== null) {
-            // @ts-ignore
             element.value = "";
         }
     }

@@ -12,33 +12,39 @@ import {GatsbyImage, getImage, IGatsbyImageData, ImageDataLike} from "gatsby-plu
  */
 const ProjectPost = ({data: {mdx}}: PageProps<Queries.ProjectPostQuery>) => {
 
-    let heroImage: IGatsbyImageData | undefined;
+    let heroImage: IGatsbyImageData | undefined, heroImageAlt: string | null | undefined,
+        description: string | null | undefined, title: string | undefined, source: string | null | undefined,
+        heroImageData: Record<string, unknown> | undefined;
     if (mdx !== null) {
-        heroImage = getImage(mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData as ImageDataLike);
+        heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
+        heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData as ImageDataLike) : undefined;
+        heroImageAlt = mdx.frontmatter?.hero_image_alt;
+        title = mdx.frontmatter?.title;
+        description = mdx.frontmatter?.description;
+        source = mdx.frontmatter?.source;
     }
 
-    return ( //TODO Change as keyword with proper type checking
+    return (
         <>
-            { mdx !== null ?
-                <Layout
-                    title={ mdx.frontmatter?.title as string }
-                    headline={ mdx.frontmatter?.title }
-                    description={ mdx.frontmatter?.description as string }>
-                    <article>
-                        { heroImage ? <GatsbyImage alt={ mdx.frontmatter?.hero_image_alt as string } image={ heroImage }/> : null }
-                        <p>{ mdx?.frontmatter?.description }</p>
-                        <p>
-                            Kildekoden på{ " " }
-                            <a className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
-                               href={ mdx.frontmatter?.source as string | undefined }
-                               target={ "_blank" } rel={ "noreferrer" }>GitHub</a>
-                        </p>
-                        <div className={ "mt-2" }>
-                            <MDXRenderer>{ mdx.body }</MDXRenderer>
-                        </div>
-                    </article>
-                </Layout> : <span>Oops! mdx seems to be 'null'</span>
-            }
+            <Layout
+                title={ typeof title === 'string' ? title : "Blogpost" }
+                headline={ title }
+                description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }>
+                <article>
+                    { heroImage && typeof heroImageAlt === 'string' ?
+                        <GatsbyImage alt={ heroImageAlt } image={ heroImage }/> : null }
+                    <p>{ description }</p>
+                    <p>
+                        Kildekoden på{ " " }
+                        <a className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
+                           href={ typeof source === 'string' || typeof source === 'undefined' ? source : undefined }
+                           target={ "_blank" } rel={ "noreferrer" }>GitHub</a>
+                    </p>
+                    <div className={ "mt-2" }>
+                        <MDXRenderer>{ mdx !== null ? mdx.body : "Something went wrong! mdx=" + mdx }</MDXRenderer>
+                    </div>
+                </article>
+            </Layout>
         </>
     );
 }

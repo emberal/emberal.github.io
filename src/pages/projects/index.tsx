@@ -3,7 +3,7 @@ import Layout from "../../components/layout";
 import { graphql, Link, PageProps } from "gatsby";
 import { GitHub } from "react-feather";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
-import {useTranslation} from "gatsby-plugin-react-i18next";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 /**
  * Contains cards of all projects with some information, and links to the posts

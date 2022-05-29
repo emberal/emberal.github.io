@@ -3890,6 +3890,14 @@ type WebPOptions = {
   readonly quality: InputMaybe<Scalars['Int']>;
 };
 
+type ProjectPostQueryVariables = Exact<{
+  id: InputMaybe<Scalars['String']>;
+  language: Scalars['String'];
+}>;
+
+
+type ProjectPostQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null } | null };
+
 type AboutMePageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
@@ -3922,14 +3930,6 @@ type GatsbyImageSharpFluid_withWebp_tracedSVGFragment = { readonly tracedSVG: st
 type GatsbyImageSharpFluid_noBase64Fragment = { readonly aspectRatio: number, readonly src: string, readonly srcSet: string, readonly sizes: string };
 
 type GatsbyImageSharpFluid_withWebp_noBase64Fragment = { readonly aspectRatio: number, readonly src: string, readonly srcSet: string, readonly srcWebp: string | null, readonly srcSetWebp: string | null, readonly sizes: string };
-
-type ProjectPostQueryVariables = Exact<{
-  id: InputMaybe<Scalars['String']>;
-  language: Scalars['String'];
-}>;
-
-
-type ProjectPostQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: Record<string, unknown> } | null } | null } | null } | null };
 
 
 }

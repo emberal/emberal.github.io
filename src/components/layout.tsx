@@ -75,10 +75,9 @@ const Layout = ({title, headline, description, children}: Props) => {
                 localStorage.theme = themeEnum.light;
                 setTheme(themeEnum.light);
                 break;
-            default: {
+            default:
                 localStorage.theme = themeEnum.auto;
                 setTheme(themeEnum.auto);
-            }
         }
     }
 
@@ -165,8 +164,8 @@ const Layout = ({title, headline, description, children}: Props) => {
                             navLinks.map(link => (
                                 <div key={link.id}>
                                     <li className={"mr-5 w-fit text-lg"}>
-                                        <Link className={"text-primaryPurple dark:text-primaryPink hover:underline"} to={link.to}>
-                                            {link.name}
+                                        <Link className={"text-primaryPurple dark:text-primaryPink hover:underline"}
+                                              to={link.to}> {link.name}
                                         </Link>
                                     </li>
                                 </div>
