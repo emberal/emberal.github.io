@@ -91,6 +91,7 @@ module.exports = {
                 localeJsonSourceName: `locale`,
                 languages: [`en`, `no`],
                 defaultLanguage: `en`,
+                fallbackLanguage: 'no',
                 siteUrl: `https://h600878.github.io/`,
                 i18nextOptions: {
                     interpolation: {

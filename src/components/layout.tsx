@@ -193,85 +193,88 @@ const Layout = ({title, headline, description, children}: Props) => {
     ];
 
     return (
-        <div id={"root"} className={"dark:bg-gray-900 dark:text-white"}>
+        <div id={ "root" } className={ "dark:bg-gray-900 dark:text-white" }>
             <Helmet>
-                <html lang={query.site.siteMetadata.lang}/>
-                <meta name={"description"} content={description}/>
-                <title>{title} | {query.site.siteMetadata.title}</title>
+                <html lang={ query.site.siteMetadata.lang }/>
+                <meta name={ "description" } content={ description }/>
+                <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div className={"absolute right-5 top-5"}>
+            <div className={ "absolute right-5 top-5" }>
                 <Menu>
                     <Menu.Button>
-                        <span className={"flex items-center"}>
-                            Change language <ChevronDown className={"w-5 h-5"}/>
+                        <span className={ "flex items-center" }>
+                            Change language <ChevronDown className={ "w-5 h-5" }/>
                         </span>
                     </Menu.Button>
-                    <Menu.Items className={"absolute z-50 right-0 bg-white dark:bg-gray-900 border rounded-b-2xl px-2 py-1"}>
-                        {langMenu.map(lang => (
-                            <div key={lang.lang}>
+                    <Menu.Items
+                        className={ "absolute z-50 right-0 bg-white dark:bg-gray-900 border rounded-b-2xl px-2 py-1" }>
+                        { langMenu.map(lang => (
+                            <div key={ lang.lang }>
                                 <Menu.Item>
-                                    {(active) => (
-                                        <div className={"w-max flex items-center"}>
-                                            <span>{lang.icon}</span>
-                                            {lang.lang === 'auto' ?
-                                                <I18Link className={`pl-2 pt-1 ${active && "hover:underline"}`}
-                                                         to={originalPath} onClick={setAuto}
+                                    { (active) => (
+                                        <div className={ "w-max flex items-center" }>
+                                            <span>{ lang.icon }</span>
+                                            { lang.lang === 'auto' ?
+                                                <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                         to={ originalPath } onClick={ setAuto }
                                                          language={
-                                                    navigator.language === "nb" || navigator.language === "nn" ||
-                                                    navigator.language === "no" ? langs.nor : langs.eng}>
-                                                    {lang.text}
+                                                             navigator.language === "nb" || navigator.language === "nn" ||
+                                                             navigator.language === "no" ? langs.nor : langs.eng }>
+                                                    { lang.text }
                                                 </I18Link> :
-                                                <I18Link className={`pl-2 pt-1 ${active && "hover:underline"}`}
-                                                         to={originalPath} language={lang.lang}
-                                                         onClick={() => localStorage.setItem("lang-follow-browser", "false")}>
-                                                    {lang.text}
+                                                <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                         to={ originalPath } language={ lang.lang }
+                                                         onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                                    { lang.text }
                                                 </I18Link>
                                             }
                                         </div>
-                                    )}
+                                    ) }
                                 </Menu.Item>
                             </div>
-                        ))}
+                        )) }
                     </Menu.Items>
                 </Menu>
             </div>
-            <div className={"max-w-2xl mx-auto px-2"}> {/*Container*/}
-                <h1 id={"title"} className={"text-primaryPurple dark:text-primaryPink font-bold text-3xl mb-6 pt-6"}>
-                    {(headline !== undefined) ? headline : title}
+            <div className={ "max-w-2xl mx-auto px-2" }> {/*Container*/ }
+                <h1 id={ "title" }
+                    className={ "text-primaryPurple dark:text-primaryPink font-bold text-3xl mb-6 pt-6" }>
+                    { (headline !== undefined) ? headline : title }
                 </h1>
                 <nav>
-                    <ul id={"links"} className={"list-none flex mb-5"}>
+                    <ul id={ "links" } className={ "list-none flex mb-5" }>
                         {
                             navLinks.map(link => (
-                                <div key={link.id}>
-                                    <li className={"mr-5 w-fit text-lg"}>
-                                        <Link className={"text-primaryPurple dark:text-primaryPink hover:underline"}
-                                              to={link.to}> {link.name}
-                                        </Link>
-                                    </li>
-                                </div>
+                                <li key={ link.id } className={ "mr-5 w-fit text-lg" }>
+                                    <Link className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
+                                          to={ link.to }> { link.name }
+                                    </Link>
+                                </li>
                             ))
                         }
-                        <li className={"mr-6 w-fit relative"}>
+                        <li className={ "mr-6 w-fit relative" }>
                             <Menu>
-                                <Menu.Button className={"text-primaryPurple dark:text-primaryPink flex items-center text-lg"}>
+                                <Menu.Button
+                                    className={ "text-primaryPurple dark:text-primaryPink flex items-center text-lg" }>
                                     <>
-                                        {t('theme')}<ChevronDown className={"w-5 h-5"}/>
+                                        { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
                                     </>
                                 </Menu.Button>
                                 <Menu.Items className={
-                                    "bg-white dark:bg-gray-900 border rounded-b-2xl pt-1 p-2 absolute z-50 right-0"}>
+                                    "bg-white dark:bg-gray-900 border rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
                                     {
                                         themeMenu.map(item => (
-                                            <div key={item.id}>
+                                            <div key={ item.id }>
                                                 <Menu.Item>
-                                                    {({active}) => (
-                                                        <button onClick={() => toggleDarkMode(item.id)}>
-                                                            <span className={`flex items-center ${active && "underline"}`}>
-                                                                {item.icon}<p className={"pl-2 w-max"}>{item.text}</p>
+                                                    { ({ active }) => (
+                                                        <button onClick={ () => toggleDarkMode(item.id) }>
+                                                            <span
+                                                                className={ `flex items-center ${ active && "underline" }` }>
+                                                                { item.icon }<p
+                                                                className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
                                                         </button>
-                                                    )}
+                                                    ) }
                                                 </Menu.Item>
                                             </div>
                                         ))
@@ -281,17 +284,17 @@ const Layout = ({title, headline, description, children}: Props) => {
                         </li>
                     </ul>
                 </nav>
-                <main className={"relative min-h-screen"}>
-                    {children}
+                <main className={ "relative min-h-screen" }>
+                    { children }
                     <Footer/>
                 </main>
             </div>
-            {(isTop) ? null : (
-                <button className={"fixed right-10 bottom-20"} title={t('goBackToTheTop')} onClick={backUp}>
+            { (isTop) ? null : (
+                <button className={ "fixed right-10 bottom-20" } title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
-                    <p className={"hidden"}>{t('goBackToTheTop')}</p>
+                    <p className={ "hidden" }>{ t('goBackToTheTop') }</p>
                 </button>
-            )}
+            ) }
         </div>
     );
 }
