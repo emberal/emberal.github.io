@@ -105,6 +105,9 @@ const Layout = ({title, headline, description, children}: Props) => {
                 langs.nor : langs.eng;
             localStorage.setItem("gatsby-i18next-language", lang);
         }
+        else if (item === null) {
+            setAuto();
+        }
     }
 
     function setAuto() {
