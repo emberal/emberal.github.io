@@ -6,6 +6,13 @@ import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Footer from "./footer";
 
+interface Props {
+    title: string,
+    headline?: string,
+    description: string,
+    children: React.ReactNode
+}
+
 /**
  * The default layout used on all pages of the website
  * @param title The title in the browsers tab
@@ -15,7 +22,7 @@ import Footer from "./footer";
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = ({title, headline, description, children}) => {
+const Layout = ({title, headline, description, children}: Props) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -58,7 +65,7 @@ const Layout = ({title, headline, description, children}) => {
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function toggleDarkMode(theme) {
+    function toggleDarkMode(theme: string) { //TODO create themeType instead
         switch (theme) {
             case 'dark':
                 localStorage.theme = themeEnum.dark;
@@ -68,10 +75,9 @@ const Layout = ({title, headline, description, children}) => {
                 localStorage.theme = themeEnum.light;
                 setTheme(themeEnum.light);
                 break;
-            default: {
+            default:
                 localStorage.theme = themeEnum.auto;
                 setTheme(themeEnum.auto);
-            }
         }
     }
 
@@ -158,8 +164,8 @@ const Layout = ({title, headline, description, children}) => {
                             navLinks.map(link => (
                                 <div key={link.id}>
                                     <li className={"mr-5 w-fit text-lg"}>
-                                        <Link className={"text-primaryPurple dark:text-primaryPink hover:underline"} to={link.to}>
-                                            {link.name}
+                                        <Link className={"text-primaryPurple dark:text-primaryPink hover:underline"}
+                                              to={link.to}> {link.name}
                                         </Link>
                                     </li>
                                 </div>
@@ -168,7 +174,9 @@ const Layout = ({title, headline, description, children}) => {
                         <li className={"mr-6 w-fit relative"}>
                             <Menu>
                                 <Menu.Button className={"text-primaryPurple dark:text-primaryPink flex items-center text-lg"}>
-                                    {t('theme')}<ChevronDown className={"w-5 h-5"}/>
+                                    <>
+                                        {t('theme')}<ChevronDown className={"w-5 h-5"}/>
+                                    </>
                                 </Menu.Button>
                                 <Menu.Items className={
                                     "bg-white dark:bg-gray-900 border rounded-b-2xl pt-1 p-2 absolute z-50 right-0"}>

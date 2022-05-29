@@ -17,17 +17,16 @@ const IndexPage = () => {
         <Layout
             title={t("home")}
             headline={t("welcome")}
-            children={
-                <div>
-                    <div className={"w-full flex justify-center my-5"}>
-                        <StaticImage className={"max-w-sm border rounded-3xl"} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
-                    </div>
-                    <p>
-                        {t("aboutMeDesc")}
-                    </p>
+            description={t("aboutMeDesc")}>
+            <div>
+                <div className={"w-full flex justify-center my-5"}>
+                    <StaticImage className={"max-w-sm border rounded-3xl"} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
                 </div>
-            }
-        />
+                <p>
+                    {t("aboutMeDesc")}
+                </p>
+            </div>
+        </Layout>
     )
 }
 

@@ -57,7 +57,13 @@ const Links = () => {
     );
 }
 
-const MyLink = ({icon, text, url}) => {
+interface Props {
+    icon: React.ReactNode,
+    text: string,
+    url: string
+}
+
+const MyLink = ({icon, text, url}: Props) => {
     return(
         <a href={url} target={"_blank"} rel={"noreferrer"}>
             <div className={"bg-primaryPink border rounded-2xl h-16 flex justify-center items-center my-2"}>
