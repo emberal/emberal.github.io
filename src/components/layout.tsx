@@ -4,13 +4,23 @@ import { graphql, Link, useStaticQuery } from "gatsby";
 import { Helmet } from "react-helmet";
 import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
-import { Link as I18Link, useI18next, useTranslation } from "gatsby-plugin-react-i18next";
+import { useTranslation } from "gatsby-plugin-react-i18next";
+
+export const Links = {
+    home: "/",
+    projects: "/projects",
+    contactMe: "/contact-me",
+    links: "/links",
+    pageNotFound: "/404",
+
+}
 
 interface Props {
     title: string,
     headline?: string,
     description: string,
-    children: React.ReactNode
+    children: React.ReactNode,
+    current?: string,
 }
 
 /**
@@ -22,7 +32,7 @@ interface Props {
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = ({ title, headline, description, children }: Props) => {
+const Layout = ({ title, headline, description, children, current }: Props) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -115,58 +125,63 @@ const Layout = ({ title, headline, description, children }: Props) => {
     const navLinks = [
         {
             id: 0,
-            to: "/",
+            to: Links.home,
             name: t('home'),
         },
         {
             id: 1,
-            to: "/projects",
+            to: Links.projects,
             name: t('projects'),
         },
         {
             id: 2,
-            to: "/contact-me",
+            to: Links.contactMe,
             name: t('contactMe'),
         },
     ];
+
+    const iconCss = "w-4 h-4";
+
     const themeMenu = [
         {
             id: themeEnum.auto,
             text: t('followBrowser'),
-            icon: <Globe className={ "w-4 h-4" }/>
+            icon: <Globe className={ iconCss }/>
         },
         {
             id: themeEnum.dark,
             text: t('dark'),
-            icon: <Moon className={ "w-4 h-4" }/>
+            icon: <Moon className={ iconCss }/>
         },
         {
             id: themeEnum.light,
             text: t('light'),
-            icon: <Sun className={ "w-4 h-4" }/>
+            icon: <Sun className={ iconCss }/>
         },
     ];
 
 
     return (
-        <div id={ "root" } className={ "dark:bg-gray-900 dark:text-white" }>
+        <div className={ "dark:bg-gray-900 dark:text-white" }>
             <Helmet>
                 <html lang={ query.site.siteMetadata.lang }/>
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div className={ "max-w-2xl mx-auto px-2" }> { /*Container*/ }
-                <h1 id={ "title" }
+            <div className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
+                <h1
                     className={ "text-primaryPurple dark:text-primaryPink font-bold text-3xl mb-6 pt-6" }>
                     { (headline !== undefined) ? headline : title }
                 </h1>
                 <nav>
-                    <ul id={ "links" } className={ "list-none flex mb-5" }>
+                    <ul className={ "list-none flex mb-5" }>
                         {
                             navLinks.map(link => (
                                 <li key={ link.id } className={ "mr-5 w-fit text-lg" }>
-                                    <Link className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
-                                          to={ link.to }> { link.name }
+                                    <Link
+                                        className={ `text-primaryPurple dark:text-primaryPink hover:underline 
+                                        ${ current === link.to ? "after:content-['<']" : "" }` }
+                                        to={ link.to }> { link.name }
                                     </Link>
                                 </li>
                             ))

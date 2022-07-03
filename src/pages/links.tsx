@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout from "../components/layout";
+import Layout, { Links } from "../components/layout";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, Hash, MessageSquare, Linkedin } from "react-feather";
@@ -36,12 +36,16 @@ const linkContent = [
  * @returns {JSX.Element}
  * @constructor
  */
-const Links = () => {
+const LinksPage = () => {
 
     const { t } = useTranslation();
 
     return (
-        <Layout title={ t("links") } headline={ t("myLinks") } children={
+        <Layout
+            title={ t("links") }
+            headline={ t("myLinks") }
+            description={ t("linksDescription") }
+            current={ Links.links }>
             <div className={ "pt-5" }>
                 {
                     linkContent.map(link => (
@@ -51,9 +55,7 @@ const Links = () => {
                     ))
                 }
             </div>
-        }
-                description={ t("linksDescription") }
-        />
+        </Layout>
     );
 }
 
@@ -68,8 +70,7 @@ const MyLink = ({ icon, text, url }: Props) => {
         <a href={ url } target={ "_blank" } rel={ "noreferrer" }>
             <div
                 className={ `hover:underline bg-gradient-to-r from-primaryPurple
-                hover:to-primaryPurple border rounded-2xl h-16 
-                    flex justify-center items-center my-2` }>
+                hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
                 <div className={ "pr-2" }>{ icon }</div>
                 <span>{ text }</span>
             </div>
@@ -91,4 +92,4 @@ export const query = graphql`
     }
 `;
 
-export default Links;
+export default LinksPage;

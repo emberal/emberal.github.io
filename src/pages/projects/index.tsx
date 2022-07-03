@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout from "../../components/layout";
+import Layout, { Links } from "../../components/layout";
 import { graphql, Link, PageProps } from "gatsby";
 import { GitHub } from "react-feather";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
@@ -11,16 +11,17 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
  * @returns {JSX.Element}
  * @constructor
  */
-const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePageQuery>) => {
+const Index = ({ data: { allMdx } }: PageProps<Queries.AboutMePageQuery>) => {
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     let image: IGatsbyImageData | undefined;
 
     return (
         <Layout
             title={ t("projects") }
             headline={ t("myProjects") }
-            description={ t("projectsByMe") }>
+            description={ t("projectsByMe") }
+            current={ Links.projects }>
             <div className={ "pb-20" }>
                 {
                     allMdx.nodes.map((node: any) => (
@@ -41,11 +42,11 @@ const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePageQuery>) => {
                                 </p>
                                 <p>Type: { node.frontmatter?.type }</p>
                             </div>
-                            {(() => { // Used to initiate the variable image in order to null check it
-                                    image = getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData)
-                                    return true;
-                            })()}
-                            {image ? <GatsbyImage alt={ node.frontmatter?.hero_image_alt } image={ image }/> : null}
+                            { (() => { // Used to initiate the variable image in order to null check it
+                                image = getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData)
+                                return true;
+                            })() }
+                            { image ? <GatsbyImage alt={ node.frontmatter?.hero_image_alt } image={ image }/> : null }
                             <div className={ "mx-2 my-4" }>
                                 <p>{ node.frontmatter?.description }</p>
                             </div>
@@ -57,7 +58,7 @@ const Index = ({data: {allMdx}}: PageProps<Queries.AboutMePageQuery>) => {
     );
 }
 
-export const query = graphql `
+export const query = graphql`
     query AboutMePage ($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
@@ -68,7 +69,7 @@ export const query = graphql `
                 }
             }
         }
-        allMdx {
+        allMdx(sort: {fields: frontmatter___uploaded, order: DESC}) {
             nodes {
                 frontmatter {
                     title
@@ -81,6 +82,7 @@ export const query = graphql `
                             gatsbyImageData
                         }
                     }
+                    uploaded
                 }
                 id
                 slug

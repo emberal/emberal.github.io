@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout from "../components/layout";
+import Layout, { Links } from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
 import { useForm } from "@formspree/react";
 import { graphql } from "gatsby";
@@ -31,7 +31,7 @@ const ContactMe = () => {
 
     const [state, handelSubmit] = useForm("mknykgbn");
     if (state.succeeded) {
-        Array.from(document.querySelectorAll("input")).forEach( input => input.value = ""); //Clears inputs
+        Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
         const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
         if (element !== null) {
             element.value = "";
@@ -53,55 +53,59 @@ const ContactMe = () => {
         };
     });
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <Layout
-            title={t("contactMe")}
-            description={t("contactMeDescription")}> {/*TODO add translation*/}
+            title={ t("contactMe") }
+            description={ t("contactMeDescription") /*TODO add translation*/}
+            current={ Links.contactMe }>
             <>
-                <div className={"flex justify-center"}>
+                <div className={ "flex justify-center" }>
                     {
                         links.map(link => (
-                            <div className={"px-2"} key={link.id}>
-                                <a title={link.name} href={link.to} target={"_blank"} rel={"noreferrer"}>
-                                    {link.icon}
+                            <div className={ "px-2" } key={ link.id }>
+                                <a title={ link.name } href={ link.to } target={ "_blank" } rel={ "noreferrer" }>
+                                    { link.icon }
                                 </a>
                             </div>
                         ))
                     }
                 </div>
-                <form acceptCharset={"UTF-8"} onSubmit={handelSubmit}>
-                    <div className={"flex justify-between flex-col sm:flex-row"}>
+                <form acceptCharset={ "UTF-8" } onSubmit={ handelSubmit }>
+                    <div className={ "flex justify-between flex-col sm:flex-row" }>
                         <label>
-                            <p>{t("yourName")}</p>
-                            <input className={inputStyle} name={"name"} type={"text"} placeholder={"Ola Nordmann"}
+                            <p>{ t("yourName") }</p>
+                            <input className={ inputStyle } name={ "name" } type={ "text" }
+                                   placeholder={ "Ola Nordmann" }
                                    required/>
                         </label>
                         <label>
-                            <p>{t("subject")}</p>
-                            <input className={inputStyle} name={"Subject"} type={"text"} placeholder={"Heisann!"}
+                            <p>{ t("subject") }</p>
+                            <input className={ inputStyle } name={ "Subject" } type={ "text" }
+                                   placeholder={ "Heisann!" }
                                    required/>
                         </label>
                     </div>
                     <label>
-                        <p>{t("yourEmail")}</p>
-                        <input className={inputStyle} name={"email"} type={"email"} placeholder={"ola@nordmann.no"}
+                        <p>{ t("yourEmail") }</p>
+                        <input className={ inputStyle } name={ "email" } type={ "email" }
+                               placeholder={ "ola@nordmann.no" }
                                required/>
                     </label>
                     <label>
-                        <p>{t("message")}</p>
-                        <textarea id={"contact-me-text-area"} className={inputStyle} name={"message"}
-                                  placeholder={t("message")} required/>
+                        <p>{ t("message") }</p>
+                        <textarea id={ "contact-me-text-area" } className={ inputStyle } name={ "message" }
+                                  placeholder={ t("message") } required/>
                     </label>
-                    <input name="_gotcha" type="text" className={"hidden"}/> {/*Honeypot spam filter*/}
+                    <input name="_gotcha" type="text" className={ "hidden" }/> {/*Honeypot spam filter*/ }
                     <p></p>
-                    <button id={"submit-button"} className={"float-right"}
-                            title={"Send"}
-                            type={"submit"} disabled={state.submitting}>
-                        <Send/><p className={"hidden"}>Send</p>
+                    <button id={ "submit-button" } className={ "float-right" }
+                            title={ "Send" }
+                            type={ "submit" } disabled={ state.submitting }>
+                        <Send/><p className={ "hidden" }>Send</p>
                     </button>
-                    {(state.succeeded) ? <p>{t("messageSent")}</p> : null}
+                    { (state.succeeded) ? <p>{ t("messageSent") }</p> : null }
                 </form>
             </>
         </Layout>

@@ -752,6 +752,7 @@ type FileFieldsEnum =
   | 'childMdx.frontmatter.source'
   | 'childMdx.frontmatter.title'
   | 'childMdx.frontmatter.type'
+  | 'childMdx.frontmatter.uploaded'
   | 'childMdx.gatsbyPath'
   | 'childMdx.headings'
   | 'childMdx.headings.depth'
@@ -966,6 +967,7 @@ type FileFieldsEnum =
   | 'childrenMdx.frontmatter.source'
   | 'childrenMdx.frontmatter.title'
   | 'childrenMdx.frontmatter.type'
+  | 'childrenMdx.frontmatter.uploaded'
   | 'childrenMdx.gatsbyPath'
   | 'childrenMdx.headings'
   | 'childrenMdx.headings.depth'
@@ -2191,6 +2193,7 @@ type MdxFieldsEnum =
   | 'frontmatter.source'
   | 'frontmatter.title'
   | 'frontmatter.type'
+  | 'frontmatter.uploaded'
   | 'gatsbyPath'
   | 'headings'
   | 'headings.depth'
@@ -2283,6 +2286,15 @@ type MdxFrontmatter = {
   readonly source: Maybe<Scalars['String']>;
   readonly title: Scalars['String'];
   readonly type: Maybe<Scalars['String']>;
+  readonly uploaded: Maybe<Scalars['Date']>;
+};
+
+
+type MdxFrontmatter_uploadedArgs = {
+  difference: InputMaybe<Scalars['String']>;
+  formatString: InputMaybe<Scalars['String']>;
+  fromNow: InputMaybe<Scalars['Boolean']>;
+  locale: InputMaybe<Scalars['String']>;
 };
 
 type MdxFrontmatterFilterInput = {
@@ -2292,6 +2304,7 @@ type MdxFrontmatterFilterInput = {
   readonly source: InputMaybe<StringQueryOperatorInput>;
   readonly title: InputMaybe<StringQueryOperatorInput>;
   readonly type: InputMaybe<StringQueryOperatorInput>;
+  readonly uploaded: InputMaybe<DateQueryOperatorInput>;
 };
 
 type MdxGroupConnection = {
@@ -3903,7 +3916,7 @@ type AboutMePageQueryVariables = Exact<{
 }>;
 
 
-type AboutMePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly slug: string | null, readonly timeToRead: number | null, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly type: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null }> } };
+type AboutMePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly slug: string | null, readonly timeToRead: number | null, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly type: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly uploaded: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null }> } };
 
 type GatsbyImageSharpFixedFragment = { readonly base64: string | null, readonly width: number, readonly height: number, readonly src: string, readonly srcSet: string };
 
@@ -3937,7 +3950,7 @@ type ProjectPostQueryVariables = Exact<{
 }>;
 
 
-type ProjectPostQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null } | null };
+type ProjectPostQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly mdx: { readonly timeToRead: number | null, readonly body: string, readonly frontmatter: { readonly title: string, readonly description: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly uploaded: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null } | null };
 
 
 }

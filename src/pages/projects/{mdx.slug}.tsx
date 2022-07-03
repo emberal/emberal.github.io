@@ -1,8 +1,8 @@
 import * as React from "react";
-import Layout from "../../components/layout";
+import Layout, { Links } from "../../components/layout";
 import { graphql, PageProps } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
-import {GatsbyImage, getImage, IGatsbyImageData, ImageDataLike} from "gatsby-plugin-image";
+import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
 
 /**
  * A single post containing all the data from an mdx file
@@ -10,11 +10,12 @@ import {GatsbyImage, getImage, IGatsbyImageData, ImageDataLike} from "gatsby-plu
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({data: {mdx}}: PageProps<Queries.ProjectPostQuery>) => {
+const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => {
 
     let heroImage: IGatsbyImageData | undefined, heroImageAlt: string | null | undefined,
         description: string | null | undefined, title: string | undefined, source: string | null | undefined,
-        heroImageData: Record<string, unknown> | undefined;
+        heroImageData: ImageDataLike | undefined;
+
     if (mdx !== null) {
         heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
         heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData as ImageDataLike) : undefined;
@@ -29,8 +30,9 @@ const ProjectPost = ({data: {mdx}}: PageProps<Queries.ProjectPostQuery>) => {
             <Layout
                 title={ typeof title === 'string' ? title : "Blogpost" }
                 headline={ title }
-                description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }>
-                <article>
+                description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }
+                current={ Links.projects }>
+                <article className={"pb-28"}>
                     { heroImage && typeof heroImageAlt === 'string' ?
                         <GatsbyImage alt={ heroImageAlt } image={ heroImage }/> : null }
                     <p>{ description }</p>
@@ -49,9 +51,7 @@ const ProjectPost = ({data: {mdx}}: PageProps<Queries.ProjectPostQuery>) => {
     );
 }
 
-export default ProjectPost;
-
-export const query = graphql `
+export const query = graphql`
     query ProjectPost($id: String, $language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
@@ -73,9 +73,13 @@ export const query = graphql `
                 description
                 source
                 hero_image_alt
+                uploaded
             }
             timeToRead
             body
+           
         }
     }
 `;
+
+export default ProjectPost;

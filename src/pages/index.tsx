@@ -1,5 +1,5 @@
 import * as React from "react"
-import Layout from "../components/layout";
+import Layout, { Links } from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -11,19 +11,21 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
  */
 const IndexPage = () => {
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     return (
         <Layout
-            title={t("home")}
-            headline={t("welcome")}
-            description={t("aboutMeDesc")}>
+            title={ t("home") }
+            headline={ t("welcome") }
+            description={ t("aboutMeDesc") }
+            current={ Links.home }>
             <div>
-                <div className={"w-full flex justify-center my-5"}>
-                    <StaticImage className={"max-w-sm border rounded-3xl"} src={"../images/me.jpg"} alt={t("aboutMePicAlt")}/>
+                <div className={ "w-full flex justify-center my-5" }>
+                    <StaticImage className={ "max-w-sm border rounded-3xl" } src={ "../images/me.jpg" }
+                                 alt={ t("aboutMePicAlt") }/>
                 </div>
                 <p>
-                    {t("aboutMeDesc")}
+                    { t("aboutMeDesc") }
                 </p>
             </div>
         </Layout>
