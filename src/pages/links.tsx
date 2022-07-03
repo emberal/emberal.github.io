@@ -28,7 +28,7 @@ const linkContent = [
         icon: <Linkedin/>,
         text: "LinkedIn",
         url: "https://www.linkedin.com/in/martin-b-2a69391a3/"
-    }
+    },
 ];
 
 /**
@@ -38,37 +38,40 @@ const linkContent = [
  */
 const Links = () => {
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
-    return(
-        <Layout title={t("links")} headline={t("myLinks")} children={
-            <div className={"pb-20"}>
+    return (
+        <Layout title={ t("links") } headline={ t("myLinks") } children={
+            <div className={ "pt-5" }>
                 {
                     linkContent.map(link => (
-                        <div key={link.key}>
-                            <MyLink icon={link.icon} text={link.text} url={link.url}/>
+                        <div key={ link.key }>
+                            <MyLink icon={ link.icon } text={ link.text } url={ link.url }/>
                         </div>
                     ))
                 }
             </div>
         }
-                description={t("linksDescription")}
+                description={ t("linksDescription") }
         />
     );
 }
 
 interface Props {
-    icon: React.ReactNode,
-    text: string,
-    url: string
+    icon?: React.ReactNode | null,
+    text?: string,
+    url?: string
 }
 
-const MyLink = ({icon, text, url}: Props) => {
-    return(
-        <a href={url} target={"_blank"} rel={"noreferrer"}>
-            <div className={"bg-primaryPink border rounded-2xl h-16 flex justify-center items-center my-2"}>
-                <div className={"pr-2"}>{icon}</div>
-                <span>{text}</span>
+const MyLink = ({ icon, text, url }: Props) => {
+    return (
+        <a href={ url } target={ "_blank" } rel={ "noreferrer" }>
+            <div
+                className={ `hover:underline bg-gradient-to-r from-primaryPurple
+                hover:to-primaryPurple border rounded-2xl h-16 
+                    flex justify-center items-center my-2` }>
+                <div className={ "pr-2" }>{ icon }</div>
+                <span>{ text }</span>
             </div>
         </a>
     );
