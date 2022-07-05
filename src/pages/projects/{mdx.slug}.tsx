@@ -3,6 +3,8 @@ import Layout, { Links } from "../../components/layout";
 import { graphql, PageProps } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
+import { splitCSV } from "./index";
+import Tag from "../../components/tag";
 
 /**
  * A single post containing all the data from an mdx file
@@ -14,7 +16,7 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
 
     let heroImage: IGatsbyImageData | undefined, heroImageAlt: string | null | undefined,
         description: string | null | undefined, title: string | undefined, source: string | null | undefined,
-        heroImageData: ImageDataLike | undefined;
+        heroImageData: ImageDataLike | undefined, tags: string | null | undefined;
 
     if (mdx !== null) {
         heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
@@ -23,6 +25,7 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
         title = mdx.frontmatter?.title;
         description = mdx.frontmatter?.description;
         source = mdx.frontmatter?.source;
+        tags = mdx.frontmatter?.tags;
     }
 
     return (
@@ -32,9 +35,18 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
                 headline={ title }
                 description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }
                 current={ Links.projects }>
-                <article className={"pb-28"}>
+                <article>
                     { heroImage && typeof heroImageAlt === 'string' ?
                         <GatsbyImage alt={ heroImageAlt } image={ heroImage }/> : null }
+                    <div className={ "flex flex-row flex-wrap gap-1 my-2" }>
+                        {
+                            splitCSV(tags ?? "").map((tag: string) =>
+                                <div key={ tag }>
+                                    <Tag name={ tag }/>
+                                </div>)
+                        }
+                    </div>
+
                     <p>{ description }</p>
                     <p>
                         Kildekoden på{ " " }
@@ -74,10 +86,11 @@ export const query = graphql`
                 source
                 hero_image_alt
                 uploaded
+                tags
             }
             timeToRead
             body
-           
+
         }
     }
 `;

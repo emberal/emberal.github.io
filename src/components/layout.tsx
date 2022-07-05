@@ -21,6 +21,7 @@ interface Props {
     description: string,
     children: React.ReactNode,
     current?: string,
+    className?: string,
 }
 
 /**
@@ -29,10 +30,12 @@ interface Props {
  * @param headline The title at the top of the screen, if undefined will use title instead
  * @param description Description used for metadata of the page
  * @param children The contents of the page
+ * @param current Defines the current page using the layout
+ * @param className Styling of the root element
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = ({ title, headline, description, children, current }: Props) => {
+const Layout = ({ title, headline, description, children, current, className }: Props) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -162,7 +165,7 @@ const Layout = ({ title, headline, description, children, current }: Props) => {
 
 
     return (
-        <div className={ "dark:bg-gray-900 dark:text-white" }>
+        <div className={ `dark:bg-gray-900 dark:text-white ${ className }` }>
             <Helmet>
                 <html lang={ query.site.siteMetadata.lang }/>
                 <meta name={ "description" } content={ description }/>
@@ -170,14 +173,15 @@ const Layout = ({ title, headline, description, children, current }: Props) => {
             </Helmet>
             <div className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
                 <h1
-                    className={ "text-primaryPurple dark:text-primaryPink font-bold text-3xl mb-6 pt-6" }>
+                    className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
                     { (headline !== undefined) ? headline : title }
                 </h1>
+                {/*TODO Hamburger menu on small screens*/ }
                 <nav>
-                    <ul className={ "list-none flex mb-5" }>
+                    <ul className={ "list-none flex gap-3 mb-5" }>
                         {
                             navLinks.map(link => (
-                                <li key={ link.id } className={ "mr-5 w-fit text-lg" }>
+                                <li key={ link.id } className={ "w-fit text-lg" }>
                                     <Link
                                         className={ `text-primaryPurple dark:text-primaryPink hover:underline 
                                         ${ current === link.to ? "after:content-['<']" : "" }` }
@@ -219,7 +223,7 @@ const Layout = ({ title, headline, description, children, current }: Props) => {
                     </ul>
                 </nav>
                 <main className={ "relative min-h-[90.25vh]" }>
-                    { children }
+                    <div className={ "pb-24" }>{ children }</div>
                     <Footer/>
                 </main>
             </div>

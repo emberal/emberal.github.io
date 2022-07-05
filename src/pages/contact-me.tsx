@@ -5,7 +5,8 @@ import { useForm } from "@formspree/react";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 
-const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y border rounded-lg mb-2 dark:bg-gray-800 pl-2";
+const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y border rounded-lg mb-2 dark:bg-gray-800 pl-2 " +
+    "focus:border-primaryPurple outline-none shadow";
 
 const links = [
     {
@@ -58,7 +59,7 @@ const ContactMe = () => {
     return (
         <Layout
             title={ t("contactMe") }
-            description={ t("contactMeDescription") /*TODO add translation*/}
+            description={ t("contactMeDescription") /*TODO add translation*/ }
             current={ Links.contactMe }>
             <>
                 <div className={ "flex justify-center" }>
@@ -95,7 +96,9 @@ const ContactMe = () => {
                     </label>
                     <label>
                         <p>{ t("message") }</p>
-                        <textarea id={ "contact-me-text-area" } className={ inputStyle } name={ "message" }
+                        <textarea id={ "contact-me-text-area" }
+                                  className={ `min-h-[3rem] ${ inputStyle }` }
+                                  name={ "message" }
                                   placeholder={ t("message") } required/>
                     </label>
                     <input name="_gotcha" type="text" className={ "hidden" }/> {/*Honeypot spam filter*/ }

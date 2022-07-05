@@ -2,32 +2,42 @@ import * as React from "react";
 import Layout, { Links } from "../components/layout";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { GitHub, Hash, MessageSquare, Linkedin } from "react-feather";
+import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 
 const linkContent = [
     {
-        key: "0",
+        key: 0,
         icon: <GitHub/>,
         text: "GitHub",
         url: "https://github.com/h600878"
     },
     {
-        key: "1",
-        icon: <Hash/>,
+        key: 1,
         text: "Mastodon (snabelen.no)",
         url: "https://snabelen.no/@Martials"
     },
     {
-        key: "2",
+        key: 2,
         icon: <MessageSquare/>,
         text: "Matrix",
         url: "https://matrix.to/#/@martials:matrix.org"
     },
     {
-        key: "3",
+        key: 3,
         icon: <Linkedin/>,
         text: "LinkedIn",
         url: "https://www.linkedin.com/in/martin-b-2a69391a3/"
+    },
+    {
+        key: 4,
+        icon: <Instagram/>,
+        text: "Instagram",
+        url: "https://www.instagram.com/martinalstad/",
+    },
+    {
+        key: 5,
+        text: "Pixelfed (Pixelfed.social)",
+        url: "https://pixelfed.social/i/web/profile/261454857934868480",
     },
 ];
 
@@ -62,16 +72,17 @@ const LinksPage = () => {
 interface Props {
     icon?: React.ReactNode | null,
     text?: string,
-    url?: string
+    url?: string,
+    className?: string,
 }
 
-const MyLink = ({ icon, text, url }: Props) => {
+const MyLink = ({ icon, text, url, className }: Props) => {
     return (
-        <a href={ url } target={ "_blank" } rel={ "noreferrer" }>
+        <a href={ url } target={ "_blank" } rel={ "noreferrer" } className={ className }>
             <div
                 className={ `hover:underline bg-gradient-to-r from-primaryPurple
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ icon }</div>
+                <div className={ "pr-2" }>{ icon !== undefined ? icon : <LinkIcon/> }</div>
                 <span>{ text }</span>
             </div>
         </a>

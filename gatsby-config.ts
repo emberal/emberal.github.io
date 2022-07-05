@@ -20,7 +20,7 @@ module.exports = {
                 background_color: `#181a1b`,
                 theme_color: `#9e6ecf`,
                 display: `standalone`,
-                icon: `src/images/icon.png`,
+                icon: `src/images/Martials dog avatar.png`,
                 localize: [
                     {
                         start_url: `/no/`,

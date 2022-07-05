@@ -6,7 +6,11 @@ import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 
 const linksStyle = "text-primaryPurple dark:text-primaryPink hover:underline";
 
-const Footer = () => {
+interface Footer {
+    className?: string,
+}
+
+const Footer = ({ className }: Footer) => {
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();
@@ -61,7 +65,7 @@ const Footer = () => {
 
 
     return (
-        <div className={ "absolute text-center w-full bottom-0 mb-5" }>
+        <div className={ `absolute text-center w-full bottom-0 mb-5 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
                 <Menu>
                     <Menu.Button>
