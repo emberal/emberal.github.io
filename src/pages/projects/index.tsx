@@ -23,6 +23,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     const { t } = useTranslation();
     let image: IGatsbyImageData | undefined;
 
+    // TODO the option to select multiple tags to improve search, use string[] in useState
     // TODO update tags when one is selected, so it will only show the relevant ones
     const tagMap: any[] = [];
     let objectIndex = 0;
@@ -34,7 +35,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
 
                 let found = false;
                 for (const tagInMap of tagMap) {
-                    if (tagInArray === tagInMap.key) {
+                    if (tagInArray.toLowerCase() === tagInMap.key.toLowerCase()) {
                         tagInMap.value += 1;
                         found = true;
                     }
@@ -69,12 +70,12 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
     }
 
-    tagMap[objectIndex] = { key: hideTagsText };
-
     function toggleTags() {
         setHideTags(!hideTags);
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
     }
+
+    const showOnHide = 6; // TODO dynamic max number of tags!
 
     return (
         <Layout
@@ -87,18 +88,20 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                     {
                         tagMap.map((tag: any, index: number) =>
                             <div key={ tag.key }
-                                 className={ `${ hideTags && !(index < 6 || index === tagMap.length - 1) ? "hidden" : "" }` /*TODO dynamic max number of tags!*/ }>
+                                 className={ `${ hideTags && index >= showOnHide ? "hidden" : "" }` }>
                                 {
-                                    !hideTags || hideTags && (index < 6 || index === tagMap.length - 1) ?
+                                    !hideTags || index < showOnHide ?
 
                                         <Tag name={ tag.key }
                                              value={ tag.value }
-                                             onClick={ index < tagMap.length - 1 ? () => updateTagState(tag.key) : toggleTags }
+                                             onClick={ () => updateTagState(tag.key) }
                                              className={ `hover:border-primaryPurple
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/> : null
                                 }
                             </div>)
                     }
+                    <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                         className={ "hover:border-primaryPurple" }/>
                 </div>
                 {
                     allMdx.nodes.map((node: any) => (
