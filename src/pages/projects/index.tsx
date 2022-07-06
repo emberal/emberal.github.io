@@ -23,12 +23,14 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     const { t } = useTranslation();
     let image: IGatsbyImageData | undefined;
 
+    const allProjectTags = allMdx.nodes.map(node => node.frontmatter?.tags);
+    const [tags, setTags] = React.useState(allProjectTags);
+
     // TODO the option to select multiple tags to improve search, use string[] in useState
-    // TODO update tags when one is selected, so it will only show the relevant ones
     const tagMap: any[] = [];
     let objectIndex = 0;
-    for (const node of allMdx.nodes) {
-        const tagArray = splitCSV(node.frontmatter?.tags ?? "");
+    for (const tag of tags) {
+        const tagArray = splitCSV(tag ?? "");
 
         if (tagArray !== undefined) {
             for (const tagInArray of tagArray) {
@@ -64,18 +66,23 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     function updateTagState(key: string) {
         if (selectedTag === key) {
             setSelectedTag("");
+            setTags(allProjectTags);
         }
         else {
             setSelectedTag(key);
+            let tags = allMdx.nodes.map(node => node.frontmatter?.tags?.includes(key) ? node.frontmatter?.tags : null);
+            tags = tags.filter((element) => element !== null);
+            setTags(tags);
         }
     }
 
+    /**
+     * Update the tags and tagsText states, to the opposite one
+     */
     function toggleTags() {
         setHideTags(!hideTags);
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
     }
-
-    const showOnHide = 6; // TODO dynamic max number of tags!
 
     return (
         <Layout
@@ -84,36 +91,33 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
-                <div className={ "flex flex-wrap gap-1 mb-2" }>
+                <div className={ `flex ${ hideTags ? "overflow-scroll pb-3 mr-[6.65rem]" : "flex-wrap mb-2" } gap-1` }>
                     {
-                        tagMap.map((tag: any, index: number) =>
-                            <div key={ tag.key }
-                                 className={ `${ hideTags && index >= showOnHide ? "hidden" : "" }` }>
-                                {
-                                    !hideTags || index < showOnHide ?
-
-                                        <Tag name={ tag.key }
-                                             value={ tag.value }
-                                             onClick={ () => updateTagState(tag.key) }
-                                             className={ `hover:border-primaryPurple
-                                     ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/> : null
-                                }
+                        tagMap.map((tag: any) =>
+                            <div key={ tag.key }>
+                                <Tag name={ tag.key }
+                                     value={ tag.value }
+                                     onClick={ () => updateTagState(tag.key) }
+                                     className={ `hover:border-primaryPurple w-max
+                                     ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
                             </div>)
                     }
+                    {/*TODO scroll on PC by dragging the mouse*/ }
                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
-                         className={ "hover:border-primaryPurple" }/>
+                         hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
+                         className={ `hover:border-primaryPurple min-w-max 
+                         ${ hideTags ? "absolute bg-white dark:bg-gray-900 right-0" : "" }` }/>
                 </div>
                 {
                     allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
                             {
-                                selectedTag === "" || node.frontmatter?.tags.includes(selectedTag) ?
-
+                                selectedTag === "" || node.frontmatter?.tags.toLowerCase().includes(selectedTag.toLowerCase()) ?
                                     <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
                                         <div className={ "mx-2 mb-2" }>
                                             <div className={ "flex items-center my-3" }>
                                                 <Link
-                                                    className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
+                                                    className={ "text-primaryPurple dark:text-primaryPink hover:underline mr-2" }
                                                     to={ node.slug }>
                                                     <h2 className={ "text-xl" }>{ node.frontmatter?.title }</h2>
                                                 </Link>
