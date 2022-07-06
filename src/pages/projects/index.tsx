@@ -106,7 +106,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
                          hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
                          className={ `hover:border-primaryPurple min-w-max 
-                         ${ hideTags ? "absolute bg-white dark:bg-gray-900 right-0" : "" }` }/>
+                         ${ hideTags ? "absolute bg-white dark:bg-gray-900 right-0" : "" } shadow-sm shadow-primaryPurple` }/>
                 </div>
                 {
                     allMdx.nodes.map((node: any) => (
