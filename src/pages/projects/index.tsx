@@ -8,14 +8,15 @@ import Tag from "../../components/tag";
 
 /**
  * Takes a String in a csv format, separated by ";" and returns an array of strings
- * @param csv A String representation of a csv file
+ * @param csv A String representation of a csv file, with ; as separator
+ * @returns {string[]} An array of strings, in the order the strings in the 'csv' string was
  */
 export const splitCSV = (csv: string) => csv.split(";");
 
 /**
  * Contains cards of all projects with some information, and links to the posts
  * @param data A query containing data from the posts
- * @returns {JSX.Element}
+ * @returns {JSX.Element} A page
  * @constructor
  */
 const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => {
@@ -26,7 +27,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     const allProjectTags = allMdx.nodes.map(node => node.frontmatter?.tags);
     const [tags, setTags] = React.useState(allProjectTags);
 
-    // TODO the option to select multiple tags to improve search, use string[] in useState
+    // TODO? the option to select multiple tags to improve search, use string[] in useState
     const tagMap: any[] = [];
     let objectIndex = 0;
     for (const tag of tags) {
@@ -70,10 +71,19 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
         else {
             setSelectedTag(key);
-            let tags = allMdx.nodes.map(node => node.frontmatter?.tags?.includes(key) ? node.frontmatter?.tags : null);
-            tags = tags.filter((element) => element !== null);
+            let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
+            tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
             setTags(tags);
         }
+    }
+
+    /**
+     * Checks if a csv string contains a spesific value
+     * @param csv A csv string, separated by ';'
+     * @param key The key that will be compared to ehe csv string
+     */
+    function contains(csv: string | null | undefined, key: string): boolean {
+        return splitCSV(csv?.toLowerCase() ?? "").some(element => element === key.toLowerCase());
     }
 
     /**
@@ -102,7 +112,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
                             </div>)
                     }
-                    {/*TODO scroll on PC by dragging the mouse*/ }
+                    {/*TODO scroll on PC by dragging the mouse*/ /*TODO hide button if there aren't more tags to show!*/ }
                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
                          hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
                          className={ `hover:border-primaryPurple min-w-max 
@@ -112,7 +122,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                     allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
                             {
-                                selectedTag === "" || node.frontmatter?.tags.toLowerCase().includes(selectedTag.toLowerCase()) ?
+                                selectedTag === "" || contains(node.frontmatter?.tags, selectedTag) ?
+
                                     <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
                                         <div className={ "mx-2 mb-2" }>
                                             <div className={ "flex items-center my-3" }>
@@ -133,7 +144,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                             </div>
                                             <div className={ "flex flex-row flex-wrap gap-1" }>
                                                 {
-                                                    splitCSV(node.frontmatter.tags).map(tag =>
+                                                    splitCSV(node.frontmatter?.tags).map(tag =>
                                                         <div key={ tag }>
                                                             <Tag name={ tag }/>
                                                         </div>)
