@@ -21,7 +21,7 @@ const IndexPage = () => {
             current={ Links.home }>
             <div>
                 <div className={ "w-full flex justify-center my-5" }>
-                    <StaticImage className={ "max-w-sm border rounded-3xl" } src={ "../images/me.jpg" }
+                    <StaticImage className={ "max-w-sm border border-gray-500 rounded-3xl" } src={ "../images/me.jpg" }
                                  alt={ t("aboutMePicAlt") }/>
                 </div>
                 <p>

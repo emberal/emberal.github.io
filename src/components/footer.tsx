@@ -74,8 +74,8 @@ const Footer = ({ className }: Footer) => {
                         </span>
                     </Menu.Button>
                     <Menu.Items
-
-                        className={ `absolute -top-24 z-50 bg-white dark:bg-gray-900 border rounded-t-2xl px-2 py-1`/*TODO change -top-24 to something more dynamic*/ }>
+                        className={ `absolute -top-24 z-50 bg-white dark:bg-gray-900 border border-gray-500
+                         rounded-t-2xl px-2 py-1` }>
                         { langMenu.map(lang => (
                             <div key={ lang.lang }>
                                 <Menu.Item>

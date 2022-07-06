@@ -10,7 +10,8 @@ interface Tag {
 const Tag = ({ name, value, className, onClick }: Tag) => {
     return (
         <button
-            className={ `${ onClick !== undefined ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl border-slate-300` }
+            className={ `${ onClick !== undefined ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
+             border-gray-500` }
             onClick={ onClick }>
             <span className={ "mx-2 w-max" }>{ name + (value !== undefined ? `(${ value })` : "") }</span>
         </button>

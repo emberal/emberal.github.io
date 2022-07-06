@@ -23,26 +23,25 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     const { t } = useTranslation();
     let image: IGatsbyImageData | undefined;
 
-    // TODO have a button to hide / show tags, hidden by default
     // TODO update tags when one is selected, so it will only show the relevant ones
     const tagMap: any[] = [];
     let objectIndex = 0;
-    for (let nodeIndex = 0; nodeIndex < allMdx.nodes.length; nodeIndex++) {
-        const tagArray = splitCSV(allMdx.nodes[nodeIndex].frontmatter?.tags ?? "");
+    for (const node of allMdx.nodes) {
+        const tagArray = splitCSV(node.frontmatter?.tags ?? "");
 
         if (tagArray !== undefined) {
-            for (let i = 0; i < tagArray.length; i++) {
+            for (const tagInArray of tagArray) {
 
                 let found = false;
-                for (let j = 0; j < tagMap.length; j++) {
-                    if (tagArray[i] === tagMap[j].key) {
-                        tagMap[j].value += 1;
+                for (const tagInMap of tagMap) {
+                    if (tagInArray === tagInMap.key) {
+                        tagInMap.value += 1;
                         found = true;
                     }
                 }
                 if (!found) {
                     tagMap[objectIndex] = {
-                        key: tagArray[i],
+                        key: tagInArray,
                         value: 1,
                     };
                     objectIndex++;
@@ -50,11 +49,12 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             }
         }
     }
-    tagMap.sort(function (a: any, b: any) {
-        return b.value - a.value
-    });
-
+    tagMap.sort((a: any, b: any) => b.value - a.value);
     const [selectedTag, setSelectedTag] = React.useState("");
+
+    const [hideTags, setHideTags] = React.useState(true);
+
+    const [hideTagsText, setHideTagsText] = React.useState(t("showMore"));
 
     /**
      * Updates the state of the current selected tag to a new one. If the new one is the same as the old, reset.
@@ -69,6 +69,13 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
     }
 
+    tagMap[objectIndex] = { key: hideTagsText };
+
+    function toggleTags() {
+        setHideTags(!hideTags);
+        setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
+    }
+
     return (
         <Layout
             title={ t("projects") }
@@ -76,15 +83,20 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
-                <div className={ "flex flex-wrap gap-1 mb-5" }>
+                <div className={ "flex flex-wrap gap-1 mb-2" }>
                     {
-                        tagMap.map((tag: any) =>
-                            <div key={ tag.key }>
-                                <Tag name={ tag.key }
-                                     value={ tag.value }
-                                     onClick={ () => updateTagState(tag.key) }
-                                     className={ `hover:border-primaryPurple
-                                     ${ selectedTag === tag.key ? "border-primaryPurple" : "" }` }/>
+                        tagMap.map((tag: any, index: number) =>
+                            <div key={ tag.key }
+                                 className={ `${ hideTags && !(index < 6 || index === tagMap.length - 1) ? "hidden" : "" }` /*TODO dynamic max number of tags!*/ }>
+                                {
+                                    !hideTags || hideTags && (index < 6 || index === tagMap.length - 1) ?
+
+                                        <Tag name={ tag.key }
+                                             value={ tag.value }
+                                             onClick={ index < tagMap.length - 1 ? () => updateTagState(tag.key) : toggleTags }
+                                             className={ `hover:border-primaryPurple
+                                     ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/> : null
+                                }
                             </div>)
                     }
                 </div>
@@ -94,8 +106,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                             {
                                 selectedTag === "" || node.frontmatter?.tags.includes(selectedTag) ?
 
-                                    <article className={ "border-2 rounded-xl mb-10 shadow" }>
-                                        <div className={"mx-2 mb-2"}>
+                                    <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
+                                        <div className={ "mx-2 mb-2" }>
                                             <div className={ "flex items-center my-3" }>
                                                 <Link
                                                     className={ "text-primaryPurple dark:text-primaryPink hover:underline" }

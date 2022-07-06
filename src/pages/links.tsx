@@ -80,7 +80,7 @@ const MyLink = ({ icon, text, url, className }: Props) => {
     return (
         <a href={ url } target={ "_blank" } rel={ "noreferrer" } className={ className }>
             <div
-                className={ `hover:underline bg-gradient-to-r from-primaryPurple
+                className={ `hover:underline bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
                 <div className={ "pr-2" }>{ icon !== undefined ? icon : <LinkIcon/> }</div>
                 <span>{ text }</span>

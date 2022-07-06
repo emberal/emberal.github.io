@@ -178,7 +178,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 </h1>
                 {/*TODO Hamburger menu on small screens*/ }
                 <nav>
-                    <ul className={ "list-none flex gap-3 mb-5" }>
+                    <ul className={ "list-none flex gap-3 mb-2" }>
                         {
                             navLinks.map(link => (
                                 <li key={ link.id } className={ "w-fit text-lg" }>
@@ -199,7 +199,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                                     </>
                                 </Menu.Button>
                                 <Menu.Items className={
-                                    "bg-white dark:bg-gray-900 border rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
+                                    "bg-white dark:bg-gray-900 border border-gray-500 rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
                                     {
                                         themeMenu.map(item => (
                                             <div key={ item.id }>
