@@ -176,7 +176,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                     className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
                     { (headline !== undefined) ? headline : title }
                 </h1>
-                {/*TODO Hamburger menu on small screens*/ }
+                {/*TODO Popover or Menu (headlessUI) menu on small screens*/ }
                 <nav>
                     <ul className={ "list-none flex gap-3 mb-2" }>
                         {
@@ -198,6 +198,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                                         { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
                                     </>
                                 </Menu.Button>
+                                { /*TODO transition*/ }
                                 <Menu.Items className={
                                     "bg-white dark:bg-gray-900 border border-gray-500 rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
                                     {
@@ -227,12 +228,12 @@ const Layout = ({ title, headline, description, children, current, className }: 
                     <Footer/>
                 </main>
             </div>
-            { (isTop) ? null : (
+            { isTop ? null :
                 <button className={ "fixed right-10 bottom-20" } title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
                     <p className={ "hidden" }>{ t('goBackToTheTop') }</p>
                 </button>
-            ) }
+            }
         </div>
     );
 }

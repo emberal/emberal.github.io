@@ -66,22 +66,15 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param key The key for the new tag
      */
     function updateTagState(key: string) {
-        if (selectedTag === key) { // Resets tags
-            if (key !== allTag) {
-                setSelectedTag(allTag);
-                setTags(allProjectTags);
-            }
+        if (selectedTag === key && key !== allTag || key === allTag) { // Resets tags
+            setSelectedTag(allTag);
+            setTags(allProjectTags);
         }
         else { // Updates the tags to all the projects that contain the key
             setSelectedTag(key);
-            if (key === allTag) {
-                setTags(allProjectTags);
-            }
-            else {
-                let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
-                tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
-                setTags(tags);
-            }
+            let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
+            tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
+            setTags(tags);
         }
     }
 
@@ -117,11 +110,12 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                 const children = element!.children;
 
                 if (hideTags) {
-                    sum -= 100; // Makes room for the show more button
+                    sum -= 90;
                 }
                 for (let i = 0; i < children.length - 1; i++) {
                     sum += children[i].clientWidth + 4; // +4 is almost equal to 0.25 rem gap between
-                    if (sum > element!.clientWidth + 1) { // +1 just to make it work that one time xD
+
+                    if (sum > element!.clientWidth) {
                         return true;
                     }
                 }
@@ -138,7 +132,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             current={ Links.projects }>
             <div>
                 <div id={ "tags" }
-                     className={ `flex gap-1 ${ hideTags ? `overflow-scroll pb-3 ${ isOverflowing ? "mr-[6.7rem]" : "" }`
+                     className={ `flex gap-1 ${ hideTags ? `overflow-scroll pb-3 ${ isOverflowing ? "" : "" }`
                          : "flex-wrap mb-2" }` }>
                     <>
                         <Tag name={ allTag }
@@ -152,15 +146,20 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                          onClick={ () => updateTagState(tag.key) }
                                          className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
-                                </div>) // TODO add invisible div at the end, with the same width as the show/hide button, and don't count it
+                                </div>)
                         }
-                        {/*TODO scroll on PC by dragging the mouse*/ }
+                        { /*TODO scroll on PC by dragging the mouse*/ }
                         {
                             isOverflowing ?
-                                <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
-                                     hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
-                                     className={ `hover:border-primaryPurple min-w-max 
-                         ${ hideTags ? "absolute bg-white dark:bg-gray-900 right-0" : "" } shadow-sm shadow-primaryPurple` }/>
+                                <>
+                                    <div className={ `text-transparent min-w-max mx-2 ${ !hideTags ? "hidden" : "" }` }>
+                                        { hideTags ? t("showMore") : null }
+                                    </div>
+                                    <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                                         hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
+                                         className={ `hover:border-primaryPurple min-w-max ${ hideTags ?
+                                             "absolute bg-white dark:bg-gray-900 right-0" : "" } shadow-sm shadow-primaryPurple` }/>
+                                </>
                                 : null
                         }
                     </>
@@ -194,7 +193,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                                     splitCSV(node.frontmatter?.tags).map(tag =>
                                                         <div key={ tag }>
                                                             <Tag name={ tag }/>
-                                                        </div>)
+                                                        </div>
+                                                    )
                                                 }
                                             </div>
                                         </div>
