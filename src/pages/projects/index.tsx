@@ -54,7 +54,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
     }
     tagMap.sort((a: any, b: any) => b.value - a.value);
-    const [selectedTag, setSelectedTag] = React.useState("");
+    const allTag = t("all");
+    const [selectedTag, setSelectedTag] = React.useState(allTag);
 
     const [hideTags, setHideTags] = React.useState(true);
 
@@ -65,11 +66,13 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param key The key for the new tag
      */
     function updateTagState(key: string) {
-        if (selectedTag === key) {
-            setSelectedTag("");
-            setTags(allProjectTags);
+        if (selectedTag === key) { // Resets tags
+            if (key !== allTag) {
+                setSelectedTag(allTag);
+                setTags(allProjectTags);
+            }
         }
-        else {
+        else { // Updates the tags to all the projects that contain the key
             setSelectedTag(key);
             let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
             tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
@@ -94,6 +97,34 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
     }
 
+    const [isOverflowing, setIsOverflowing] = React.useState(false);
+    React.useEffect(() => {
+        setIsOverflowing(isOverflowingHorizontally(document.getElementById("tags")));
+
+        /**
+         * Checks if a HTMLElement overflows
+         * @param element An HTMLElement where the final element is a show / hide button
+         * @returns {boolean} Returns 'true' if the element overflows, false otherwise
+         */
+        function isOverflowingHorizontally(element: HTMLElement | null): boolean {
+            if (element !== undefined) {
+                let sum = 0;
+                const children = element!.children;
+
+                if (hideTags) {
+                    sum -= 110; // Makes room for the show more button
+                }
+                for (let i = 0; i < children.length - 1; i++) {
+                    sum += children[i].clientWidth + 4; // +4 is almost equal to 0.25 rem gap between
+                    if (sum > element!.clientWidth + 1) { // +1 just to make it work that one time xD
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }, [selectedTag, hideTags]);
+
     return (
         <Layout
             title={ t("projects") }
@@ -101,28 +132,39 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
-                <div className={ `flex ${ hideTags ? "overflow-scroll pb-3 mr-[6.65rem]" : "flex-wrap mb-2" } gap-1` }>
-                    {
-                        tagMap.map((tag: any) =>
-                            <div key={ tag.key }>
-                                <Tag name={ tag.key }
-                                     value={ tag.value }
-                                     onClick={ () => updateTagState(tag.key) }
-                                     className={ `hover:border-primaryPurple w-max
+                <div id={ "tags" }
+                     className={ `flex gap-1 ${ hideTags ? `overflow-scroll pb-3 ${ isOverflowing ? "mr-[6.7rem]" : "" }`
+                         : "flex-wrap mb-2" }` }>
+                    <>
+                        <Tag name={ allTag }
+                             onClick={ () => updateTagState(allTag) }
+                             className={ `hover:border-primaryPurple ${ selectedTag === allTag ? "!border-primaryPurple" : "" }` }/>
+                        {
+                            tagMap.map((tag: any) =>
+                                <div key={ tag.key }>
+                                    <Tag name={ tag.key }
+                                         value={ tag.value }
+                                         onClick={ () => updateTagState(tag.key) }
+                                         className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
-                            </div>)
-                    }
-                    {/*TODO scroll on PC by dragging the mouse*/ /*TODO hide button if there aren't more tags to show!*/ }
-                    <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
-                         hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
-                         className={ `hover:border-primaryPurple min-w-max 
+                                </div>)
+                        }
+                        {/*TODO scroll on PC by dragging the mouse*/ }
+                        {
+                            isOverflowing ?
+                                <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                                     hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
+                                     className={ `hover:border-primaryPurple min-w-max 
                          ${ hideTags ? "absolute bg-white dark:bg-gray-900 right-0" : "" } shadow-sm shadow-primaryPurple` }/>
+                                : null
+                        }
+                    </>
                 </div>
                 {
                     allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
                             {
-                                selectedTag === "" || contains(node.frontmatter?.tags, selectedTag) ?
+                                selectedTag === allTag || contains(node.frontmatter?.tags, selectedTag) ?
 
                                     <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
                                         <div className={ "mx-2 mb-2" }>
