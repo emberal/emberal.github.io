@@ -74,9 +74,14 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
         else { // Updates the tags to all the projects that contain the key
             setSelectedTag(key);
-            let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
-            tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
-            setTags(tags);
+            if (key === allTag) {
+                setTags(allProjectTags);
+            }
+            else {
+                let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
+                tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
+                setTags(tags);
+            }
         }
     }
 
@@ -112,7 +117,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                 const children = element!.children;
 
                 if (hideTags) {
-                    sum -= 110; // Makes room for the show more button
+                    sum -= 100; // Makes room for the show more button
                 }
                 for (let i = 0; i < children.length - 1; i++) {
                     sum += children[i].clientWidth + 4; // +4 is almost equal to 0.25 rem gap between
@@ -147,7 +152,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                          onClick={ () => updateTagState(tag.key) }
                                          className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
-                                </div>)
+                                </div>) // TODO add invisible div at the end, with the same width as the show/hide button, and don't count it
                         }
                         {/*TODO scroll on PC by dragging the mouse*/ }
                         {
