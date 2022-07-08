@@ -6,6 +6,7 @@ import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Tag from "../../components/tag";
 import TagsSelector from "../../components/tags_selector";
+import TagsRow from "../../components/tags_row";
 
 /**
  * Takes a String in a csv format, separated by ";" and returns an array of strings
@@ -133,15 +134,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                                     t("minute") : t("minutes") }
                                                 </p>
                                             </div>
-                                            <div className={ "flex flex-row flex-wrap gap-1" }>
-                                                {
-                                                    splitCSV(node.frontmatter?.tags).sort().map(tag =>
-                                                        <div key={ tag }>
-                                                            <Tag name={ tag }/>
-                                                        </div>
-                                                    )
-                                                }
-                                            </div>
+                                            <TagsRow tagsCSV={ node.frontmatter?.tags }/>
                                         </div>
 
                                         { (() => { // Used to initiate the variable image in order to null check it

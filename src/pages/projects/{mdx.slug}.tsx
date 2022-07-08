@@ -5,6 +5,7 @@ import { MDXRenderer } from "gatsby-plugin-mdx";
 import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "./index";
 import Tag from "../../components/tag";
+import TagsRow from "../../components/tags_row";
 
 /**
  * A single post containing all the data from an mdx file
@@ -38,13 +39,8 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
                 <article>
                     { heroImage && typeof heroImageAlt === 'string' ?
                         <GatsbyImage alt={ heroImageAlt } image={ heroImage }/> : null }
-                    <div className={ "flex flex-row flex-wrap gap-1 my-2" }>
-                        {
-                            splitCSV(tags ?? "").map((tag: string) =>
-                                <div key={ tag }>
-                                    <Tag name={ tag }/>
-                                </div>)
-                        }
+                    <div className={"my-1"}>
+                        <TagsRow tagsCSV={tags ?? undefined}/>
                     </div>
 
                     <p>{ description }</p>
