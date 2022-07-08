@@ -10,7 +10,7 @@
   "iconsFrom": "Icons from ",
 
   "welcome": "Welcome!",
-  "aboutMeDesc": "Hi, my name is Martin and i'm currently studying informationtechnology at the western university of Norway, in Bergen.",
+  "aboutMeDesc": "Hi, my name is Martin and i'm currently studying information-technology at the western university of Norway, in Bergen.",
   "aboutMePicAlt": "A picture of me on a hike",
 
   "yourName": "Your name",
@@ -30,6 +30,7 @@
   "showMoreTags": "Show more tags",
   "showLessTags": "Show less tags",
   "all": "All",
+  "dragToScroll": "Drag to scroll",
 
   "pageNotFound": "Page not found",
   "sorry": "Sorry",

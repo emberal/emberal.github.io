@@ -2,6 +2,7 @@ import * as React from "react";
 import Tag from "./tag";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import ScrollContainer from "react-indiana-drag-scroll";
+import { Move } from "react-feather";
 
 interface TagsSelector {
     allTag?: string,
@@ -58,7 +59,7 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
                 if (hideTags) {
                     sum -= 90; // Makes room for the hide button // TODO use width of actual button
                 }
-                for (let i = 0; i < children.length - 1; i++) {
+                for (let i = 1; i < children.length - 1; i++) {
                     if (children[i] !== null) {
                         sum += children[i].clientWidth + 4; // +4 is almost equal to 0.25 rem gap between
                     }
@@ -82,12 +83,21 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
 
     return (
         <div id={ id }>
-            <ScrollContainer // TODO add visual, to show it's possible to drag
+            <ScrollContainer
                 innerRef={ scrollContainer }
                 vertical={ false }
-                onScroll={ (scrollEvent) => scrollEvent }
+                onScroll={ (...scrollEvent) => scrollEvent }
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll` : "flex-wrap" } ${ className }` }>
                 <>
+                    {
+                        isOverflowing && hideTags && !("ontouchstart" in document.documentElement) ?
+                            <div className={ "absolute top-1 -left-10 rotate-90" }
+                                 title={ t("dragToScroll") }
+                                 role={ "tooltip" }>
+                                <Move className={ "animate-bounce w-5 h-5 text-gray-500" }/>
+                            </div>
+                            : null
+                    }
                     {
                         allTag !== undefined ?
                             <Tag
