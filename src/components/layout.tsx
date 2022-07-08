@@ -223,7 +223,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                         </li>
                     </ul>
                 </nav>
-                <main className={ "relative min-h-[90.25vh]" }>
+                <main className={ "relative min-h-[90.85vh]" }>
                     <div className={ "pb-24" }>{ children }</div>
                     <Footer/>
                 </main>
