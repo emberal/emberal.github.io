@@ -21,7 +21,7 @@ export const splitCSV = (csv: string) => csv.split(";");
  * @returns {JSX.Element} A page
  * @constructor
  */
-const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => {
+const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => { // TODO search
 
     const { t } = useTranslation();
     let image: IGatsbyImageData | undefined;
@@ -80,7 +80,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param key The key for the new tag
      */
     function updateTagState(key: string) {
-        if (selectedTag === key && key !== allTag || key === allTag) { // Resets tags
+        if (selectedTag === key || key === allTag) { // Resets tags
             setSelectedTag(allTag);
             setTags(allProjectTags);
         }
@@ -96,6 +96,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * Checks if a csv string contains a spesific value
      * @param csv A csv string, separated by ';'
      * @param key The key that will be compared to ehe csv string
+     * @returns {boolean} 'true' if atleast one element in the csv string equals the given key
      */
     function contains(csv: string | null | undefined, key: string): boolean {
         return splitCSV(csv?.toLowerCase() ?? "").some(element => element === key.toLowerCase());
@@ -109,7 +110,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             current={ Links.projects }>
             <div>
                 <TagsSelector id={ "tags" } allTag={ allTag } tagMap={ tagMap } selectedTag={ selectedTag }
-                              updateTagState={ updateTagState }/>
+                              onClick={ updateTagState }/>
                 {
                     allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
@@ -134,7 +135,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                                     t("minute") : t("minutes") }
                                                 </p>
                                             </div>
-                                            <TagsRow tagsCSV={ node.frontmatter?.tags }/>
+                                            <TagsRow tags={ splitCSV(node.frontmatter?.tags) }/>
                                         </div>
 
                                         { (() => { // Used to initiate the variable image in order to null check it

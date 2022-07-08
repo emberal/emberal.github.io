@@ -3,23 +3,30 @@ import Tag from "./tag";
 import { splitCSV } from "../pages/projects";
 
 interface TagsRow {
-    tagsCSV?: string,
+    tags?: string[],
     sort?: boolean,
     className?: string,
     id?: string,
 }
 
-const TagsRow = ({ tagsCSV, sort = true, className, id }: TagsRow) => {
-    if (tagsCSV !== undefined) {
-        const array = splitCSV(tagsCSV);
+/**
+ * A row containing an array of tags
+ * @param tags A string array containing all the names of the tags
+ * @param sort If 'true' will sort the string[] in ascending order
+ * @param className Styling of the root element
+ * @param id A unique id for the component
+ * @constructor
+ */
+const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
+    if (tags !== undefined) {
         if (sort) {
-            array.sort();
+            tags.sort();
         }
 
         return (
             <div className={ `flex flex-row flex-wrap gap-1 ${ className }` } id={ id }>
                 {
-                    array.map(tag =>
+                    tags.map(tag =>
                         <div key={ tag }>
                             <Tag name={ tag }/>
                         </div>

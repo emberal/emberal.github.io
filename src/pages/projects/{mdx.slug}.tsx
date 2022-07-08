@@ -3,9 +3,8 @@ import Layout, { Links } from "../../components/layout";
 import { graphql, PageProps } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
-import { splitCSV } from "./index";
-import Tag from "../../components/tag";
 import TagsRow from "../../components/tags_row";
+import { splitCSV } from "./index";
 
 /**
  * A single post containing all the data from an mdx file
@@ -39,15 +38,15 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
                 <article>
                     { heroImage && typeof heroImageAlt === 'string' ?
                         <GatsbyImage alt={ heroImageAlt } image={ heroImage }/> : null }
-                    <div className={"my-1"}>
-                        <TagsRow tagsCSV={tags ?? undefined}/>
+                    <div className={ "my-1" }>
+                        <TagsRow tags={ splitCSV(tags ?? "") }/>
                     </div>
 
                     <p>{ description }</p>
                     <p>
                         Kildekoden på{ " " }
                         <a className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
-                           href={ typeof source === 'string' || typeof source === 'undefined' ? source : undefined }
+                           href={ source !== null ? source : undefined }
                            target={ "_blank" } rel={ "noreferrer" }>GitHub</a>
                     </p>
                     <div className={ "mt-2" }>

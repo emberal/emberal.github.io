@@ -6,12 +6,25 @@ interface TagsSelector {
     allTag?: string,
     tagMap?: any[],
     selectedTag?: string,
-    updateTagState?: Function,
+    onClick?: Function,
     id?: string,
     className?: string,
 }
 
-const TagsSelector = ({ allTag, selectedTag, tagMap, updateTagState, id, className }: TagsSelector) => {
+/**
+ * This component is meant to contain a list of Tags, that can be used to sort a page.
+ * Each tag is selectable and with an 'all' button that will display all, which is enabled by default.
+ * The tags can be hidden down to just one line, with horizontal scrolling, or all can be displayed at the same time, flex-wrapped
+ * @param allTag The name of the tag that will display all tags, and it's content
+ * @param selectedTag The currently selected tag
+ * @param tagMap An array containing objects with a unique string key, and a number value. Value is meant to display the number
+ * of occurrences of the key. If value is 'undefined' the parenthesis will not be shown.
+ * @param onClick The function to be called when a tag is clicked or tapped
+ * @param id A unique id of the component
+ * @param className Styling of the root element
+ * @constructor
+ */
+const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, className }: TagsSelector) => {
 
     const { t } = useTranslation();
 
@@ -66,7 +79,7 @@ const TagsSelector = ({ allTag, selectedTag, tagMap, updateTagState, id, classNa
                     allTag !== undefined ?
                         <Tag
                             name={ allTag }
-                            onClick={ updateTagState !== undefined ? () => updateTagState(allTag) : undefined }
+                            onClick={ onClick !== undefined ? () => onClick(allTag) : undefined }
                             className={ `hover:border-primaryPurple ${ selectedTag === allTag ? "!border-primaryPurple" : "" }` }/>
                         : null
                 }
@@ -75,7 +88,7 @@ const TagsSelector = ({ allTag, selectedTag, tagMap, updateTagState, id, classNa
                         <div key={ tag.key }>
                             <Tag name={ tag.key }
                                  value={ tag.value }
-                                 onClick={ updateTagState !== undefined ? () => updateTagState(tag.key) : undefined }
+                                 onClick={ onClick !== undefined ? () => onClick(tag.key) : undefined }
                                  className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
                         </div>)
