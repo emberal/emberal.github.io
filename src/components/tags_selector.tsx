@@ -56,7 +56,7 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
                 const children = element.children[0].children;
 
                 if (hideTags) {
-                    sum -= 90; // Makes room for the hide button
+                    sum -= 90; // Makes room for the hide button // TODO use width of actual button
                 }
                 for (let i = 0; i < children.length - 1; i++) {
                     if (children[i] !== null) {
@@ -85,6 +85,7 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
             <ScrollContainer // TODO add visual, to show it's possible to drag
                 innerRef={ scrollContainer }
                 vertical={ false }
+                onScroll={ (scrollEvent) => scrollEvent }
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll` : "flex-wrap" } ${ className }` }>
                 <>
                     {
