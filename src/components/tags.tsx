@@ -1,8 +1,38 @@
 import * as React from "react";
-import Tag from "./tag";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { Move } from "react-feather";
+
+interface Tag {
+    name?: string,
+    value?: number,
+    hoverTitle?: string,
+    className?: string,
+    onClick?: React.MouseEventHandler<HTMLButtonElement>,
+    id?: string,
+}
+
+/**
+ * A tag containing a short string and a number of occurrences
+ * @param name The string name that will be visible on the tag
+ * @param value The number of occurrences of the tag
+ * @param hoverTitle The string that will be shown when hovering above the tag
+ * @param className Styling of the root element
+ * @param onClick The function that will be called upon clicking the tag. If 'undefined' the cursor will appear normal
+ * @param id A unique id for the tag
+ * @constructor
+ */
+export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) => {
+
+    return (
+        <button title={ hoverTitle } id={ id }
+                className={ `${ onClick !== undefined ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
+             border-gray-500` }
+                onClick={ onClick }>
+            <span className={ "mx-2 w-max" }>{ name + (value !== undefined ? `(${ value })` : "") }</span>
+        </button>
+    )
+}
 
 interface TagsSelector {
     allTag?: string,
@@ -26,7 +56,7 @@ interface TagsSelector {
  * @param className Styling of the root element
  * @constructor
  */
-const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, className }: TagsSelector) => {
+export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, className }: TagsSelector) => {
 
     const { t } = useTranslation();
 
@@ -90,15 +120,6 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll` : "flex-wrap" } ${ className }` }>
                 <>
                     {
-                        isOverflowing && hideTags && !("ontouchstart" in document.documentElement) ?
-                            <div className={ "absolute top-1 -left-10 rotate-90" }
-                                 title={ t("dragToScroll") }
-                                 role={ "tooltip" }>
-                                <Move className={ "animate-bounce w-5 h-5 text-gray-500" }/>
-                            </div>
-                            : null
-                    }
-                    {
                         allTag !== undefined ?
                             <Tag
                                 name={ allTag }
@@ -122,10 +143,24 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
                                 <div className={ `text-transparent min-w-max mx-2 ${ !hideTags ? "hidden" : "" }` }>
                                     { hideTags ? t("showMore") : null }
                                 </div>
-                                <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
-                                     hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
-                                     className={ `hover:border-primaryPurple min-w-max ${ hideTags ?
-                                         "absolute bg-white dark:bg-gray-900 right-0" : "" } shadow-sm shadow-primaryPurple` }/>
+                                <div className={ `${ hideTags ? "absolute right-0 flex flex-row gap-5" : "" }` }>
+                                    {
+                                        hideTags && !("ontouchstart" in document.documentElement) ?
+                                            <div className={ "rotate-90 pointer-events-none" }
+                                                 title={ t("dragToScroll") }
+                                                 role={ "tooltip" }>
+                                                <Move
+                                                    className={ "animate-bounce w-6 h-6 dark:text-[rgba(255,255,255,0.5)] " +
+                                                        "text-[rgba(0,0,0,0.5)]" }/>
+                                            </div>
+                                            : null
+                                    }
+                                    <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                                         hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
+                                         className={ `hover:border-primaryPurple min-w-max ${ hideTags ?
+                                             "bg-white dark:bg-gray-900" : "" } shadow-sm shadow-primaryPurple` }/>
+                                </div>
+
                             </>
                             : null
                     }
@@ -135,4 +170,41 @@ const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, classN
     )
 };
 
-export default TagsSelector;
+interface TagsRow {
+    tags?: string[],
+    sort?: boolean,
+    className?: string,
+    id?: string,
+}
+
+/**
+ * A row containing an array of tags
+ * @param tags A string array containing all the names of the tags
+ * @param sort If 'true' will sort the string[] in ascending order
+ * @param className Styling of the root element
+ * @param id A unique id for the component
+ * @constructor
+ */
+export const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
+    if (tags !== undefined) {
+        if (sort) {
+            tags.sort();
+        }
+
+        return (
+            <div className={ `flex flex-row flex-wrap gap-1 ${ className }` } id={ id }>
+                {
+                    tags.map(tag =>
+                        <div key={ tag }>
+                            <Tag name={ tag }/>
+                        </div>
+                    )
+                }
+            </div>
+        );
+    }
+    else {
+        return null;
+    }
+
+}

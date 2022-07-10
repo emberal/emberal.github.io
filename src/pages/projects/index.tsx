@@ -4,9 +4,10 @@ import { graphql, Link, PageProps } from "gatsby";
 import { GitHub } from "react-feather";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import Tag from "../../components/tag";
-import TagsSelector from "../../components/tags_selector";
-import TagsRow from "../../components/tags_row";
+import { TagsRow, TagsSelector } from "../../components/tags";
+import Search from "../../components/search";
+import { ChangeEvent } from "react";
+import ProjectCard from "../../components/project";
 
 /**
  * Takes a String in a csv format, separated by ";" and returns an array of strings
@@ -102,6 +103,13 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         return splitCSV(csv?.toLowerCase() ?? "").some(element => element === key.toLowerCase());
     }
 
+    // TODO search for: headlines -> tags -> description -> body
+    const [searchState, setSearchState] = React.useState("");
+
+    function onSearch(event?: ChangeEvent<HTMLInputElement>) {
+        setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
+    }
+
     return (
         <Layout
             title={ t("projects") }
@@ -109,51 +117,32 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
+                <Search onChange={ onSearch }/>
                 <TagsSelector id={ "tags" } allTag={ allTag } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
                     allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
                             {
-                                selectedTag === allTag || contains(node.frontmatter?.tags, selectedTag) ?
+                                node.frontmatter.title.toLowerCase().includes(searchState) &&
+                                (selectedTag === allTag || contains(node.frontmatter?.tags, selectedTag)) ?
 
-                                    <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
-                                        <div className={ "mx-2 mb-2" }>
-                                            <div className={ "flex items-center my-3" }>
-                                                <Link
-                                                    className={ "text-primaryPurple dark:text-primaryPink hover:underline mr-2" }
-                                                    to={ node.slug }>
-                                                    <h2 className={ "text-xl" }>{ node.frontmatter?.title }</h2>
-                                                </Link>
-                                                <a title={ t("openInGitHub") } href={ node.frontmatter?.source }
-                                                   target={ "_blank" } rel={ "noreferrer" }><GitHub/>
-                                                </a>
-                                            </div>
-                                            <div className={ "grid grid-flow-col justify-between mb-2" }>
-                                                <p>
-                                                    { t("timeToRead") } { node.timeToRead } { (node.timeToRead === 1) ?
-                                                    t("minute") : t("minutes") }
-                                                </p>
-                                            </div>
-                                            <TagsRow tags={ splitCSV(node.frontmatter?.tags) }/>
-                                        </div>
-
-                                        { (() => { // Used to initiate the variable image in order to null check it
-                                            image = getImage(node.frontmatter?.hero_image.childImageSharp.gatsbyImageData)
-                                            return true;
-                                        })() }
-                                        { image ?
-                                            <GatsbyImage alt={ node.frontmatter?.hero_image_alt }
-                                                         image={ image }/> : null }
-                                        <div className={ "mx-2 my-4" }>
-                                            <p>{ node.frontmatter?.description }</p>
-                                        </div>
-                                    </article>
+                                    <ProjectCard title={ node.frontmatter.title }
+                                                 slug={ node.slug }
+                                                 description={ node.frontmatter.description }
+                                                 tags={ node.frontmatter.tags }
+                                                 timeToRead={ node.timeToRead }
+                                                 source={ node.frontmatter.source }
+                                                 image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
+                                                 imageAlt={ node.frontmatter.hero_image_alt }/>
                                     : null
                             }
                         </div>
                     ))
                 }
+                <div className={ "absolute w-full pt-5" }>
+                    <span className={ "flex justify-center" }>{ t("noResults") }</span>
+                </div>
             </div>
         </Layout>
     );

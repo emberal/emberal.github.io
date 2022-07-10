@@ -3,7 +3,7 @@ import Layout, { Links } from "../../components/layout";
 import { graphql, PageProps } from "gatsby";
 import { MDXRenderer } from "gatsby-plugin-mdx";
 import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
-import TagsRow from "../../components/tags_row";
+import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 
 /**
