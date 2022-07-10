@@ -103,11 +103,25 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         return splitCSV(csv?.toLowerCase() ?? "").some(element => element === key.toLowerCase());
     }
 
-    // TODO search for: headlines -> tags -> description -> body
     const [searchState, setSearchState] = React.useState("");
 
     function onSearch(event?: ChangeEvent<HTMLInputElement>) {
         setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
+    }
+
+    let numberOfPosts = 0;
+
+    function resetNumberOfPosts() {
+        numberOfPosts = 0;
+    }
+
+    function containsSearchString(title: string, tags: string) {
+        const search = title.toLowerCase().includes(searchState) || tags.toLowerCase().includes(searchState);
+        const result = search && (selectedTag === allTag || contains(tags, selectedTag));
+        if (result) {
+            numberOfPosts++;
+        }
+        return result;
     }
 
     return (
@@ -117,32 +131,42 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
-                <Search onChange={ onSearch }/>
+                { // TODO improve for mobile!
+                    !("ontouchstart" in document.documentElement) ? <Search onChange={ onSearch } collapse={ false }/> : null
+                }
+
                 <TagsSelector id={ "tags" } allTag={ allTag } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
-                    allMdx.nodes.map((node: any) => (
+                    allMdx.nodes.map((node: any, index: number) => (
                         <div key={ node.id }>
-                            {
-                                node.frontmatter.title.toLowerCase().includes(searchState) &&
-                                (selectedTag === allTag || contains(node.frontmatter?.tags, selectedTag)) ?
+                            <>
+                                {
+                                    containsSearchString(node.frontmatter.title, node.frontmatter.tags) ?
 
-                                    <ProjectCard title={ node.frontmatter.title }
-                                                 slug={ node.slug }
-                                                 description={ node.frontmatter.description }
-                                                 tags={ node.frontmatter.tags }
-                                                 timeToRead={ node.timeToRead }
-                                                 source={ node.frontmatter.source }
-                                                 image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
-                                                 imageAlt={ node.frontmatter.hero_image_alt }/>
-                                    : null
-                            }
+                                        <ProjectCard
+                                            title={ node.frontmatter.title }
+                                            slug={ node.slug }
+                                            description={ node.frontmatter.description }
+                                            tags={ node.frontmatter.tags }
+                                            timeToRead={ node.timeToRead }
+                                            source={ node.frontmatter.source }
+                                            image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
+                                            imageAlt={ node.frontmatter.hero_image_alt }/>
+                                        :
+                                        numberOfPosts === 0 && index === allMdx.nodes.length - 1 ?
+                                            <div className={ "absolute w-full mt-14" }>
+                                                <>
+                                                    <span className={ "flex justify-center" }>{ t("noResults") }</span>
+                                                    { resetNumberOfPosts() }
+                                                </>
+                                            </div>
+                                            : null
+                                }
+                            </>
                         </div>
                     ))
                 }
-                <div className={ "absolute w-full pt-5" }>
-                    <span className={ "flex justify-center" }>{ t("noResults") }</span>
-                </div>
             </div>
         </Layout>
     );
