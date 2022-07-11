@@ -27,12 +27,12 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     /**
      * The name of the tag, used to show all posts
      */
-    const allTag = t("all");
+    const ALL_TAG = t("all");
 
     /**
      * The state used to mark the current selected tag
      */
-    const [selectedTag, setSelectedTag] = React.useState(allTag);
+    const [selectedTag, setSelectedTag] = React.useState(ALL_TAG);
 
     /**
      * This state contains the current search string
@@ -93,8 +93,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param key The key for the new tag
      */
     function updateTagState(key: string): void {
-        if (selectedTag === key || key === allTag) { // Resets tags
-            setSelectedTag(allTag);
+        if (selectedTag === key || key === ALL_TAG) { // Resets tags
+            setSelectedTag(ALL_TAG);
             setNodes(allMdx.nodes);
         }
         else { // Updates the tags to all the projects that contain the key
@@ -123,14 +123,14 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     }
 
     React.useEffect(() => {
-        if (searchState !== "") {
-            let tags = nodes.map(node => searchTitleAndTags(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
-            setNodes(removeNullValues(tags));
+        if (searchState !== "") { // FIXME only allow searching through current tag if it's not ALL_TAG
+            let newNodes = allMdx.nodes.map(node => searchTitleAndTags(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
+            setNodes(removeNullValues(newNodes));
         }
         else {
-            if (selectedTag !== allTag) {
-                let nodes = allMdx.nodes.map(node => contains(node.frontmatter?.tags, selectedTag) ? node : null);
-                setNodes(removeNullValues(nodes));
+            if (selectedTag !== ALL_TAG) {
+                let newNodes = allMdx.nodes.map(node => contains(node.frontmatter?.tags, selectedTag) ? node : null);
+                setNodes(removeNullValues(newNodes));
             }
             else {
                 setNodes(allMdx.nodes);
@@ -143,7 +143,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     }
 
     function containsSearchString(title: string, tags: string): boolean {
-        return searchTitleAndTags(title, tags) && (selectedTag === allTag || contains(tags, selectedTag));
+        return searchTitleAndTags(title, tags) && (selectedTag === ALL_TAG || contains(tags, selectedTag));
     }
 
     /**
@@ -164,10 +164,10 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             <div>
                 { // TODO improve for mobile!
                     typeof document !== "undefined" && !("ontouchstart" in document.documentElement) ?
-                        <Search onChange={ onSearch } collapse={ false }/> : null
+                        <Search onChange={ onSearch } collapse={ false } searchWithoutFocus={ true }/> : null
                 }
 
-                <TagsSelector id={ "tags" } allTag={ allTag } tagMap={ tagMap } selectedTag={ selectedTag }
+                <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
                     allMdx.nodes.map((node: any) => (

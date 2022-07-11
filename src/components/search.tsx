@@ -5,9 +5,34 @@ import { ChangeEvent } from "react";
 interface Search {
     onChange?: Function,
     collapse?: boolean, // TODO collapse search box to only the icon, and expand on typing or click
+    searchWithoutFocus?: boolean,
 }
 
-const Search = ({ onChange, collapse = false }: Search) => {
+const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Search) => {
+
+    if (searchWithoutFocus) {
+        React.useEffect(() => {
+            let isMounted = true;
+            const element = document.getElementById("search") as HTMLInputElement;
+
+            function keyboardListener(keyboardEvent: KeyboardEvent) {
+                if (element !== null && !element.matches(":focus")) {
+                    element.focus();
+                    element.value += keyboardEvent.key;
+                    if (onChange !== undefined) {
+                        onChange();
+                    }
+                }
+            }
+            document.addEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
+
+            return () => {
+                document.removeEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
+                isMounted = false;
+            };
+        }, []);
+    }
+
     return (
         <div className={ `absolute right-0 -top-8 w-40 h-6 flex flex-row items-center` }>
             <SearchIcon className={ "absolute left-0 w-4 h-4 mx-2" }/>
@@ -17,6 +42,6 @@ const Search = ({ onChange, collapse = false }: Search) => {
         </div>
 
     );
-}
+};
 
 export default Search;
