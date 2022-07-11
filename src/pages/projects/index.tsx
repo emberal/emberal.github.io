@@ -1,12 +1,10 @@
 import * as React from "react";
-import Layout, { Links } from "../../components/layout";
-import { graphql, Link, PageProps } from "gatsby";
-import { GitHub } from "react-feather";
-import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
-import { useTranslation } from "gatsby-plugin-react-i18next";
-import { TagsRow, TagsSelector } from "../../components/tags";
-import Search from "../../components/search";
 import { ChangeEvent } from "react";
+import Layout, { Links } from "../../components/layout";
+import { graphql, PageProps } from "gatsby";
+import { useTranslation } from "gatsby-plugin-react-i18next";
+import { TagsSelector } from "../../components/tags";
+import Search from "../../components/search";
 import ProjectCard from "../../components/project";
 
 /**
@@ -25,24 +23,40 @@ export const splitCSV = (csv: string) => csv.split(";");
 const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => { // TODO search
 
     const { t } = useTranslation();
-    let image: IGatsbyImageData | undefined;
 
-    const allProjectTags = allMdx.nodes.map(node => node.frontmatter?.tags);
-    const [tags, setTags] = React.useState(allProjectTags);
+    /**
+     * The name of the tag, used to show all posts
+     */
+    const allTag = t("all");
+
+    /**
+     * The state used to mark the current selected tag
+     */
+    const [selectedTag, setSelectedTag] = React.useState(allTag);
+
+    /**
+     * This state contains the current search string
+     */
+    const [searchState, setSearchState] = React.useState("");
+
+    /**
+     * This state contains an array of all the tags of the posts that fit the current search crtieria
+     */
+    const [nodes, setNodes] = React.useState(allMdx.nodes);
 
     // TODO? the option to select multiple tags to improve search, use string[] in useState
     const tagMap: any[] = [];
     let objectIndex = 0;
-    for (const tag of tags) {
-        const tagArray = splitCSV(tag ?? "");
+    for (const tag of nodes) {
 
+        const tagArray = splitCSV(tag.frontmatter?.tags ?? "");
         if (tagArray !== undefined) {
-            for (const tagInArray of tagArray) {
 
+            for (const tagInArray of tagArray) {
                 let found = false;
                 for (const tagInMap of tagMap) {
                     if (tagInArray.toLowerCase() === tagInMap.key.toLowerCase()) {
-                        tagInMap.value += 1;
+                        tagInMap.value++;
                         found = true;
                     }
                 }
@@ -56,6 +70,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             }
         }
     }
+
+    // Sorts the map by value, then by name
     tagMap.sort((a: any, b: any) => {
         let sum: number;
         if (b.value !== a.value) {
@@ -72,24 +88,19 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         return sum;
     });
 
-    const allTag = t("all");
-
-    const [selectedTag, setSelectedTag] = React.useState(allTag);
-
     /**
      * Updates the state of the current selected tag to a new one. If the new one is the same as the old, reset.
      * @param key The key for the new tag
      */
-    function updateTagState(key: string) {
+    function updateTagState(key: string): void {
         if (selectedTag === key || key === allTag) { // Resets tags
             setSelectedTag(allTag);
-            setTags(allProjectTags);
+            setNodes(allMdx.nodes);
         }
         else { // Updates the tags to all the projects that contain the key
             setSelectedTag(key);
-            let tags = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node.frontmatter?.tags : null);
-            tags = tags.filter((element: string | null | undefined) => element !== null); // Removes the null values
-            setTags(tags);
+            let nodes = allMdx.nodes.map(node => contains(node.frontmatter?.tags, key) ? node : null);
+            setNodes(removeNullValues(nodes));
         }
     }
 
@@ -103,25 +114,45 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         return splitCSV(csv?.toLowerCase() ?? "").some(element => element === key.toLowerCase());
     }
 
-    const [searchState, setSearchState] = React.useState("");
-
-    function onSearch(event?: ChangeEvent<HTMLInputElement>) {
+    /**
+     * Called when searching
+     * @param event
+     */
+    function onSearch(event?: ChangeEvent<HTMLInputElement>): void {
         setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
     }
 
-    let numberOfPosts = 0;
+    React.useEffect(() => {
+        if (searchState !== "") {
+            let tags = nodes.map(node => searchTitleAndTags(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
+            setNodes(removeNullValues(tags));
+        }
+        else {
+            if (selectedTag !== allTag) {
+                let nodes = allMdx.nodes.map(node => contains(node.frontmatter?.tags, selectedTag) ? node : null);
+                setNodes(removeNullValues(nodes));
+            }
+            else {
+                setNodes(allMdx.nodes);
+            }
+        }
+    }, [searchState]);
 
-    function resetNumberOfPosts() {
-        numberOfPosts = 0;
+    function searchTitleAndTags(title: string | undefined, tags: string | null | undefined): boolean {
+        return title?.toLowerCase().includes(searchState) || tags?.toLowerCase().includes(searchState) || false;
     }
 
-    function containsSearchString(title: string, tags: string) {
-        const search = title.toLowerCase().includes(searchState) || tags.toLowerCase().includes(searchState);
-        const result = search && (selectedTag === allTag || contains(tags, selectedTag));
-        if (result) {
-            numberOfPosts++;
-        }
-        return result;
+    function containsSearchString(title: string, tags: string): boolean {
+        return searchTitleAndTags(title, tags) && (selectedTag === allTag || contains(tags, selectedTag));
+    }
+
+    /**
+     * Removes all 'null' and 'undefined' values in a string array
+     * @param arr An array of strings
+     * @returns {string[]} An array of strings without any 'null' or 'undefined' values
+     */
+    function removeNullValues(arr: any[]): any[] {
+        return arr.filter((element: string | null | undefined) => element !== null && element !== undefined) as string[];
     }
 
     return (
@@ -132,13 +163,14 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             current={ Links.projects }>
             <div>
                 { // TODO improve for mobile!
-                    !("ontouchstart" in document.documentElement) ? <Search onChange={ onSearch } collapse={ false }/> : null
+                    typeof document !== "undefined" && !("ontouchstart" in document.documentElement) ?
+                        <Search onChange={ onSearch } collapse={ false }/> : null
                 }
 
                 <TagsSelector id={ "tags" } allTag={ allTag } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
-                    allMdx.nodes.map((node: any, index: number) => (
+                    allMdx.nodes.map((node: any) => (
                         <div key={ node.id }>
                             <>
                                 {
@@ -154,12 +186,9 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                                             image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
                                             imageAlt={ node.frontmatter.hero_image_alt }/>
                                         :
-                                        numberOfPosts === 0 && index === allMdx.nodes.length - 1 ?
+                                        nodes.length === 0 ?
                                             <div className={ "absolute w-full mt-14" }>
-                                                <>
-                                                    <span className={ "flex justify-center" }>{ t("noResults") }</span>
-                                                    { resetNumberOfPosts() }
-                                                </>
+                                                <span className={ "flex justify-center" }>{ t("noResults") }</span>
                                             </div>
                                             : null
                                 }

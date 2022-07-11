@@ -101,7 +101,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
             }
             return false;
         }
-    }, [selectedTag]);
+    }, [tagMap]);
 
     const scrollContainer = React.useRef<HTMLElement>(null);
 
