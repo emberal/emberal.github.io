@@ -117,7 +117,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                 innerRef={ scrollContainer }
                 vertical={ false }
                 onScroll={ (...scrollEvent) => scrollEvent }
-                className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll` : "flex-wrap" } ${ className }` }>
+                className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
                     {
                         allTag !== undefined ?

@@ -115,16 +115,17 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     }
 
     /**
-     * Called when searching
-     * @param event
+     * Called when searching, and updates the state of the search object, stores it in lowercase
+     * @param event ChangeEvent from HTMLInputElement
      */
     function onSearch(event?: ChangeEvent<HTMLInputElement>): void {
         setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
     }
 
     React.useEffect(() => {
-        if (searchState !== "") { // FIXME only allow searching through current tag if it's not ALL_TAG
-            let newNodes = allMdx.nodes.map(node => searchTitleAndTags(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
+        if (searchState !== "") {
+            let newNodes = allMdx.nodes.map(node =>
+                containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
             setNodes(removeNullValues(newNodes));
         }
         else {
@@ -138,11 +139,22 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
         }
     }, [searchState]);
 
+    /**
+     * Checks if a search string is in the title or the tags of a post, if 'null' or 'undefined', returns 'false'
+     * @param title The title of the post
+     * @param tags The tags of the post, as a string, could be in csv format
+     */
     function searchTitleAndTags(title: string | undefined, tags: string | null | undefined): boolean {
         return title?.toLowerCase().includes(searchState) || tags?.toLowerCase().includes(searchState) || false;
     }
 
-    function containsSearchString(title: string, tags: string): boolean {
+    /**
+     * Checks if a search string is in the title or the tags of a post, or the selectedTag is used on the post.
+     * If 'null' or 'undefined', returns 'false'
+     * @param title The title of the post
+     * @param tags The tags of the post, as a string, could be in csv format
+     */
+    function containsSearchString(title: string | undefined, tags: string | null | undefined): boolean {
         return searchTitleAndTags(title, tags) && (selectedTag === ALL_TAG || contains(tags, selectedTag));
     }
 
@@ -162,10 +174,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div>
-                { // TODO improve for mobile!
-                    typeof document !== "undefined" && !("ontouchstart" in document.documentElement) ?
-                        <Search onChange={ onSearch } collapse={ false } searchWithoutFocus={ true }/> : null
-                }
+                <Search onChange={ onSearch } collapse={ true } searchWithoutFocus={ true }/>
 
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
