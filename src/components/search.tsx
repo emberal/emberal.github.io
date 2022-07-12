@@ -74,12 +74,13 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
         if (element !== null) {
             element.value = "";
             if (onChange) {
+                element.focus();
                 onChange();
             }
         }
     }
 
-    return ( // TODO use <button/> for icons, and use title
+    return (
         <div className={ `absolute right-0 sm:-top-8 -top-[5.5rem] h-6 flex flex-row items-center` }>
             <button className={ `absolute left-0 mx-[0.40rem]` } onClick={ focusSearch } title={ t("search") }>
                 <SearchIcon className={ "w-4 h-4" }/>
