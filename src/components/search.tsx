@@ -81,19 +81,19 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
     }
 
     return (
-        <div className={ `absolute right-0 sm:-top-8 -top-[5.5rem] h-6 flex flex-row items-center` }>
+        <div className={ `absolute right-0 sm:-top-9 -top-24 sm:h-7 h-10 flex flex-row items-center` }>
             <button className={ `absolute left-0 mx-[0.40rem]` } onClick={ focusSearch } title={ t("search") }>
-                <SearchIcon className={ "w-4 h-4" }/>
+                <SearchIcon className={ "sm:w-4 sm:h-4 h-5 w-5" }/>
             </button>
             <input id={ "search" }
-                   className={ `pl-6 dark:bg-gray-900 ${ collapse && !searched ? "focus:w-40 w-6" : "w-40" } border-2 border-gray-500 
-                   rounded-xl outline-none focus:border-primaryPurple shadow-sm shadow-primaryPurple 
-                   transition-all duration-200 ease-in-out` }
+                   className={ `sm:pl-6 pl-7 dark:bg-gray-900 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
+                    border-2 border-gray-500 rounded-xl outline-none focus:border-primaryPurple shadow-sm shadow-primaryPurple 
+                   transition-all duration-200 ease-in-out h-full` }
                    onChange={ onChange !== undefined ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }/>
             {
                 searched ?
-                    <button className={ `absolute right-0 mr-2` } onClick={ clearSearch } title={ t("clear") }>
-                        <X className={ "w-4 h-4" }/>
+                    <button className={ `absolute right-0 mr-1 p-1` } onClick={ clearSearch } title={ t("clear") }>
+                        <X className={ "sm:w-4 sm:h-4 h-5 w-5" }/>
                     </button>
                     : null
             }
