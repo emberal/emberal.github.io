@@ -32,6 +32,8 @@
   "all": "All",
   "dragToScroll": "Drag to scroll",
   "noResults": "No results",
+  "search": "Search",
+  "clear": "Clear search",
 
   "pageNotFound": "Page not found",
   "sorry": "Sorry",

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
 import { ChangeEvent } from "react";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 interface Search {
     onChange?: Function,
@@ -9,6 +10,8 @@ interface Search {
 }
 
 const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Search) => {
+
+    const { t } = useTranslation();
 
     const [searched, setSearched] = React.useState(false);
 
@@ -76,9 +79,11 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
         }
     }
 
-    return (
+    return ( // TODO use <button/> for icons, and use title
         <div className={ `absolute right-0 sm:-top-8 -top-[5.5rem] h-6 flex flex-row items-center` }>
-            <SearchIcon className={ `absolute left-0 w-4 h-4 mx-[0.40rem]` } onClick={ focusSearch }/>
+            <button className={ `absolute left-0 mx-[0.40rem]` } onClick={ focusSearch } title={ t("search") }>
+                <SearchIcon className={ "w-4 h-4" }/>
+            </button>
             <input id={ "search" }
                    className={ `pl-6 dark:bg-gray-900 ${ collapse && !searched ? "focus:w-40 w-6" : "w-40" } border-2 border-gray-500 
                    rounded-xl outline-none focus:border-primaryPurple shadow-sm shadow-primaryPurple 
@@ -86,7 +91,10 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
                    onChange={ onChange !== undefined ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }/>
             {
                 searched ?
-                    <X className={ `absolute right-0 w-4 h-4 mr-2 cursor-pointer` } onClick={ clearSearch }/> : null
+                    <button className={ `absolute right-0 mr-2` } onClick={ clearSearch } title={ t("clear") }>
+                        <X className={ "w-4 h-4" }/>
+                    </button>
+                    : null
             }
         </div>
 
