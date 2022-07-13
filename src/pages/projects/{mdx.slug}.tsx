@@ -85,7 +85,6 @@ export const query = graphql`
             }
             timeToRead
             body
-
         }
     }
 `;

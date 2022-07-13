@@ -50,7 +50,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     for (const tag of nodes) {
 
         const tagArray = splitCSV(tag.frontmatter?.tags ?? "");
-        if (tagArray !== undefined) {
+        if (tagArray) {
 
             for (const tagInArray of tagArray) {
                 let found = false;
@@ -164,7 +164,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @returns {string[]} An array of strings without any 'null' or 'undefined' values
      */
     function removeNullValues(arr: any[]): any[] {
-        return arr.filter((element: string | null | undefined) => element !== null && element !== undefined) as string[];
+        return arr.filter((element: string | null | undefined) => element !== null && element) as string[];
     }
 
     return (

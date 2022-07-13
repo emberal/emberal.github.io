@@ -30,7 +30,7 @@ const links = [
  */
 const ContactMe = () => {
 
-    const [state, handelSubmit] = useForm("mknykgbn");
+    const [state, handleSubmit] = useForm("mknykgbn");
     if (state.succeeded) {
         Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
         const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
@@ -39,8 +39,9 @@ const ContactMe = () => {
         }
     }
     React.useEffect(() => {
+        let isMounted = true;
         const submitKeys = (e: KeyboardEvent) => {
-            if (e.ctrlKey) {
+            if (isMounted && e.ctrlKey) {
                 //Activates button if ctrl and enter is clicked at the same time
                 const element = document.getElementById("submit-button");
                 if (element !== null) {
@@ -51,6 +52,7 @@ const ContactMe = () => {
         document.addEventListener("keyup", (e) => submitKeys(e));
         return () => {
             document.removeEventListener("keyup", (e) => submitKeys(e));
+            isMounted = false;
         };
     });
 
@@ -73,7 +75,7 @@ const ContactMe = () => {
                         ))
                     }
                 </div>
-                <form acceptCharset={ "UTF-8" } onSubmit={ handelSubmit }>
+                <form acceptCharset={ "UTF-8" } onSubmit={ handleSubmit }>
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
                         <label>
                             <p>{ t("yourName") }</p>

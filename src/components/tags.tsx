@@ -74,7 +74,9 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
 
     const [isOverflowing, setIsOverflowing] = React.useState(false);
     React.useEffect(() => {
-        setIsOverflowing(isOverflowingHorizontally(document.getElementById(id ?? "")));
+        if (id) {
+            setIsOverflowing(isOverflowingHorizontally(document.getElementById(id)));
+        }
 
         /**
          * Checks if a HTMLElement overflows
@@ -121,10 +123,10 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                  cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
                     {
-                        allTag !== undefined ?
+                        allTag ?
                             <Tag
                                 name={ allTag }
-                                onClick={ onClick !== undefined ? () => onClick(allTag) : undefined }
+                                onClick={ onClick ? () => onClick(allTag) : undefined }
                                 className={ `hover:border-primaryPurple ${ selectedTag === allTag ? "!border-primaryPurple" : "" }` }/>
                             : null
                     }
@@ -133,7 +135,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                             <div key={ tag.key }>
                                 <Tag name={ tag.key }
                                      value={ tag.value }
-                                     onClick={ onClick !== undefined ? () => onClick(tag.key) : undefined }
+                                     onClick={ onClick ? () => onClick(tag.key) : undefined }
                                      className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
                             </div>)
@@ -187,7 +189,7 @@ interface TagsRow {
  * @constructor
  */
 export const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
-    if (tags !== undefined) {
+    if (tags) {
         if (sort) {
             tags.sort();
         }

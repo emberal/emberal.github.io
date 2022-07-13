@@ -25,10 +25,12 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
             let isMounted = true;
 
             function keyboardListener(keyboardEvent: KeyboardEvent) {
-                if (element !== null && keyboardEvent.key !== "Enter" && !element.matches(":focus")) {
+                if (isMounted && element !== null && !element.matches(":focus")) {
 
                     element.focus();
-                    element.value += keyboardEvent.key;
+                    if (keyboardEvent.key !== "Enter") {
+                        element.value += keyboardEvent.key;
+                    }
                     if (onChange) {
                         onChange();
                     }
@@ -36,7 +38,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
 
                 // Used to exit the box with 'Escape'
                 document.addEventListener("keyup", keyUpEvent => {
-                    if (keyUpEvent.key === "Escape") {
+                    if (isMounted && keyUpEvent.key === "Escape") {
                         element?.blur();
                     }
                 });
@@ -89,7 +91,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
                    className={ `sm:pl-6 pl-7 dark:bg-gray-900 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
                     border-2 border-gray-500 rounded-xl outline-none focus:border-primaryPurple shadow-sm shadow-primaryPurple 
                    transition-all duration-200 ease-in-out h-full` }
-                   onChange={ onChange !== undefined ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }/>
+                   onChange={ onChange ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }/>
             {
                 searched ?
                     <button className={ `absolute right-0 mr-1 p-1` } onClick={ clearSearch } title={ t("clear") }>
