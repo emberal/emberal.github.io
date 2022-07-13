@@ -88,12 +88,15 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                 let sum = 0;
                 const children = element.children[0].children;
 
-                if (hideTags) {
-                    sum -= 90; // Makes room for the hide button // TODO use width of actual button
+                if (hideTags && isOverflowing) {
+                    const box = document.getElementById("invisible-box");
+                    if (box) {
+                        sum -= box.clientWidth + 10; // Makes room for the hide button
+                    }
                 }
                 for (let i = 1; i < children.length - 1; i++) {
                     if (children[i] !== null) {
-                        sum += children[i].clientWidth + 4; // +4 is almost equal to 0.25 rem gap between
+                        sum += children[i].clientWidth + 9; // The extra width is for the margin in between and borders
                     }
 
                     if (sum > element.clientWidth) {
@@ -143,7 +146,8 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                     {
                         isOverflowing ?
                             <>
-                                <div className={ `text-transparent min-w-max mx-2 ${ !hideTags ? "hidden" : "" }` }>
+                                <div id={ "invisible-box" }
+                                     className={ `text-transparent min-w-max mx-2 ${ !hideTags ? "hidden" : "" }` }>
                                     { hideTags ? t("showMore") : null }
                                 </div>
                                 <div className={ `${ hideTags ? "absolute right-0 flex flex-row gap-5" : "" }` }>
@@ -163,7 +167,6 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                          className={ `hover:border-primaryPurple min-w-max ${ hideTags ?
                                              "bg-white dark:bg-gray-900" : "" } shadow-sm shadow-primaryPurple` }/>
                                 </div>
-
                             </>
                             : null
                     }
