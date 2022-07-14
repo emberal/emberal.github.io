@@ -123,7 +123,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     }
 
     React.useEffect(() => {
-        if (searchState !== "") {
+        if (searchState !== "") { // TODO sort searches after priority: title -> tags -> description
             let newNodes = allMdx.nodes.map(node =>
                 containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
             setNodes(removeNullValues(newNodes));
@@ -154,7 +154,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param title The title of the post
      * @param tags The tags of the post, as a string, could be in csv format
      */
-    function containsSearchString(title: string | undefined, tags: string | null | undefined): boolean {
+    function containsSearchString(title: string | undefined, tags: string | null | undefined): boolean { // TODO search description
         return searchTitleAndTags(title, tags) && (selectedTag === ALL_TAG || contains(tags, selectedTag));
     }
 

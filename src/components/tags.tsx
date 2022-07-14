@@ -26,10 +26,10 @@ export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) =>
 
     return (
         <button title={ hoverTitle } id={ id }
-                className={ `${ onClick !== undefined ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
+                className={ `${ onClick ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
              border-gray-500` }
                 onClick={ onClick }>
-            <span className={ "mx-2 w-max" }>{ name + (value !== undefined ? `(${ value })` : "") }</span>
+            <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>
         </button>
     )
 }
@@ -130,7 +130,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                             <Tag
                                 name={ allTag }
                                 onClick={ onClick ? () => onClick(allTag) : undefined }
-                                className={ `hover:border-primaryPurple ${ selectedTag === allTag ? "!border-primaryPurple" : "" }` }/>
+                                className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
                             : null
                     }
                     {
@@ -140,17 +140,17 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                      value={ tag.value }
                                      onClick={ onClick ? () => onClick(tag.key) : undefined }
                                      className={ `hover:border-primaryPurple w-max
-                                     ${ selectedTag === tag.key ? "!border-primaryPurple" : "" }` }/>
+                                     ${ selectedTag === tag.key && "!border-primaryPurple" }` }/>
                             </div>)
                     }
                     {
                         isOverflowing ?
                             <>
                                 <div id={ "invisible-box" }
-                                     className={ `text-transparent min-w-max mx-2 ${ !hideTags ? "hidden" : "" }` }>
+                                     className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
                                     { hideTags ? t("showMore") : null }
                                 </div>
-                                <div className={ `${ hideTags ? "absolute right-0 flex flex-row gap-5" : "" }` }>
+                                <div className={ `${ hideTags && "absolute right-0 flex flex-row gap-5" }` }>
                                     {
                                         hideTags && !("ontouchstart" in document.documentElement) ?
                                             <div className={ "rotate-90 pointer-events-none" }
@@ -164,8 +164,8 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                     }
                                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
                                          hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
-                                         className={ `hover:border-primaryPurple min-w-max ${ hideTags ?
-                                             "bg-white dark:bg-gray-900" : "" } shadow-sm shadow-primaryPurple` }/>
+                                         className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
+                                         "bg-white dark:bg-gray-900" } shadow-sm shadow-primaryPurple` }/>
                                 </div>
                             </>
                             : null
@@ -185,7 +185,7 @@ interface TagsRow {
 
 /**
  * A row containing an array of tags
- * @param tags A string array containing all the names of the tags
+ * @param tags A string set containing all the names of the tags
  * @param sort If 'true' will sort the string[] in ascending order
  * @param className Styling of the root element
  * @param id A unique id for the component
@@ -212,5 +212,4 @@ export const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
     else {
         return null;
     }
-
 }

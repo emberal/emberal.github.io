@@ -15,7 +15,7 @@ export const Links = {
 
 }
 
-interface Props {
+interface Layout {
     title: string,
     headline?: string,
     description: string,
@@ -35,7 +35,7 @@ interface Props {
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = ({ title, headline, description, children, current, className }: Props) => {
+const Layout = ({ title, headline, description, children, current, className }: Layout) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -127,17 +127,14 @@ const Layout = ({ title, headline, description, children, current, className }: 
 
     const navLinks = [
         {
-            id: 0,
             to: Links.home,
             name: t('home'),
         },
         {
-            id: 1,
             to: Links.projects,
             name: t('projects'),
         },
         {
-            id: 2,
             to: Links.contactMe,
             name: t('contactMe'),
         },
@@ -174,14 +171,14 @@ const Layout = ({ title, headline, description, children, current, className }: 
             <div className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
                 <h1
                     className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
-                    { (headline !== undefined) ? headline : title }
+                    { (headline) ? headline : title }
                 </h1>
-                {/*TODO Popover or Menu (headlessUI) menu on small screens*/ }
+                { /*TODO Popover or Menu (headlessUI) menu on small screens*/ }
                 <nav>
                     <ul className={ "list-none flex gap-3 mb-2" }>
                         {
                             navLinks.map(link => (
-                                <li key={ link.id } className={ "w-fit text-lg" }>
+                                <li key={ link.to } className={ "w-fit text-lg" }>
                                     <Link
                                         className={ `text-primaryPurple dark:text-primaryPink hover:underline 
                                         ${ current === link.to ? "after:content-['<']" : "" }` }
@@ -229,7 +226,8 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 </main>
             </div>
             { isTop ? null :
-                <button className={ "fixed right-10 bottom-20" } title={ t('goBackToTheTop') } onClick={ backUp }>
+                <button className={ "fixed right-10 bottom-20 border rounded-xl shadow-sm shadow-primaryPurple p-1" }
+                        title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
                     <p className={ "hidden" }>{ t('goBackToTheTop') }</p>
                 </button>
