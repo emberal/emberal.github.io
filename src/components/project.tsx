@@ -20,19 +20,20 @@ interface ProjectCard {
     id?: string,
 }
 
-const ProjectCard = ({
-                         title = "",
-                         description = "",
-                         slug = "/",
-                         source,
-                         timeToRead = 1,
-                         tags,
-                         image,
-                         imageAlt = "",
-                         className,
-                         key,
-                         id,
-                     }: ProjectCard) => {
+const ProjectCard = (
+    {
+        title = "",
+        description = "",
+        slug = "/",
+        source,
+        timeToRead = 1,
+        tags,
+        image,
+        imageAlt = "",
+        className,
+        key,
+        id,
+    }: ProjectCard) => {
 
     const { t } = useTranslation();
 
@@ -60,7 +61,12 @@ const ProjectCard = ({
                         </div>
                         <TagsRow tags={ splitCSV(tags ?? "") }/>
                     </div>
-                    { image ? <GatsbyImage alt={ imageAlt } image={ image }/> : null }
+                    <div className={ `max-h-[40rem] flex justify-center` }>
+                        {
+                            image ? <GatsbyImage className={ `${ image.height >= 1500 && "w-72" }` } alt={ imageAlt } // TODO check image height
+                                                 image={ image }/> : null
+                        }
+                    </div>
                     <div className={ "mx-2 my-4" }>
                         <p>{ description }</p>
                     </div>
