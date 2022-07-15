@@ -63,7 +63,7 @@ const ProjectCard = (
                     </div>
                     <div className={ `max-h-[40rem] flex justify-center` }>
                         {
-                            image ? <GatsbyImage className={ `${ image.height >= 1500 && "w-72" }` } alt={ imageAlt } // TODO check image height
+                            image ? <GatsbyImage className={ `${ image.height > image.width * 2 && "w-72" }` } alt={ imageAlt }
                                                  image={ image }/> : null
                         }
                     </div>

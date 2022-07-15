@@ -39,7 +39,7 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
                         <div className={ `max-h-[40rem] flex justify-center` }>
                             {
                                 heroImage && typeof heroImageAlt === 'string' ?
-                                    <GatsbyImage className={ `${ heroImage.height >= 1500 && "w-72" }` }
+                                    <GatsbyImage className={ `${ heroImage.height > heroImage.width * 2 && "w-72" }` }
                                                  alt={ heroImageAlt } image={ heroImage }/> : null
                             }
                         </div>
