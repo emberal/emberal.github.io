@@ -4,9 +4,9 @@ import { Send, Linkedin, GitHub } from "react-feather";
 import { useForm } from "@formspree/react";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import Input from "../components/input";
 
-const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y border rounded-lg mb-2 dark:bg-gray-800 pl-2 " +
-    "focus:border-primaryPurple outline-none shadow border-gray-500";
+const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-2 pl-2 shadow";
 
 const links = [
     {
@@ -79,27 +79,27 @@ const ContactMe = () => {
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
                         <label>
                             <p>{ t("yourName") }</p>
-                            <input className={ inputStyle } name={ "name" } type={ "text" }
-                                   placeholder={ "Ola Nordmann" }
-                                   required/>
+                            <Input className={ inputStyle } name={ "name" } type={ "text" }
+                                   placeholder={ "Ola Nordmann" } required={ true }/>
                         </label>
                         <label>
                             <p>{ t("subject") }</p>
-                            <input className={ inputStyle } name={ "Subject" } type={ "text" }
+                            <Input className={ inputStyle } name={ "Subject" } type={ "text" }
                                    placeholder={ "Heisann!" }
-                                   required/>
+                                   required={ true }/>
                         </label>
                     </div>
                     <label>
                         <p>{ t("yourEmail") }</p>
-                        <input className={ inputStyle } name={ "email" } type={ "email" }
+                        <Input className={ inputStyle } name={ "email" } type={ "email" }
                                placeholder={ "ola@nordmann.no" }
-                               required/>
+                               required={ true }/>
                     </label>
                     <label>
                         <p>{ t("message") }</p>
                         <textarea id={ "contact-me-text-area" }
-                                  className={ `min-h-[3rem] ${ inputStyle }` }
+                                  className={ `min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
+                                   border-2 border-gray-500 ${ inputStyle }` }
                                   name={ "message" }
                                   placeholder={ t("message") } required/>
                     </label>

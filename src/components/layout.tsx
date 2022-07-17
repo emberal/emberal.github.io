@@ -19,7 +19,7 @@ interface Layout {
     title: string,
     headline?: string,
     description: string,
-    children: React.ReactNode,
+    children?: React.ReactNode,
     current?: string,
     className?: string,
 }

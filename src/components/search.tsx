@@ -2,6 +2,7 @@ import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
 import { ChangeEvent } from "react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import Input from "./input";
 
 interface Search {
     onChange?: Function,
@@ -87,10 +88,9 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
             <button className={ `absolute left-0 mx-[0.40rem]` } onClick={ focusSearch } title={ t("search") }>
                 <SearchIcon className={ "sm:w-4 sm:h-4 h-5 w-5" }/>
             </button>
-            <input id={ "search" }
-                   className={ `sm:pl-6 pl-7 dark:bg-gray-900 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
-                    border-2 border-gray-500 rounded-xl outline-none focus:border-primaryPurple shadow-sm shadow-primaryPurple 
-                   transition-all duration-200 ease-in-out h-full` }
+            <Input id={ "search" }
+                   className={ `sm:pl-6 pl-7 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
+                    rounded-xl shadow-sm shadow-primaryPurple transition-all duration-200 ease-in-out h-full` }
                    onChange={ onChange ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }/>
             {
                 searched ?

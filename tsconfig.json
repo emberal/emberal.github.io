@@ -102,5 +102,6 @@
     /* Skip type checking all .d.ts files. */
     "jsx": "react"
   },
-  "include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]
+  "include": ["./src/**/*", "./test/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }

@@ -24,6 +24,7 @@ interface Tag {
  */
 export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) => {
 
+    // TODO use if - else for button or div element, if onClick === true use button
     return (
         <button title={ hoverTitle } id={ id }
                 className={ `${ onClick ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
