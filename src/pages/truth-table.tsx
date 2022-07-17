@@ -9,7 +9,7 @@ interface TruthTablePage {
 }
 
 export function simplify(oldString: string): Expression {
-    let exp = new Expression(null, Operator.none, null);
+    let exp = new Expression(null, Operator.none, null, {});
 
     for (let i = 0; i < oldString.length; i++) {
         let c = oldString.charAt(i);
@@ -17,7 +17,7 @@ export function simplify(oldString: string): Expression {
 
             // Moves the entire expression over to the left side
             if (exp.operator !== Operator.none) {
-                exp.exp1 = new Expression(exp.exp1, exp.operator, exp.exp2);
+                exp.exp1 = new Expression(exp.exp1, exp.operator, exp.exp2, {});
                 exp.operator = Operator.none;
                 exp.exp2 = null;
             }
@@ -76,7 +76,8 @@ export function simplify(oldString: string): Expression {
     console.log(exp);
 
     exp.absorption();
-    exp.distributivity(); // TODO
+    exp.distributivity();
+    exp.eliminationOfImplication();
     return exp;
 }
 

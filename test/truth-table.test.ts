@@ -18,6 +18,7 @@ test(" Distributivity", () => {
 
 test("Elimination of implication", () => {
     expect(simplify("A->B").toString()).toBe("!A | B");
+    expect(simplify("(A&C)->B").toString()).toBe("!(A & C) | B");
 });
 
 test("De Morgan's law", () => {

@@ -6,15 +6,23 @@ export enum Operator {
 }
 
 export class Expression {
-    constructor(exp1: Expression | string | null, operator: Operator, exp2: Expression | string | null) {
+
+    constructor(exp1: Expression | string | null, operator: Operator, exp2: Expression | string | null, {
+        leading = "",
+        trailing = ""
+    }) {
+        this.leading = leading;
         this.exp1 = exp1;
         this.operator = operator;
         this.exp2 = exp2;
+        this.trailing = trailing;
     }
 
+    leading: string;
     exp1: Expression | string | null;
     operator: Operator;
     exp2: Expression | string | null;
+    trailing: string;
 
     equals(): boolean {
 
@@ -35,7 +43,6 @@ export class Expression {
 
     /**
      * @example A & B | B & C <=> B & (A | C)
-     * @returns {Expression} The simplified expression, or if it's not possible to simplify further return the unchanged object
      */
     distributivity(): void {
 
@@ -44,13 +51,13 @@ export class Expression {
             if (typeof exp2 === "object") {
                 if (typeof exp1 === "object" && exp1.exp1 === exp2.exp1) {
                     common = exp1.exp1;
-                    this.exp2 = new Expression("(" + exp1.exp2, this.operator, exp2.exp2 + ")"); // FIXME if exp1.exp2 is expression
+                    this.exp2 = new Expression(exp1.exp2, this.operator, exp2.exp2, { leading: "(", trailing: ")" });
                     this.exp1 = common;
                     this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
                 }
                 else if (typeof exp1 === "object" && exp1.exp1 === exp2.exp2) {
                     common = exp1.exp1;
-                    this.exp2 = new Expression("(" + exp1.exp2, this.operator, exp2.exp1 + ")"); // FIXME if exp1.exp2 is expression
+                    this.exp2 = new Expression(exp1.exp2, this.operator, exp2.exp1, { leading: "(", trailing: ")" });
                     this.exp1 = common;
                     this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
                 }
@@ -76,15 +83,23 @@ export class Expression {
     }
 
     /**
-     * @example A -> B <=> ¬A | B
+     * @example A -> B <=> !A | B
      */
-    eliminationOfImplication(): Expression {
-        return this;
+    eliminationOfImplication(): void {
+        if (this.exp1 !== null && this.operator === Operator.implication && this.exp2 !== null) {
+            if (typeof this.exp1 === "string") {
+                this.exp1 = "!" + this.exp1;
+            }
+            else {
+                this.exp1.leading = "!(";
+                this.exp1.trailing = ")";
+            }
+            this.operator = Operator.or;
+        }
     }
 
     /**
      * @example A & (A | B) <=> A or A | (A & B) <=> A
-     * @returns {Expression} The simplified expression, or if it's not possible to simplify further return the unchanged object
      */
     absorption(): void {
 
@@ -129,9 +144,9 @@ export class Expression {
     }
 
     toString(): string {
-        let s = "";
+        let s = this.leading;
         if (this.exp1 !== null) {
-            s = this.exp1.toString();
+            s += this.exp1.toString();
 
             if (this.operator !== Operator.none) {
                 s += " " + this.operator.valueOf();
@@ -140,6 +155,7 @@ export class Expression {
                     s += " " + this.exp2.toString();
                 }
             }
+            s += this.trailing;
         }
         return s;
     }
