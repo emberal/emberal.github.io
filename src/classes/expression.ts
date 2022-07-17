@@ -41,6 +41,15 @@ export class Expression {
         return false;
     }
 
+    laws(): void {
+        this.distributivity();
+        this.deMorgansLaw();
+        this.assosiativeLaw();
+        this.commutativeLaw();
+        this.eliminationOfImplication();
+        this.absorption();
+    }
+
     /**
      * @example A & B | B & C <=> B & (A | C)
      */

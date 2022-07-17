@@ -12,7 +12,7 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&(B|B)&C").toString()).toBe("A & B & C");
 });
 
-test(" Distributivity", () => {
+test("Distributivity", () => {
     expect(simplify("(A&B)|(B&C)").toString()).toBe("B & (C | A)");
 });
 
@@ -24,4 +24,9 @@ test("Elimination of implication", () => {
 test("De Morgan's law", () => {
     expect(simplify("!(A&B)").toString()).toBe("!A | !B");
     expect(simplify("!(A|B)").toString()).toBe("!A & !B");
+});
+
+test("Commutative", () => {
+    expect(simplify("B&A").toString()).toBe("A & B");
+    expect(simplify(("B|A").toString())).toBe("A | B");
 });

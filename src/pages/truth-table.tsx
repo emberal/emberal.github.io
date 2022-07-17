@@ -13,7 +13,7 @@ export function simplify(oldString: string): Expression {
 
     for (let i = 0; i < oldString.length; i++) {
         let c = oldString.charAt(i);
-        if (c === "&" || c === "|" || (c === "-" && oldString.charAt(i + 1) === ">")) {
+        if (isOperator(c, oldString.charAt(i + 1))) {
 
             // Moves the entire expression over to the left side
             if (exp.operator !== Operator.none) {
@@ -72,12 +72,38 @@ export function simplify(oldString: string): Expression {
                 }
             }
         }
+        else if (c === "!") {
+            exp.leading = c;
+            let stringStart = -1, operator = -1;
+            for (let j = i + 1; j < oldString.length; j++) {
+                // FIXME throwes error at some point
+                if (oldString.charAt(j) === "(") {
+                    stringStart = j + 1;
+                }
+                else if (isOperator(oldString.charAt(j), oldString.charAt(j + 1))) {
+                    exp.exp1 = simplify(oldString.substring(stringStart, j));
+                    operator = j;
+                }
+                else if (oldString.charAt(j) === ")") {
+                    exp.exp2 = simplify(oldString.substring(operator, j));
+                    i = j;
+                    break;
+                }
+                else if (stringStart === -1) {
+                    exp.exp1 = oldString.charAt(j);
+                    break;
+                }
+            }
+        }
     }
+
+    function isOperator(char: string, nextChar: string): boolean {
+        return char === "&" || char === "|" || (char === "-" && nextChar === ">");
+    }
+
     console.log(exp);
 
-    exp.absorption();
-    exp.distributivity();
-    exp.eliminationOfImplication();
+    exp.laws();
     return exp;
 }
 
