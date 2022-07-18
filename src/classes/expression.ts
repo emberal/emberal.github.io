@@ -7,15 +7,17 @@ export enum Operator {
 
 export class Expression {
 
-    constructor(exp1: Expression | string | null, operator: Operator, exp2: Expression | string | null, {
+    public constructor(exp1: Expression | string | null, operator: Operator, exp2: Expression | string | null, {
         leading = "",
-        trailing = ""
+        trailing = "",
+        isAtomic = false,
     }) {
         this.leading = leading;
         this.exp1 = exp1;
         this.operator = operator;
         this.exp2 = exp2;
         this.trailing = trailing;
+        this.isAtomic = isAtomic;
     }
 
     leading: string;
@@ -23,8 +25,9 @@ export class Expression {
     operator: Operator;
     exp2: Expression | string | null;
     trailing: string;
+    isAtomic: boolean; // TODO set to true if it's an atomic value
 
-    equals(): boolean {
+    public equals(): boolean {
 
         if (this.exp1 === this.exp2) {
             return true;
@@ -41,7 +44,7 @@ export class Expression {
         return false;
     }
 
-    laws(): void {
+    public laws(): void {
         this.distributivity();
         this.deMorgansLaw();
         this.assosiativeLaw();
@@ -53,7 +56,7 @@ export class Expression {
     /**
      * @example A & B | B & C <=> B & (A | C)
      */
-    distributivity(): void {
+    public distributivity(): void {
 
         const x = (exp1: Expression, exp2: Expression) => {
             let common: Expression | string | null;
@@ -79,22 +82,69 @@ export class Expression {
         }
     }
 
-    deMorgansLaw(): Expression {
-        return this;
+    /**
+     * @example !A & !B <=> !(A | B)
+     */
+    public deMorgansLaw(): void {
+        if (this.exp1 !== null && this.exp2 !== null) {
+            if (this._isNot(this.exp1) && this._isNot(this.exp2)) {
+                let op = Operator.none;
+
+                switch (this.operator) {
+                    case Operator.and:
+                        op = Operator.or;
+                        break;
+                    case Operator.or:
+                        op = Operator.and;
+                }
+
+                if (op !== Operator.none) {
+                    this.exp1 = new Expression(this._removeNot(this.exp1), op, this._removeNot(this.exp2), {
+                        leading: "!(",
+                        trailing: ")"
+                    });
+                    this.operator = Operator.none;
+                    this.exp2 = null;
+                }
+            }
+        }
     }
 
-    assosiativeLaw(): Expression {
-        return this;
+    private _isNot(exp: Expression | string): boolean {
+        if (typeof exp === "string") {
+            return exp.charAt(0) === "!";
+        }
+        return exp.leading === "!";
     }
 
-    commutativeLaw(): Expression {
-        return this;
+    private _removeNot(exp: Expression | string): Expression | string {
+        if (typeof exp === "string") {
+            return this._removeNotFromString(exp);
+        }
+        return this._removeNotFromExp(exp);
+    }
+
+    private _removeNotFromString(exp: string): string {
+        return exp.replace("!", "");
+    }
+
+    private _removeNotFromExp(exp: Expression): Expression {
+        exp.leading = "";
+        return exp;
+    }
+
+    public assosiativeLaw(): void {
+        // TODO
+    }
+
+    public commutativeLaw(): void {
+        // TODO
     }
 
     /**
      * @example A -> B <=> !A | B
      */
-    eliminationOfImplication(): void {
+    public eliminationOfImplication(): void {
         if (this.exp1 !== null && this.operator === Operator.implication && this.exp2 !== null) {
             if (typeof this.exp1 === "string") {
                 this.exp1 = "!" + this.exp1;
@@ -110,7 +160,7 @@ export class Expression {
     /**
      * @example A & (A | B) <=> A or A | (A & B) <=> A
      */
-    absorption(): void {
+    public absorption(): void {
 
         if (this.exp1 !== null && this.exp2 !== null) {
 
@@ -152,7 +202,7 @@ export class Expression {
         }
     }
 
-    toString(): string {
+    public toString(): string {
         let s = this.leading;
         if (this.exp1 !== null) {
             s += this.exp1.toString();
