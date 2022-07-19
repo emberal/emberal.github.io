@@ -11,30 +11,25 @@ interface TruthTablePage {
 
 // TODO remember strength: !, &, |, ->
 
-// TODO test alt method, find center operator, then divide left side and ride side to each expression, then recursion on both sides
-// (A & B) | C    A & B & C & D   A | (B & C)   (A | B) -> C   (A | A) -> (B & C) -> (C | A)   A -> (((B & C) -> C) | A)
-//         ^            ^           ^                   ^                         ^              ^
-// TODO if there are 2 center operators, pick the one with lowest weight
-
-export function simplify(stringExp: string): Expression | string {
-    return simplifyRec(stringExp, 0, stringExp.length);
+export function simplify(stringExp: string): string {
+    return removeOuterParenthesis(simplifyRec(stringExp).toString());
 }
 
-function simplifyRec(stringExp: string, start: number, end: number): Expression | string {
+function simplifyRec(stringExp: string): Expression {
 
-    stringExp = removeOuterParenthesis(stringExp);
+    stringExp = removeOuterParenthesis(stringExp); // TODO use, or move?
+    const end = stringExp.length;
 
-    if (stringExp.length <= 1) {
-        return stringExp;
+    if (stringExp.length < 3) {
+        return new Expression(stringExp, null, null, { isAtomic: true });
     }
 
     const center = getCenterOperatorIndex(stringExp);
 
-    return new Expression(simplifyRec(stringExp.substring(start, center.index), start, center.index), center.operator,
-        simplifyRec(stringExp.substring(center.index + 1, end), center.index + 1, end), {
-            leading: "(",
-            trailing: ")"
-        });
+    const exp = new Expression(simplifyRec(stringExp.substring(0, center.index)), center.operator,
+        simplifyRec(stringExp.substring(center.index + 1, end)), { leading: "(", trailing: ")" }); // TODO only use parenthesis when needed to
+    exp.absorption(); // TODO use all
+    return exp;
 }
 
 /**
@@ -48,16 +43,17 @@ function getCenterOperatorIndex(stringExp: string): any {
     let index = 0;
     for (let i = 0; i < stringExp.length; i++) {
 
-        const stack = [];
+        let operators = 0;
         try {
+            // Skips all lines within parenthesis
             let c = stringExp.charAt(i);
-            while ( c === "(" || stack.length > 0 ) {
+            while ( c === "(" || operators > 0 ) {
                 c = stringExp.charAt(i);
                 if (c === "(") {
-                    stack.push("(");
+                    operators++;
                 }
                 else if (c === ")") {
-                    stack.pop();
+                    operators--;
                 }
                 i++;
             }
@@ -66,8 +62,9 @@ function getCenterOperatorIndex(stringExp: string): any {
             console.error(error);
         }
 
+        // Finds the matching Operator
         for (const value of Operator.getValues()) {
-            if (value.operator === stringExp.charAt(i)) {
+            if (value.operator === stringExp.charAt(i) && value.operator !== Operator.not.operator) {
                 arr[index++] = { operator: value, index: i };
                 break;
             }
@@ -91,18 +88,18 @@ function removeOuterParenthesis(stringExp: string): string {
     let remove = false;
     try {
         let index = 0;
-        const stack = [];
+        let operators = 0;
 
         if (stringExp.charAt(0) === "(") {
             remove = true;
         }
-        while ( remove && (stringExp.charAt(index) === "(" || stack.length > 0) ) {
+        while ( remove && (stringExp.charAt(index) === "(" || operators > 0) ) {
             if (stringExp.charAt(index) === "(") {
-                stack.push("(");
+                operators++;
             }
             else if (stringExp.charAt(index) === ")") {
-                stack.pop();
-                if (stack.length === 0 && index !== stringExp.length - 1) {
+                operators--;
+                if (operators === 0 && index !== stringExp.length - 1) {
                     remove = false;
                 }
             }
@@ -114,120 +111,6 @@ function removeOuterParenthesis(stringExp: string): string {
     }
     return remove ? stringExp.substring(1, stringExp.length - 1) : stringExp;
 }
-
-// export function simplify(oldString: string): Expression {
-//     let exp = new Expression(null, OperatorEnum.none, null, {});
-//
-//     // TODO check for parenthesis that spans the entire expression, and remove it, ex: (A&B) => A&B, stack: if the stack is not empty before the end, remove the first and last char
-//     // TODO check for illegal inputs, and throw errors
-//
-//     for (let i = 0; i < oldString.length; i++) {
-//         let c = oldString.charAt(i);
-//         if (isOperator(c, oldString.charAt(i + 1))) {
-//
-//             // Moves the entire expression over to the left side
-//             if (exp.operator !== OperatorEnum.none) {
-//                 exp.exp1 = new Expression(exp.exp1, exp.operator, exp.exp2, {});
-//                 exp.operator = OperatorEnum.none;
-//                 exp.exp2 = null;
-//             }
-//
-//             switch (c) {
-//                 case "&":
-//                     exp.operator = OperatorEnum.and;
-//                     break;
-//                 case "|":
-//                     exp.operator = OperatorEnum.or;
-//                     break;
-//                 default:
-//                     exp.operator = OperatorEnum.implication;
-//             }
-//
-//             if (exp.exp1 === null) {
-//                 let stringEnd = -1;
-//                 for (let j = i - 1; j >= 0; j--) {
-//
-//                     if (oldString.charAt(j) === ")") {
-//                         stringEnd = j;
-//                     }
-//                     else if (oldString.charAt(j) === "(") {
-//                         exp.exp1 = simplify(oldString.substring(j + 1, stringEnd));
-//                         if (oldString.charAt(j - 1) === "!") {
-//                             exp.exp1.leading = "!";
-//                         }
-//                         break;
-//                     }
-//                     else if (stringEnd === -1) {
-//                         exp.exp1 = oldString.charAt(j);
-//                         if (oldString.charAt(j - 1) === "!") {
-//                             exp.exp1 = "!" + exp.exp1;
-//                         }
-//                         break;
-//                     }
-//                 }
-//             } // if
-//
-//             if (exp.exp2 === null) {
-//                 // Since implication has length 2, iterate to the final char
-//                 if (exp.operator === OperatorEnum.implication) {
-//                     i++;
-//                 }
-//                 let stringStart = -1;
-//                 for (let j = i + 1; j < oldString.length; j++) { // TODO use stack to count parenthesis
-//                     if (oldString.charAt(j) === "(") {
-//                         stringStart = j + 1;
-//                     }
-//                     else if (oldString.charAt(j) === ")") {
-//                         exp.exp2 = simplify(oldString.substring(stringStart, j));
-//                         if (oldString.charAt(j - 1) === "!") {
-//                             exp.exp2.leading = "!";
-//                         }
-//                         i = j;
-//                         break;
-//                     }
-//                     else if (stringStart === -1 && oldString.charAt(j) !== "!") {
-//                         exp.exp2 = oldString.charAt(j);
-//                         if (oldString.charAt(j - 1) === "!") {
-//                             exp.exp2 = "!" + exp.exp2;
-//                         }
-//                         break;
-//                     }
-//                 } // for
-//             } // if
-//         }
-//         // else if (c === "!") {
-//         //     exp.leading = c;
-//         //     let stringStart = -1;
-//         //
-//         //     for (let j = i + 1; j < oldString.length; j++) {
-//         //
-//         //         if (oldString.charAt(j) === "(") {
-//         //             stringStart = j + 1;
-//         //         }
-//         //         else if (oldString.charAt(j) === ")") {
-//         //             exp.exp1 = simplify(oldString.substring(stringStart, j));
-//         //             exp.exp1.leading = "(";
-//         //             exp.exp1.trailing = ")";
-//         //             i = j;
-//         //             break;
-//         //         }
-//         //         else if (stringStart === -1) {
-//         //             exp.exp1 = oldString.charAt(j);
-//         //             break;
-//         //         }
-//         //     } // for
-//         // } // else if
-//     } // for
-//
-//     function isOperator(char: string, nextChar: string): boolean {
-//         return char === "&" || char === "|" || (char === "-" && nextChar === ">");
-//     }
-//
-//     // console.log(exp);
-//
-//     exp.laws();
-//     return exp;
-// }
 
 // TODO translate
 // TODO create methods for each of the laws
