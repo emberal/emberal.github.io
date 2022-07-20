@@ -11,18 +11,19 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
  */
 const NotFoundPage = () => {
 
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     return (
-        <Layout title={t("pageNotFound")} description={"Error 404. Page not found!"}>
+        <Layout title={ t("pageNotFound") } description={ "Error 404. Page not found!" }>
             <>
                 <Helmet>
                     <meta name="robots" content="noindex"/>
                 </Helmet>
-                <p> {t("sorry") + " "} <span role="img" aria-label="Pensive emoji">😔</span>
-                    {" " + t("pageWasNotFound")}
+                <p> { t("sorry") + " " } <span role="img" aria-label="Pensive emoji">😔</span>
+                    { " " + t("pageWasNotFound") }
                     <br/><br/>
-                    <Link className={"dark:text-primaryPink text-primaryPurple hover:underline"} to="/">{t("home")}</Link>.
+                    <Link className={ "dark:text-primaryPink text-primaryPurple hover:underline" }
+                          to="/">{ t("home") }</Link>.
                 </p>
             </>
         </Layout>
