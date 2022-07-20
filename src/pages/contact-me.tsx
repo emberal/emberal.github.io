@@ -29,6 +29,15 @@ const links = [
  */
 const ContactMe = () => {
 
+    function handleSubmit() {
+        Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
+        const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
+        if (element !== null) {
+            element.value = "";
+        }
+    }
+
+
     React.useEffect(() => {
         let isMounted = true;
         const submitKeys = (e: KeyboardEvent) => {
@@ -40,9 +49,18 @@ const ContactMe = () => {
                 }
             }
         }
+        const postSubmit = (e: SubmitEvent, form: HTMLFormElement) => {
+            if (isMounted) {
+                window.open("https://formspree.io/f/mknykgbn", "_blank");
+                form.reset();
+            }
+        }
+        const form = document.getElementById("form") as HTMLFormElement | null;
+        //form?.addEventListener("submit", (e) => postSubmit(e, form));
         document.addEventListener("keyup", (e) => submitKeys(e));
         return () => {
             document.removeEventListener("keyup", (e) => submitKeys(e));
+            //form?.removeEventListener("submit", (e) => postSubmit(e, form));
             isMounted = false;
         };
     });
@@ -67,6 +85,8 @@ const ContactMe = () => {
                     }
                 </div>
                 <form acceptCharset={ "UTF-8" }
+                      id={ "form" }
+                      target={ "_blank" }
                       action={ "https://formspree.io/f/mknykgbn" }
                       method={ "post" }>
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
@@ -105,13 +125,13 @@ const ContactMe = () => {
                                   required/>
                     </label>
                     <input name="_gotcha" type="text" className={ "hidden" }/> { /*Honeypot spam filter*/ }
-                    <p></p>
                     <button id={ "submit-button" } className={ "float-right" }
                             title={ "Send" }
+                            name={ "submit" }
                             type={ "submit" }>
-                        <Send/><p className={ "hidden" }>Send</p>
+                        <Send/>
+                        <p className={ "hidden" }>Send</p>
                     </button>
-                    { (false) ? <p>{ t("messageSent") }</p> : null }
                 </form>
             </>
         </Layout>
