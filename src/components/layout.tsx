@@ -163,7 +163,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
 
     return (
         <div className={ `dark:bg-gray-900 dark:text-white ${ className }` }>
-            <Helmet> {/*TODO update gatsby to 4.19 and use new Head, instead of Helmet*/ }
+            <Helmet> { /*TODO Use new Head, instead of Helmet*/ }
                 <html lang={ query.site.siteMetadata.lang }/>
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
