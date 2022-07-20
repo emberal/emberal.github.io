@@ -63,7 +63,6 @@ const Footer = ({ className }: Footer) => {
         }
     ];
 
-
     return (
         <div className={ `absolute text-center w-full bottom-0 mb-5 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
@@ -83,6 +82,7 @@ const Footer = ({ className }: Footer) => {
                                         <div className={ "w-max flex items-center" }>
                                             <span>{ lang.icon }</span>
                                             { lang.lang === 'auto' ?
+                                                // @ts-ignore // TODO error for some reason
                                                 <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
                                                          to={ originalPath } onClick={ setAuto }
                                                          language={
@@ -90,6 +90,7 @@ const Footer = ({ className }: Footer) => {
                                                              navigator.language === "no" ? langs.nor : langs.eng }>
                                                     { lang.text }
                                                 </I18Link> :
+                                                // @ts-ignore // TODO error for some reason
                                                 <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
                                                          to={ originalPath } language={ lang.lang }
                                                          onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
