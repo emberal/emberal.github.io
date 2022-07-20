@@ -6,7 +6,7 @@ import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "../components/input";
 
-const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-2 pl-2 shadow";
+const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-2 shadow";
 
 const links = [
     {
@@ -98,7 +98,7 @@ const ContactMe = () => {
                     <label>
                         <p>{ t("message") }</p>
                         <textarea id={ "contact-me-text-area" }
-                                  className={ `min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
+                                  className={ `pl-2 min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 ${ inputStyle }` }
                                   name={ "message" }
                                   placeholder={ t("message") } required/>
