@@ -14,12 +14,13 @@ test("Absorption w/ different values", () => {
 });
 
 test("Distributivity", () => {
-    expect(simplify("(A&B)|(B&C)")).toBe("B & (C | A)");
+    expect(simplify("A&B|B&C")).toBe("B & (C | A)");
+    expect(simplify("(A|B)&(B|C)")).toBe("B | A & C");
 });
 
 test("Elimination of implication", () => {
     expect(simplify("A>B")).toBe("!A | B");
-    expect(simplify("(A&C)>B")).toBe("!(A & C) | B");
+    expect(simplify("A&C>B")).toBe("!(A & C) | B");
 });
 
 test("De Morgan's law", () => {

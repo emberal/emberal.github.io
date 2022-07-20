@@ -1,6 +1,10 @@
+interface Values {
+    values?: string[],
+}
+
 export class Operator {
 
-    public constructor(operator: string, weight: number, { values = [] }) {
+    public constructor(operator: string, weight: number, { values = [] }: Values) {
         this.operator = operator;
         this.weight = weight;
         this.values = values;
@@ -10,10 +14,10 @@ export class Operator {
     weight: number;
     values: string[];
 
-    static implication = new Operator(">", 0, {});
-    static or = new Operator("|", 1, {});
-    static and = new Operator("&", 2, {});
-    static not = new Operator("!", 3, {});
+    static implication = new Operator(">", 0, { values: ["implication", "impliserer", "->", "=>"] });
+    static or = new Operator("|", 1, { values: ["or", "eller", "V", "\\/"] });
+    static and = new Operator("&", 2, { values: ["and", "og", "/\\"] });
+    static not = new Operator("!", 3, { values: ["not", "ikke", "¬", "~", "-"] });
 
     public static getValues(): Operator[] {
         return [Operator.implication, Operator.or, Operator.and, Operator.not];
