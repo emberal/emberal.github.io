@@ -83,14 +83,14 @@ export class Expression {
 
         const x = (exp1: Expression, exp2: Expression) => {
             let common: Expression | string | null;
-            if (typeof exp2 === "object") {
-                if (typeof exp1 === "object" && exp1.exp1 === exp2.exp1) {
+            if (typeof exp1 === "object" && typeof exp2 === "object") {
+                if (exp1.exp1 === exp2.exp1) {
                     common = exp1.exp1;
                     this.exp2 = new Expression(exp1.exp2, this.operator, exp2.exp2, { leading: "(", trailing: ")" });
                     this.exp1 = common;
                     this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
                 }
-                else if (typeof exp1 === "object" && exp1.exp1 === exp2.exp2) {
+                else if (exp1.exp1 === exp2.exp2) {
                     common = exp1.exp1;
                     this.exp2 = new Expression(exp1.exp2, this.operator, exp2.exp1, { leading: "(", trailing: ")" });
                     this.exp1 = common;

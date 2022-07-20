@@ -13,11 +13,11 @@ interface Input {
 }
 
 const Input = ({ className, id, name, type, placeholder, required, onChange, leading, trailing }: Input) => {
-    return ( // TODO add leading and trailing components and make there's no overlap
-        <div>
+    return (
+        <div className={ "flex flex-row items-center" }>
             { leading }
             <input
-                className={ `dark:bg-gray-900 focus:border-primaryPurple outline-none border-2 border-gray-500 ${ className }` }
+                className={ `dark:bg-gray-900 focus:border-primaryPurple outline-none border-2 border-gray-500 pl-2 ${ className }` }
                 id={ id }
                 name={ name }
                 type={ type }
@@ -26,7 +26,6 @@ const Input = ({ className, id, name, type, placeholder, required, onChange, lea
                 onChange={ onChange }/>
             { trailing }
         </div>
-
     );
 }
 

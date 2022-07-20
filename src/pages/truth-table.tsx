@@ -4,6 +4,7 @@ import Input from "../components/input";
 import { graphql } from "gatsby";
 import { Expression } from "../classes/expression";
 import { Operator } from "../classes/operator";
+import { Search } from "react-feather";
 
 interface TruthTablePage {
 
@@ -29,6 +30,12 @@ function simplifyRec(stringExp: string): Expression {
     const exp = new Expression(simplifyRec(stringExp.substring(0, center.index)), center.operator,
         simplifyRec(stringExp.substring(center.index + 1, end)), { leading: "(", trailing: ")" }); // TODO only use parenthesis when needed to
     exp.absorption(); // TODO use all
+    exp.distributivity(); // FIXME
+
+    if (exp.operator === Operator.and) { // TODO improve
+        exp.leading = "";
+        exp.trailing = "";
+    }
     return exp;
 }
 
@@ -125,7 +132,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
      */
-    function onChange() {
+    function onClick() {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp) {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
@@ -143,7 +150,15 @@ const TruthTablePage = ({}: TruthTablePage) => {
     return (
         <Layout title={ "Truth tables" } description={ "Generate truth tables or simplify" }>
             <div>
-                <Input className={ `rounded-xl` } id={ "truth-input" } onChange={ onChange }/>
+                <Input className={ `rounded-xl !pl-7 h-10` }
+                       id={ "truth-input" }
+                       leading={ <Search className={ "pl-2 absolute" }/> }
+                       trailing={
+                           <button
+                               className={ "ml-1 px-1 bg-primaryPink text-black border border-gray-500 rounded-xl h-10" }
+                               onClick={ onClick }>
+                               Simplify
+                           </button> }/>
             </div>
         </Layout>
     );
