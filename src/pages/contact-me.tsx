@@ -1,7 +1,6 @@
 import * as React from "react";
 import Layout, { Links } from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
-import { useForm } from "@formspree/react";
 import { graphql } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "../components/input";
@@ -30,14 +29,6 @@ const links = [
  */
 const ContactMe = () => {
 
-    const [state, handleSubmit] = useForm("mknykgbn");
-    if (state.succeeded) {
-        Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
-        const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
-        if (element !== null) {
-            element.value = "";
-        }
-    }
     React.useEffect(() => {
         let isMounted = true;
         const submitKeys = (e: KeyboardEvent) => {
@@ -75,23 +66,32 @@ const ContactMe = () => {
                         ))
                     }
                 </div>
-                <form acceptCharset={ "UTF-8" } onSubmit={ handleSubmit }>
+                <form acceptCharset={ "UTF-8" }
+                      action={ "https://formspree.io/f/mknykgbn" }
+                      method={ "post" }>
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
                         <label>
                             <p>{ t("yourName") }</p>
-                            <Input className={ inputStyle } name={ "name" } type={ "text" }
-                                   placeholder={ "Ola Nordmann" } required={ true }/>
+                            <Input className={ inputStyle }
+                                   name={ "name" }
+                                   type={ "text" }
+                                   placeholder={ "Ola Nordmann" }
+                                   required={ true }/>
                         </label>
                         <label>
                             <p>{ t("subject") }</p>
-                            <Input className={ inputStyle } name={ "Subject" } type={ "text" }
+                            <Input className={ inputStyle }
+                                   name={ "subject" }
+                                   type={ "text" }
                                    placeholder={ "Heisann!" }
                                    required={ true }/>
                         </label>
                     </div>
                     <label>
                         <p>{ t("yourEmail") }</p>
-                        <Input className={ inputStyle } name={ "email" } type={ "email" }
+                        <Input className={ inputStyle }
+                               name={ "_replyto" }
+                               type={ "email" }
                                placeholder={ "ola@nordmann.no" }
                                required={ true }/>
                     </label>
@@ -101,16 +101,17 @@ const ContactMe = () => {
                                   className={ `pl-2 min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 ${ inputStyle }` }
                                   name={ "message" }
-                                  placeholder={ t("message") } required/>
+                                  placeholder={ t("message") }
+                                  required/>
                     </label>
-                    <input name="_gotcha" type="text" className={ "hidden" }/> {/*Honeypot spam filter*/ }
+                    <input name="_gotcha" type="text" className={ "hidden" }/> { /*Honeypot spam filter*/ }
                     <p></p>
                     <button id={ "submit-button" } className={ "float-right" }
                             title={ "Send" }
-                            type={ "submit" } disabled={ state.submitting }>
+                            type={ "submit" }>
                         <Send/><p className={ "hidden" }>Send</p>
                     </button>
-                    { (state.succeeded) ? <p>{ t("messageSent") }</p> : null }
+                    { (false) ? <p>{ t("messageSent") }</p> : null }
                 </form>
             </>
         </Layout>
