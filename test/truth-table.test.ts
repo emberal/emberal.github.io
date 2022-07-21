@@ -14,7 +14,7 @@ test("Absorption w/ different values", () => {
 });
 
 test("Distributivity", () => {
-    expect(simplify("A&B|B&C")).toBe("B & (C | A)");
+    expect(simplify("A&B|B&C")).toBe("B & (A | C)");
     expect(simplify("(A|B)&(B|C)")).toBe("B | A & C");
 });
 
@@ -33,7 +33,8 @@ test("Parenthesis", () => {
     expect(simplify("(!(A&B)|(C>D))&E")).toBe("(!(A&B)|(C>D))&E");
 });
 
-// test("Commutative", () => {
-//     expect(simplify("B&A")).toBe("A & B");
-//     expect(simplify(("B|A"))).toBe("A | B");
-// });
+test("Commutative", () => {
+    expect(simplify("B&A")).toBe("A & B");
+    expect(simplify(("B|A"))).toBe("A | B");
+    expect(simplify("G&(H|B)>(A&(C|J))")).toBe("G & (B | H) > (A & (C | J))");
+});

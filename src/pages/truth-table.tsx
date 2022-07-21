@@ -13,29 +13,32 @@ interface TruthTablePage {
 // TODO remember strength: !, &, |, ->
 
 export function simplify(stringExp: string): string {
+    // TODO parse string and remove all unnecessarry parenthesis
     return removeOuterParenthesis(simplifyRec(stringExp).toString());
 }
 
 function simplifyRec(stringExp: string): Expression {
 
-    stringExp = removeOuterParenthesis(stringExp); // TODO use, or move?
-    const end = stringExp.length;
+    stringExp = removeOuterParenthesis(stringExp); // TODO remove and test
 
     if (stringExp.length < 3) {
-        return new Expression(stringExp, null, null, { isAtomic: true });
+        let leading = "";
+        if (stringExp.includes("!")) {
+            leading = "!";
+            stringExp = stringExp.replace("!", "");
+        }
+        return new Expression(stringExp, null, null, { leading: leading, isAtomic: true });
     }
 
     const center = getCenterOperatorIndex(stringExp);
 
     const exp = new Expression(simplifyRec(stringExp.substring(0, center.index)), center.operator,
-        simplifyRec(stringExp.substring(center.index + 1, end)), { leading: "(", trailing: ")" }); // TODO only use parenthesis when needed to
+        simplifyRec(stringExp.substring(center.index + 1, stringExp.length)), {});
     exp.absorption(); // TODO use all
-    exp.distributivity(); // FIXME
-
-    if (exp.operator === Operator.and) { // TODO improve
-        exp.leading = "";
-        exp.trailing = "";
-    }
+    exp.distributivity();
+    exp.eliminationOfImplication();
+    exp.deMorgansLaw();
+    exp.commutativeLaw();
     return exp;
 }
 
@@ -46,8 +49,11 @@ function simplifyRec(stringExp: string): Expression {
  */
 function getCenterOperatorIndex(stringExp: string): any {
 
-    const arr: any[] = [];
+    const oldLen = stringExp.length;
+    stringExp = removeOuterParenthesis(stringExp);
+
     let index = 0;
+    const arr: any[] = [];
     for (let i = 0; i < stringExp.length; i++) {
 
         let operators = 0;
@@ -72,7 +78,7 @@ function getCenterOperatorIndex(stringExp: string): any {
         // Finds the matching Operator
         for (const value of Operator.getValues()) {
             if (value.operator === stringExp.charAt(i) && value.operator !== Operator.not.operator) {
-                arr[index++] = { operator: value, index: i };
+                arr[index++] = { operator: value, index: i + (stringExp.length - stringExp.length) / 2 }; // TODO use oldLen?
                 break;
             }
         }
@@ -117,6 +123,10 @@ function removeOuterParenthesis(stringExp: string): string {
         console.error(error);
     }
     return remove ? stringExp.substring(1, stringExp.length - 1) : stringExp;
+}
+
+function removeUnnessesarryParenthesis() {
+    // TODO include removeOuterParenthesis
 }
 
 // TODO translate
