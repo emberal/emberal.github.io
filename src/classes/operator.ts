@@ -2,6 +2,8 @@ interface Values {
     values?: string[],
 }
 
+// TODO remember strength: !, &, |, ->
+
 export class Operator {
 
     public constructor(operator: string, weight: number, { values = [] }: Values) {

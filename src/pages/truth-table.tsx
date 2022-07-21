@@ -10,30 +10,43 @@ interface TruthTablePage {
 
 }
 
-// TODO remember strength: !, &, |, ->
-
 export function simplify(stringExp: string): string {
-    // TODO parse string and remove all unnecessarry parenthesis
+    // TODO parse string and remove all unnecessarry parenthesis, if needed
     return removeOuterParenthesis(simplifyRec(stringExp).toString());
 }
 
 function simplifyRec(stringExp: string): Expression {
 
-    stringExp = removeOuterParenthesis(stringExp); // TODO remove and test
-
     if (stringExp.length < 3) {
         let leading = "";
         if (stringExp.includes("!")) {
-            leading = "!";
             stringExp = stringExp.replace("!", "");
+            leading = "!";
         }
         return new Expression(stringExp, null, null, { leading: leading, isAtomic: true });
     }
 
+    const exp = new Expression(null, null, null, {});
+
+    if (stringExp[0] === "!" && stringExp[1] === "(") {
+        stringExp = stringExp.replace("!", "");
+        exp.leading = "!";
+    }
+
+    const oldStringLen = stringExp.length;
+    stringExp = removeOuterParenthesis(stringExp);
+
+    if (oldStringLen !== stringExp.length) {
+        exp.leading += "(";
+        exp.trailing = ")";
+    }
+
     const center = getCenterOperatorIndex(stringExp);
 
-    const exp = new Expression(simplifyRec(stringExp.substring(0, center.index)), center.operator,
-        simplifyRec(stringExp.substring(center.index + 1, stringExp.length)), {});
+    exp.exp1 = simplifyRec(stringExp.substring(0, center.index)); // Left
+    exp.operator = center.operator;
+    exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length)); // Right
+
     exp.absorption(); // TODO use all
     exp.distributivity();
     exp.eliminationOfImplication();
@@ -86,6 +99,7 @@ function getCenterOperatorIndex(stringExp: string): any {
 
     let op = arr[Math.floor(arr.length / 2)];
 
+    // If even, use the one with the lowest weight
     if (arr.length % 2 === 0) {
 
         let secondOp = arr[Math.floor(arr.length / 2 - 1)];

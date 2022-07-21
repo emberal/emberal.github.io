@@ -30,11 +30,15 @@ test("De Morgan's law", () => {
 
 test("Parenthesis", () => {
     expect(simplify("A&(B|C)&D")).toBe("A & (B | C) & D");
-    expect(simplify("(!(A&B)|(C>D))&E")).toBe("(!(A&B)|(C>D))&E");
+    expect(simplify("(!(A&B)|(C>D))&E")).toBe("(!(A & B) | (!C | D)) & E");
 });
 
 test("Commutative", () => {
     expect(simplify("B&A")).toBe("A & B");
-    expect(simplify(("B|A"))).toBe("A | B");
-    expect(simplify("G&(H|B)>(A&(C|J))")).toBe("G & (B | H) > (A & (C | J))");
+    expect(simplify("B|A")).toBe("A | B");
+    expect(simplify("G&(H|B)>(A&(C|J))")).toBe("G & (B | H) > A & (C | J)");
+});
+
+test("All", () => {
+    expect(true).toBe(false); // TODO test all laws
 });
