@@ -13,7 +13,6 @@ export class Expression {
         this.exp2 = exp2;
         this.trailing = trailing;
         this.isAtomic = isAtomic;
-        // TODO add weight to each Expression used to compare and sort, using the "value" of noth child Expressions, atomic uses string value
     }
 
     leading: string;
@@ -22,6 +21,8 @@ export class Expression {
     exp2: Expression | string | null;
     trailing: string;
     isAtomic: boolean;
+
+    // TODO add weight to each Expression used to compare and sort, using the "value" of noth child Expressions, atomic uses string value
 
     private _isString({
                           exp1 = null,
@@ -107,6 +108,7 @@ export class Expression {
         this.assosiativeLaw();
         this.commutativeLaw();
         this.distributivity();
+        this.mergeNot();
     }
 
     /**
@@ -149,7 +151,9 @@ export class Expression {
      * @example !A & !B <=> !(A | B)
      */
     public deMorgansLaw(): void {
+
         if (this.exp1 && this.exp2) {
+
             if (this._isNot(this.exp1) && this._isNot(this.exp2)) {
                 let newOperator = null;
 
@@ -224,8 +228,8 @@ export class Expression {
 
             if (typeof this.exp1 !== "string") {
                 if (!this.exp1.isAtomic) {
-                    this.exp1.leading = "(";
-                    this.exp1.trailing = ")";
+                    this.exp1.leading += "(";
+                    this.exp1.trailing += ")";
                 }
                 this.exp1.leading = "!" + this.exp1.leading;
             }
@@ -289,8 +293,28 @@ export class Expression {
         }
     }
 
+    public mergeNot(): void {
+        let index = 0;
+        while ( this.leading.charAt(index) === "!" ) {
+            index++;
+        }
+        if (index > 1) {
+            this.leading = this.leading.replace(/!/g, "");
+            if (index % 2 !== 0) {
+                this.leading = "!" + this.leading;
+            }
+        }
+        if (typeof this.exp1 !== "string") {
+            this.exp1?.mergeNot();
+        }
+        if (typeof this.exp2 !== "string") {
+            this.exp2?.mergeNot();
+        }
+    }
+
     public toString(): string {
         let s = this.leading;
+
         if (this.exp1 !== null) {
             s += this.exp1.toString();
 

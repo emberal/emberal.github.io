@@ -25,6 +25,15 @@ export class Operator {
         return [Operator.implication, Operator.or, Operator.and, Operator.not];
     }
 
+    public static getOperator(operator: string): Operator | null {
+        for (const value of Operator.getValues()) {
+            if (value.operator === operator) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     public append(val: string): void {
         this.values[this.values.length] = val;
     }

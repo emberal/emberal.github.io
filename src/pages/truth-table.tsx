@@ -12,7 +12,7 @@ interface TruthTablePage {
 
 export function simplify(stringExp: string): string {
     // TODO parse string and remove all unnecessarry parenthesis, if needed
-    return removeOuterParenthesis(simplifyRec(stringExp).toString());
+    return removeOuterParentheses(simplifyRec(stringExp).toString());
 }
 
 function simplifyRec(stringExp: string): Expression {
@@ -29,17 +29,17 @@ function simplifyRec(stringExp: string): Expression {
 
     const exp = new Expression(null, null, null, {});
 
-    if (stringExp[0] === "!" && stringExp[1] === "(") {
+    if (stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length))) { // TODO what if several !!!!
         stringExp = stringExp.replace("!", "");
         exp.leading = "!";
     }
 
     const oldStringLen = stringExp.length;
-    stringExp = removeOuterParenthesis(stringExp);
+    stringExp = removeOuterParentheses(stringExp);
 
     if (oldStringLen !== stringExp.length) {
         exp.leading += "(";
-        exp.trailing = ")";
+        exp.trailing += ")";
     }
 
     const center = getCenterOperatorIndex(stringExp);
@@ -48,11 +48,7 @@ function simplifyRec(stringExp: string): Expression {
     exp.operator = center.operator;
     exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length)); // Right
 
-    exp.absorption(); // TODO use all
-    exp.eliminationOfImplication();
-    exp.deMorgansLaw();
-    exp.commutativeLaw();
-    exp.distributivity();
+    exp.laws();
     return exp;
 }
 
@@ -63,8 +59,7 @@ function simplifyRec(stringExp: string): Expression {
  */
 function getCenterOperatorIndex(stringExp: string): any {
 
-    const oldLen = stringExp.length;
-    stringExp = removeOuterParenthesis(stringExp);
+    stringExp = removeOuterParentheses(stringExp);
 
     let index = 0;
     const arr: any[] = [];
@@ -90,11 +85,9 @@ function getCenterOperatorIndex(stringExp: string): any {
         }
 
         // Finds the matching Operator
-        for (const value of Operator.getValues()) {
-            if (value.operator === stringExp.charAt(i) && value.operator !== Operator.not.operator) {
-                arr[index++] = { operator: value, index: i + (stringExp.length - stringExp.length) / 2 }; // TODO use oldLen?
-                break;
-            }
+        const operator = Operator.getOperator(stringExp.charAt(i));
+        if (operator && operator !== Operator.not) {
+            arr[index++] = { operator: operator, index: i };
         }
     }
 
@@ -111,37 +104,74 @@ function getCenterOperatorIndex(stringExp: string): any {
     return op;
 }
 
-function removeOuterParenthesis(stringExp: string): string {
-
-    let remove = false;
-    try {
-        let index = 0;
-        let operators = 0;
-
-        if (stringExp.charAt(0) === "(") {
-            remove = true;
-        }
-        while ( remove && (stringExp.charAt(index) === "(" || operators > 0) ) {
-            if (stringExp.charAt(index) === "(") {
-                operators++;
-            }
-            else if (stringExp.charAt(index) === ")") {
-                operators--;
-                if (operators === 0 && index !== stringExp.length - 1) {
-                    remove = false;
-                }
-            }
-            index++;
-        }
-    }
-    catch (error) {
-        console.error(error);
-    }
-    return remove ? stringExp.substring(1, stringExp.length - 1) : stringExp;
+function removeOuterParentheses(stringExp: string): string {
+    return isOuterParentheses(stringExp) ? stringExp.substring(1, stringExp.length - 1) : stringExp;
 }
 
-function removeUnnessesarryParenthesis() {
-    // TODO include removeOuterParenthesis
+function isOuterParentheses(stringExp: string): boolean {
+    let operators = 0;
+    let is = false;
+
+    if (stringExp.charAt(0) === "(") {
+        is = true;
+    }
+    let index = 0;
+    while ( is && (stringExp.charAt(index) === "(" || operators > 0) ) {
+        if (stringExp.charAt(index) === "(") {
+            operators++;
+        }
+        else if (stringExp.charAt(index) === ")") {
+            operators--;
+            if (operators === 0 && index !== stringExp.length - 1) {
+                is = false;
+            }
+        }
+        index++;
+    }
+    return is;
+}
+
+function removeUnnessesarryParentheses(stringExp: string): string {
+    let operators = 0;
+    let parenthesesAroundExp = false;
+
+    let leftPIndex = -1;
+    let removeParentheses = false;
+
+    if (stringExp.charAt(0) === "(") {
+        parenthesesAroundExp = true;
+    }
+    let index = 0;
+    while ( stringExp.charAt(index) === "(" || operators > 0 ) {
+        if (leftPIndex !== -1) {
+            const operator = Operator.getOperator(stringExp.charAt(index));
+            // TODO use Expression instead?
+            switch (operator) {
+                case Operator.and:
+                    removeParentheses = true;
+                    break;
+                case Operator.or:
+                case Operator.implication:
+                case Operator.not:
+            }
+        }
+
+        if (stringExp.charAt(index) === "(") {
+            operators++;
+            leftPIndex = index;
+        }
+        else if (stringExp.charAt(index) === ")") {
+            operators--;
+            if (leftPIndex !== -1 && removeParentheses) {
+                stringExp = stringExp.substring(0, leftPIndex) + stringExp.substring(index + 1, stringExp.length);
+            }
+            if (operators === 0 && index !== stringExp.length - 1) {
+                parenthesesAroundExp = false;
+            }
+        }
+        index++;
+    }
+    return stringExp;
 }
 
 // TODO translate

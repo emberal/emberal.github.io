@@ -23,11 +23,13 @@ test("Distributivity", () => {
 test("Elimination of implication", () => {
     expect(simplify("A>B")).toBe("!A | B");
     expect(simplify("A&C>B")).toBe("!(A & C) | B");
+    expect(simplify("!(A|B)>C")).toBe("(A | B) | C");
 });
 
 test("De Morgan's law", () => {
     expect(simplify("!A&!B")).toBe("!(A | B)");
     expect(simplify("!A|!B")).toBe("!(A & B)");
+    expect(simplify("!(A|B)&!(C|D)")).toBe("!((A | B) | (C | D))");
 });
 
 test("Parenthesis", () => {
