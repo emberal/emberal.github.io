@@ -36,7 +36,7 @@ test("Parenthesis", () => {
 test("Commutative", () => {
     expect(simplify("B&A")).toBe("A & B");
     expect(simplify("B|A")).toBe("A | B");
-    expect(simplify("G&(H|B)>(A&(C|J))")).toBe("G & (B | H) > A & (C | J)");
+    expect(simplify("G&(H|B)>A&(J|C)")).toBe("!(G & (B | H)) | A & (C | J)");
 });
 
 test("All", () => {

@@ -13,6 +13,7 @@ export class Expression {
         this.exp2 = exp2;
         this.trailing = trailing;
         this.isAtomic = isAtomic;
+        // TODO add weight to each Expression used to compare and sort, using the "value" of noth child Expressions, atomic uses string value
     }
 
     leading: string;
@@ -54,15 +55,11 @@ export class Expression {
     }
 
     public getAtomicValue(): string | null {
-        if (this.isAtomic) {
-            if (typeof this.exp1 === "string") {
-                return this.exp1;
-            }
-            else {
-                if (this.exp1) {
-                    return this.exp1.getAtomicValue();
-                }
-            }
+        if (typeof this.exp1 === "string") {
+            return this.exp1;
+        }
+        else if (this.exp1 && this.exp1.isAtomic) {
+            return this.exp1.getAtomicValue();
         }
         return null;
     }
@@ -81,7 +78,7 @@ export class Expression {
      */
     public distributivity(): void {
 
-        if (this.exp1 !== null && this.exp2 !== null && typeof this.exp1 === "object" && typeof this.exp2 === "object" &&
+        if (this.exp1 && this.exp2 && typeof this.exp1 === "object" && typeof this.exp2 === "object" &&
             !this.exp1.isAtomic && !this.exp2.isAtomic) {
 
             const setObjects = (left: Expression | string, right: Expression | string, common: Expression | string | null): void => {
@@ -186,7 +183,9 @@ export class Expression {
      * @example A -> B <=> !A | B
      */
     public eliminationOfImplication(): void {
-        if (this.exp1 !== null && this.operator === Operator.implication && this.exp2 !== null) {
+
+        if (this.exp1 && this.exp2 && this.operator === Operator.implication) {
+
             if (typeof this.exp1 !== "string") {
                 if (!this.exp1.isAtomic) {
                     this.exp1.leading = "(";

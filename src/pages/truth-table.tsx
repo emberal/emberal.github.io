@@ -17,6 +17,7 @@ export function simplify(stringExp: string): string {
 
 function simplifyRec(stringExp: string): Expression {
 
+    // Basis
     if (stringExp.length < 3) {
         let leading = "";
         if (stringExp.includes("!")) {
