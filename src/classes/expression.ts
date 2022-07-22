@@ -228,8 +228,12 @@ export class Expression {
 
             if (typeof this.exp1 !== "string") {
                 if (!this.exp1.isAtomic) {
-                    this.exp1.leading += "(";
-                    this.exp1.trailing += ")";
+                    if (!this.exp1.leading.includes("(")) {
+                        this.exp1.leading += "(";
+                    }
+                    if (!this.exp1.trailing.includes(")")) {
+                        this.exp1.trailing += ")";
+                    }
                 }
                 this.exp1.leading = "!" + this.exp1.leading;
             }

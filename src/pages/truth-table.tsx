@@ -131,6 +131,7 @@ function isOuterParentheses(stringExp: string): boolean {
     return is;
 }
 
+// TODO? neccessarry?
 function removeUnnessesarryParentheses(stringExp: string): string {
     let operators = 0;
     let parenthesesAroundExp = false;
