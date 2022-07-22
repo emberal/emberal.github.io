@@ -49,10 +49,10 @@ function simplifyRec(stringExp: string): Expression {
     exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length)); // Right
 
     exp.absorption(); // TODO use all
-    exp.distributivity();
     exp.eliminationOfImplication();
     exp.deMorgansLaw();
     exp.commutativeLaw();
+    exp.distributivity();
     return exp;
 }
 

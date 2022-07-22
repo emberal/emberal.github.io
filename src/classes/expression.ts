@@ -23,6 +23,25 @@ export class Expression {
     trailing: string;
     isAtomic: boolean;
 
+    private _isString({
+                          exp1 = null,
+                          exp2 = null
+                      }: { exp1: Expression | string | null, exp2: Expression | string | null }): boolean {
+        let isString = false;
+        if (exp1 !== null) {
+            isString = typeof exp1 === "string";
+        }
+        if (exp2 !== null) {
+            isString = typeof exp2 === "string";
+        }
+        return isString;
+    }
+
+    /**
+     * Compared an object with an other object and returns true if they contain the same values
+     * @param other The object this is compared to
+     * @returns {boolean} If this and the other expressions are the same returns 'true' (regardless or order) otherwise 'false'
+     */
     public equals(other: Expression | string): boolean {
 
         if (this === other) { // If they are the same object, or a string with the same content, return true
@@ -34,12 +53,29 @@ export class Expression {
             }
             else if (!(this.isAtomic || other.isAtomic)) { // If neither is atomic
 
-                if (((this.exp1 === other.exp1 && this.exp2 === other.exp2) ||
-                    (this.exp1 === other.exp2 && this.exp2 === other.exp1)) && this.operator === other.operator) {
-                    return true;
+                if (this._isString({ exp1: this.exp1, exp2: this.exp2 }) && this._isString({
+                    exp1: other.exp1,
+                    exp2: other.exp2
+                })) {
+
+                    if (((this.exp1 === other.exp1 && this.exp2 === other.exp2) ||
+                        (this.exp1 === other.exp2 && this.exp2 === other.exp1)) && this.operator === other.operator) {
+                        return true;
+                    }
+                }
+                else if (!(this._isString({ exp1: this.exp1, exp2: this.exp2 }) || this._isString({
+                    exp1: other.exp1,
+                    exp2: other.exp2
+                }))) {
+                    if (this.exp1 && this.exp2 && other.exp1 && other.exp2) {
+
+                        if ((this.exp1 as Expression).equals(other.exp1) || (this.exp1 as Expression).equals(other.exp2) ||
+                            (this.exp2 as Expression).equals(other.exp2)) {
+                            return true;
+                        }
+                    }
                 }
             }
-            // TODO check children of both objects
         }
         else { // One is a string while the other is an Expression
 
@@ -65,12 +101,12 @@ export class Expression {
     }
 
     public laws(): void {
-        this.distributivity();
+        this.absorption();
+        this.eliminationOfImplication();
         this.deMorgansLaw();
         this.assosiativeLaw();
         this.commutativeLaw();
-        this.eliminationOfImplication();
-        this.absorption();
+        this.distributivity();
     }
 
     /**
@@ -205,9 +241,9 @@ export class Expression {
      */
     public absorption(): void {
 
-        if (this.exp1 !== null && this.exp2 !== null && typeof this.exp1 !== "string" && typeof this.exp2 !== "string") {
+        if (this.exp1 && this.exp2 && typeof this.exp1 !== "string" && typeof this.exp2 !== "string") {
 
-            const removeExp2 = () => { // TODO save exp1 in parent, if possible
+            const removeExp2 = () => {
                 this.leading = "";
                 this.operator = null;
                 this.exp2 = null;
@@ -215,7 +251,7 @@ export class Expression {
                 this.isAtomic = true;
             };
 
-            if (this.exp1?.isAtomic && this.exp2?.isAtomic && this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
+            if (this.exp1.isAtomic && this.exp2.isAtomic && this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
                 removeExp2();
             }
             else if (this.exp1.isAtomic || this.exp2.isAtomic) { // eg: A | (A & B)

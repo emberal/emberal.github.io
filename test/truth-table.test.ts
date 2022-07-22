@@ -6,11 +6,13 @@ test("Absorption w/ same values", () => {
     expect(simplify("A>A&A|A")).toBe("A");
     expect(simplify("(A&A)|(A&A)")).toBe("A");
     expect(simplify("((A|A)>(A&(A|A)))")).toBe("A");
+    expect(simplify("A|A|(A>A)&(A|A&A)>A")).toBe("A");
 });
 
 test("Absorption w/ different values", () => {
     expect(simplify("A&B|A")).toBe("A");
     expect(simplify("A&(B|B)&C")).toBe("A & B & C");
+    expect(simplify("A&B|A&B")).toBe("A & B");
 });
 
 test("Distributivity", () => {
