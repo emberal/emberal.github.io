@@ -13,11 +13,13 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&B|A")).toBe("A");
     expect(simplify("A&(B|B)&C")).toBe("A & B & C");
     expect(simplify("A&B|A&B")).toBe("A & B");
+    expect(simplify("(A&B|C&D)&(A&B|C&D)")).toBe("A & B | C & D")
 });
 
 test("Distributivity", () => {
     expect(simplify("A&B|B&C")).toBe("B & (A | C)");
     expect(simplify("(A|B)&(B|C)")).toBe("B | A & C");
+    expect(simplify("(A|B)&(B|C)&D|(A|B)&(B|C)&E")).toBe("(B | A & C) & (D | E)");
 });
 
 test("Elimination of implication", () => {

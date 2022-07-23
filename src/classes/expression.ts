@@ -70,8 +70,8 @@ export class Expression {
                 }))) {
                     if (this.exp1 && this.exp2 && other.exp1 && other.exp2) {
 
-                        if ((this.exp1 as Expression).equals(other.exp1) || (this.exp1 as Expression).equals(other.exp2) ||
-                            (this.exp2 as Expression).equals(other.exp2)) {
+                        if ((this.exp1 as Expression).equals(other.exp1) && (this.exp2 as Expression).equals(other.exp2) ||
+                            (this.exp1 as Expression).equals(other.exp2) && (this.exp1 as Expression).equals(other.exp2)) {
                             return true;
                         }
                     }
@@ -123,9 +123,22 @@ export class Expression {
                 this.exp2 = new Expression(left, this.operator, right, {});
                 this.exp1 = new Expression(common, null, null, { isAtomic: true });
                 this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
-                if (this.exp2.operator !== Operator.and) {
-                    this.exp2.leading = "(";
-                    this.exp2.trailing = ")";
+
+                if (this.operator !== Operator.and) {
+                    if (!this.leading.includes("(")) {
+                        this.leading += "(";
+                    }
+                    if (!this.trailing.includes(")")) {
+                        this.trailing += ")";
+                    }
+                }
+                else { // exp2.operator === or
+                    if (!this.exp2.leading.includes("(")) {
+                        this.exp2.leading = "(";
+                    }
+                    if (!this.exp2.trailing.includes(")")) {
+                        this.exp2.trailing = ")";
+                    }
                 }
             };
 
@@ -194,7 +207,7 @@ export class Expression {
     }
 
     public assosiativeLaw(): void {
-        // TODO
+        // TODO?
     }
 
     public commutativeLaw(): void {
@@ -297,6 +310,9 @@ export class Expression {
         }
     }
 
+    /**
+     * @example !!A <=> A or !!!A <=> !A
+     */
     public mergeNot(): void {
         let index = 0;
         while ( this.leading.charAt(index) === "!" ) {
