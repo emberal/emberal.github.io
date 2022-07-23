@@ -52,15 +52,15 @@ export class Expression {
             if (this.isAtomic && other.isAtomic && this.exp1 === other.exp1) {
                 return true;
             }
-            else if (!(this.isAtomic || other.isAtomic)) { // If neither is atomic
+            else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
 
                 if (this._isString({ exp1: this.exp1, exp2: this.exp2 }) && this._isString({
                     exp1: other.exp1,
                     exp2: other.exp2
                 })) {
 
-                    if (((this.exp1 === other.exp1 && this.exp2 === other.exp2) ||
-                        (this.exp1 === other.exp2 && this.exp2 === other.exp1)) && this.operator === other.operator) {
+                    if (this.exp1 === other.exp1 && this.exp2 === other.exp2 ||
+                        this.exp1 === other.exp2 && this.exp2 === other.exp1) {
                         return true;
                     }
                 }
