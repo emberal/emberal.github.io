@@ -264,16 +264,16 @@ export class Expression {
 
         if (this.exp1 && this.exp2 && typeof this.exp1 !== "string" && typeof this.exp2 !== "string") {
 
-            const removeExp2 = () => {
-                this.leading = "";
-                this.operator = null;
-                this.exp2 = null;
-                this.trailing = "";
-                this.isAtomic = true;
+            const removeExp2 = (exp: Expression) => {
+                exp.leading = "";
+                exp.operator = null;
+                exp.exp2 = null;
+                exp.trailing = "";
+                exp.isAtomic = true;
             };
 
             if (this.exp1.isAtomic && this.exp2.isAtomic && this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
-                removeExp2();
+                removeExp2(this);
             }
             else if (this.exp1.isAtomic || this.exp2.isAtomic) { // eg: A | (A & B)
 
@@ -283,28 +283,49 @@ export class Expression {
                     if (!correctOperators) {
                         correctOperators = this.operator === Operator.or && exp1.operator === Operator.and;
                     }
+                    if (!correctOperators) {
+                        correctOperators = this.operator === Operator.implication;
+                    }
 
                     return correctOperators && (typeof exp1.exp1 !== "string" && typeof exp1.exp2 !== "string" &&
                         (exp2 === exp1.exp1?.getAtomicValue() || exp2 === exp1.exp2?.getAtomicValue()));
                 };
 
-                if (this.exp1.isAtomic) {
-                    const atomic = this.exp1.getAtomicValue();
-                    if (atomic !== null && contains(this.exp2, atomic)) {
-                        removeExp2();
+                const removeRedundant = (exp1: Expression, exp2: Expression, func: Function): void => {
+                    const atomic = exp1.getAtomicValue();
+                    if (atomic && contains(exp2, atomic)) {
+                        if (typeof exp2.exp1 === "object" && exp2.exp1?.isAtomic && this.operator === Operator.implication) {
+
+                            if (exp2.operator === Operator.and) { // Removes the equal
+                                if (exp2.exp1?.getAtomicValue() === atomic) {
+                                    exp2.exp1 = exp2.exp2;
+                                }
+                                removeExp2(exp2);
+                            }
+                            else if (exp2.operator === Operator.or) { // Removes the unequal
+                                if (exp2.exp1?.getAtomicValue() !== atomic) {
+                                    exp2.exp1 = exp2.exp2;
+                                }
+                                removeExp2(exp2);
+                            }
+                        }
+                        else {
+                            func();
+                            removeExp2(this);
+                        }
                     }
+                };
+
+                if (this.exp1.isAtomic) {
+                    removeRedundant(this.exp1, this.exp2, () => null);
                 }
                 else {
-                    const atomic = this.exp2.getAtomicValue();
-                    if (atomic !== null && contains(this.exp1, atomic)) {
-                        this.exp1 = this.exp2;
-                        removeExp2();
-                    }
+                    removeRedundant(this.exp2, this.exp1, () => this.exp1 = this.exp2);
                 }
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.exp1.equals(this.exp2)) {
-                    removeExp2();
+                    removeExp2(this);
                 }
             }
         }

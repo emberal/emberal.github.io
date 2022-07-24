@@ -13,7 +13,9 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&B|A")).toBe("A");
     expect(simplify("A&(B|B)&C")).toBe("A & B & C");
     expect(simplify("A&B|A&B")).toBe("A & B");
-    expect(simplify("(A&B|C&D)&(A&B|C&D)")).toBe("A & B | C & D")
+    expect(simplify("(A&B|C&D)&(A&B|C&D)")).toBe("A & B | C & D");
+    expect(simplify("A>A&B")).toBe("!A | B");
+    expect(simplify("A>A|B")).toBe("!A | A");
 });
 
 test("Distributivity", () => {
@@ -46,5 +48,5 @@ test("Commutative", () => {
 });
 
 test("All", () => {
-    expect(true).toBe(false); // TODO test all laws
+    expect(true).toBe(false);
 });
