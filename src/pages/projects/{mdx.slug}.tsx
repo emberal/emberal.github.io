@@ -14,7 +14,7 @@ import { splitCSV } from "./index";
  */
 const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => {
 
-    if (mdx !== null) {
+    if (mdx) {
 
         let heroImage: IGatsbyImageData | undefined, heroImageAlt: string | null | undefined,
             description: string | null | undefined, title: string | undefined, source: string | null | undefined,

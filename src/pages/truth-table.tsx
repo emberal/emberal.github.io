@@ -10,9 +10,15 @@ interface TruthTablePage {
 
 }
 
+/**
+ * Takes in a string representation of a truth expression, then simplified it after multiple known laws.
+ * @param stringExp The string that will be attempted simplified
+ * @returns {string} A simplified string
+ */
 export function simplify(stringExp: string): string {
     // TODO parse string and remove all unnecessarry parenthesis, if needed
-    return removeOuterParentheses(simplifyRec(stringExp).toString());
+    const isLegal = isLegalExpression(stringExp);
+    return isLegal ? removeOuterParentheses(simplifyRec(stringExp).toString()) : stringExp;
 }
 
 function simplifyRec(stringExp: string): Expression {
@@ -53,8 +59,9 @@ function simplifyRec(stringExp: string): Expression {
 }
 
 /**
- *
- * @param stringExp
+ * Iterates through the string and finds the outer most center operator, if there are two, the one with the lowest weight is picked.
+ * If they have the same weight the one to the right is picked.
+ * @param stringExp A truth expression as a string, with no spaces between characters
  * @returns {number} The index position of the center operator based on the weight of the operators
  */
 function getCenterOperatorIndex(stringExp: string): any {
@@ -102,6 +109,15 @@ function getCenterOperatorIndex(stringExp: string): any {
         }
     }
     return op;
+}
+
+/**
+ * TODO
+ * @param stringExp
+ */
+function isLegalExpression(stringExp: string): boolean {
+
+    return true;
 }
 
 function removeOuterParentheses(stringExp: string): string {
@@ -176,12 +192,13 @@ function removeUnnessesarryParentheses(stringExp: string): string {
 }
 
 // TODO translate
-// TODO create methods for each of the laws
 // TODO generate truth tables
 // TODO simplify truth expressions
-// TODO F.eks A & B | B, check A & B first, since it can't be simplified, then check | B if B is in the previous expression
 const TruthTablePage = ({}: TruthTablePage) => {
 
+    /**
+     * The state element used to store the simplified string, "empty string" by default
+     */
     const [search, setSearch] = React.useState("");
 
     /**
@@ -192,7 +209,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp) {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
-            setSearch(exp);
+            setSearch(simplify(exp));
         }
         else {
             setSearch("");
@@ -200,21 +217,43 @@ const TruthTablePage = ({}: TruthTablePage) => {
     }
 
     React.useEffect(() => {
-        // console.log(search);
-    }, [search]);
+
+        let isMounted = true;
+
+        function keyPress(e: KeyboardEvent) {
+            if (isMounted && e.key === "Enter") {
+                const el = document.getElementById("truth-input-button");
+                if (el) {
+                    el.click();
+                }
+            }
+        }
+
+        const el = document.getElementById("truth-input");
+        if (el) {
+            el.addEventListener("keypress", (e) => keyPress(e));
+        }
+        return () => {
+            if (el) {
+                el.removeEventListener("keypress", (e) => keyPress(e));
+            }
+            isMounted = false;
+        };
+    }, []);
 
     return (
         <Layout title={ "Truth tables" } description={ "Generate truth tables or simplify" }>
-            <div>
+            <div className={ "pt-2" }>
                 <Input className={ `rounded-xl !pl-7 h-10` }
                        id={ "truth-input" }
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
-                           <button
-                               className={ "ml-1 px-1 bg-primaryPink text-black border border-gray-500 rounded-xl h-10" }
-                               onClick={ onClick }>
+                           <button id={ "truth-input-button" }
+                                   className={ "ml-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
+                                   onClick={ onClick }>
                                Simplify
                            </button> }/>
+                <p>Output: { search }</p>
             </div>
         </Layout>
     );

@@ -29,7 +29,7 @@ const links = [
  */
 const ContactMe = () => {
 
-    function handleSubmit() {
+    function handleSubmit() { // TODO
         Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
         const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
         if (element !== null) {
