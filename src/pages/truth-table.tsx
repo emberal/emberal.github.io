@@ -5,6 +5,7 @@ import { graphql } from "gatsby";
 import { Expression } from "../classes/expression";
 import { Operator } from "../classes/operator";
 import { Search } from "react-feather";
+import TruthTable from "../components/truth-table";
 
 interface TruthTablePage {
 
@@ -278,6 +279,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                Simplify
                            </button> }/>
                 <p>Output: { search }</p>
+                <TruthTable/>
             </div>
         </Layout>
     );
