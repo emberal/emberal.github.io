@@ -126,6 +126,7 @@ function isLegalExpression(stringExp: string): boolean {
 
     // If the first or las index is an operator, return false
     if (operators.some((value) => value === stringExp.charAt(0) || value === stringExp.charAt(stringExp.length - 1))) {
+        console.error("Illegal input!");
         return false;
     }
 
@@ -134,6 +135,7 @@ function isLegalExpression(stringExp: string): boolean {
             continue;
         }
         if (Operator.isOperator(stringExp.charAt(i)) && Operator.isOperator(stringExp.charAt(i - 1))) {
+            console.error("Illegal input!");
             return false;
         }
     }
@@ -267,6 +269,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
             <div className={ "pt-2" }>
                 <Input className={ `rounded-xl !pl-7 h-10` }
                        id={ "truth-input" }
+                       placeholder={"A&B>C"}
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
                            <button id={ "truth-input-button" }

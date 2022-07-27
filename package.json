@@ -21,7 +21,7 @@
     "@mdx-js/mdx": "^1.6.22",
     "@mdx-js/react": "^1.6.22",
     "fs-extra": "^10.1.0",
-    "gatsby": "^4.19.1",
+    "gatsby": "^4.19.2",
     "gatsby-plugin-image": "^2.19.0",
     "gatsby-plugin-manifest": "^4.19.0",
     "gatsby-plugin-mdx": "^3.19.0",
@@ -40,7 +40,7 @@
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.10",
     "react-helmet": "^6.1.0",
-    "react-i18next": "^11.18.1",
+    "react-i18next": "^11.18.3",
     "react-indiana-drag-scroll": "^2.2.0",
     "selenium-webdriver": "^4.3.1"
   },

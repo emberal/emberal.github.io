@@ -47,6 +47,6 @@ test("Commutative", () => {
     expect(simplify("G&(H|B)>A&(J|C)")).toBe("!(G & (B | H)) | A & (C | J)");
 });
 
-test("All", () => {
-    expect(true).toBe(false);
+test("Several", () => {
+    expect(simplify("A&B|C>C&A")).toBe("!(A & B | C) | C & A"); // TODO check test
 });

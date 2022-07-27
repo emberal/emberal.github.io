@@ -206,8 +206,8 @@ const Layout = ({ title, headline, description, children, current, className }: 
                                                         <button onClick={ () => toggleDarkMode(item.id) }>
                                                             <span
                                                                 className={ `flex items-center ${ active && "underline" }` }>
-                                                                { item.icon }<p
-                                                                className={ "pl-2 w-max" }>{ item.text }</p>
+                                                                { item.icon }
+                                                                <p className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
                                                         </button>
                                                     ) }

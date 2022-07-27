@@ -16,7 +16,7 @@ export class Operator {
     weight: number;
     values: string[];
 
-    static implication = new Operator(">", 0, { values: ["implication", "impliserer", "->", "=>"] });
+    static implication = new Operator(">", 0, { values: ["implication", "imp", "impliserer", "->", "=>"] });
     static or = new Operator("|", 1, { values: ["or", "eller", "V", "\\/"] });
     static and = new Operator("&", 2, { values: ["and", "og", "/\\"] });
     static not = new Operator("!", 3, { values: ["not", "ikke", "¬", "~", "-"] });
