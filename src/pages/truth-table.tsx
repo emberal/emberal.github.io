@@ -112,10 +112,31 @@ function getCenterOperatorIndex(stringExp: string): any {
 }
 
 /**
- * TODO
+ * TODO illegal if two or more operators are following eachother, or if ! is before an operator
  * @param stringExp
  */
 function isLegalExpression(stringExp: string): boolean {
+
+    let operators: string[] = [];
+    for (let i = 0; i < Operator.getValues().length; i++) {
+        if (Operator.getValues()[i] !== Operator.not) {
+            operators[i] = Operator.getValues()[i].operator;
+        }
+    }
+
+    // If the first or las index is an operator, return false
+    if (operators.some((value) => value === stringExp.charAt(0) || value === stringExp.charAt(stringExp.length - 1))) {
+        return false;
+    }
+
+    for (let i = 1; i < stringExp.length - 1; i++) {
+        if (stringExp.charAt(i) === Operator.not.operator) {
+            continue;
+        }
+        if (Operator.isOperator(stringExp.charAt(i)) && Operator.isOperator(stringExp.charAt(i - 1))) {
+            return false;
+        }
+    }
 
     return true;
 }

@@ -34,6 +34,10 @@ export class Operator {
         return null;
     }
 
+    public static isOperator(char: string): boolean {
+        return this.getValues().some((value) => value.operator === char);
+    }
+
     public append(val: string): void {
         this.values[this.values.length] = val;
     }
