@@ -24,15 +24,26 @@ interface Tag {
  */
 export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) => {
 
-    // TODO use if - else for button or div element, if onClick === true use button
-    return (
-        <button title={ hoverTitle } id={ id }
-                className={ `${ onClick ? "cursor-pointer" : "cursor-auto" } ${ className } border rounded-xl
-             border-gray-500` }
-                onClick={ onClick }>
-            <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>
-        </button>
-    )
+    const text = <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>;
+    const classes = "border rounded-xl border-gray-500"
+
+    if (onClick) {
+        return (
+            <button title={ hoverTitle } id={ id }
+                    className={ `${ className } ${ classes }` }
+                    onClick={ onClick }>
+                { text }
+            </button>
+        );
+    }
+    else {
+        return (
+            <div title={ hoverTitle } id={ id }
+                 className={ `${ className } ${ classes }` }>
+                { text }
+            </div>
+        );
+    }
 }
 
 interface TagsSelector {
