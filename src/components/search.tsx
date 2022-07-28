@@ -74,7 +74,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
      */
     function clearSearch() {
         const element = getSearchElement();
-        if (element !== null) {
+        if (element) {
             element.value = "";
             if (onChange) {
                 element.focus();

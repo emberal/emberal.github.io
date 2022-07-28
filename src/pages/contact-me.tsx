@@ -90,31 +90,25 @@ const ContactMe = () => {
                       action={ "https://formspree.io/f/mknykgbn" }
                       method={ "post" }>
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
-                        <label>
-                            <p>{ t("yourName") }</p>
-                            <Input className={ inputStyle }
-                                   name={ "name" }
-                                   type={ "text" }
-                                   placeholder={ "Ola Nordmann" }
-                                   required={ true }/>
-                        </label>
-                        <label>
-                            <p>{ t("subject") }</p>
-                            <Input className={ inputStyle }
-                                   name={ "subject" }
-                                   type={ "text" }
-                                   placeholder={ "Heisann!" }
-                                   required={ true }/>
-                        </label>
-                    </div>
-                    <label>
-                        <p>{ t("yourEmail") }</p>
                         <Input className={ inputStyle }
-                               name={ "_replyto" }
-                               type={ "email" }
-                               placeholder={ "ola@nordmann.no" }
+                               name={ "name" }
+                               id={ "inputName" }
+                               type={ "text" }
+                               title={ t("yourName") }
                                required={ true }/>
-                    </label>
+                        <Input className={ inputStyle }
+                               name={ "subject" }
+                               id={ "inputSubject" }
+                               type={ "text" }
+                               title={ t("subject") }
+                               required={ true }/>
+                    </div>
+                    <Input className={ inputStyle }
+                           name={ "_replyto" }
+                           id={ "inputEmail" }
+                           type={ "email" }
+                           title={ t("yourEmail") }
+                           required={ true }/>
                     <label>
                         <p>{ t("message") }</p>
                         <textarea id={ "contact-me-text-area" }

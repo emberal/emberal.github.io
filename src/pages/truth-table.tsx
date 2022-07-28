@@ -270,7 +270,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
             <div className={ "pt-2" }>
                 <Input className={ `rounded-xl !pl-7 h-10` }
                        id={ "truth-input" }
-                       placeholder={"A&B>C"}
+                       title={"A&B>C"}
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
                            <button id={ "truth-input-button" }
