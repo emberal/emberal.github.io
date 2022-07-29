@@ -98,7 +98,7 @@ const ContactMe = () => {
                               required={ true }
                               name={ "message" }
                               id={ "contact-me-text-area" }
-                              className={ `pl-2 min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
+                              className={ `pl-2 min-h-[3rem] h-24 dark:bg-gray-900 focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 ${ inputStyle }` }/>
                     <input name="_gotcha" type="text" className={ "hidden" }/> { /*Honeypot spam filter*/ }
                     <button id={ "submit-button" } className={ "float-right" }
@@ -139,10 +139,12 @@ interface FormInput {
 }
 
 const FormInput = ({ name, id, type, title, className }: FormInput) => {
-    return (<Input className={ inputStyle }
-                   name={ name }
-                   id={ id }
-                   type={ type }
-                   title={ title }
-                   required={ true }/>)
+    return (
+        <Input className={ `${ inputStyle } ${ className }` }
+               name={ name }
+               id={ id }
+               type={ type }
+               title={ title }
+               required={ true }/>
+    );
 };
