@@ -26,7 +26,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
             let isMounted = true;
 
             function keyboardListener(keyboardEvent: KeyboardEvent) {
-                if (isMounted && element !== null && !element.matches(":focus")) {
+                if (isMounted && element && !element.matches(":focus")) {
 
                     element.focus();
                     if (keyboardEvent.key !== "Enter") {

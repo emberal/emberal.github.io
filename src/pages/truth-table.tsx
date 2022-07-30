@@ -16,10 +16,16 @@ interface TruthTablePage {
  * @param stringExp The string that will be attempted simplified
  * @returns {string} A simplified string
  */
-export function simplify(stringExp: string): string {
+export function simplify(stringExp: string): Expression | undefined {
     // TODO parse string and remove all unnecessarry parenthesis, if needed
     const isLegal = isLegalExpression(stringExp);
-    return isLegal ? removeOuterParentheses(simplifyRec(stringExp).toString()) : stringExp;
+    let exp: Expression | undefined = undefined;
+    if (isLegal) {
+        exp = simplifyRec(stringExp);
+        exp.leading = "";
+        exp.trailing = "";
+    }
+    return exp;
 }
 
 function simplifyRec(stringExp: string): Expression {
@@ -224,6 +230,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
      * The state element used to store the simplified string, "empty string" by default
      */
     const [search, setSearch] = React.useState("");
+    let expression = React.useRef(new Expression(null, null, null, {}));
 
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
@@ -233,7 +240,11 @@ const TruthTablePage = ({}: TruthTablePage) => {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp) {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
-            setSearch(simplify(exp));
+            const sExp = simplify(exp);
+            if (sExp) {
+                expression.current = sExp;
+                setSearch(sExp.toString());
+            }
         }
         else {
             setSearch("");
@@ -270,7 +281,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
             <div className={ "pt-2" }>
                 <Input className={ `rounded-xl !pl-7 h-10` }
                        id={ "truth-input" }
-                       title={"A&B>C"}
+                       placeholder={ "A&B>C" }
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
                            <button id={ "truth-input-button" }
@@ -279,7 +290,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                Simplify
                            </button> }/>
                 <p>Output: { search }</p>
-                <TruthTable/>
+                <TruthTable expression={ expression.current } className={"mt-2"}/>
             </div>
         </Layout>
     );
