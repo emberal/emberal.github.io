@@ -305,7 +305,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                        onChange={ (bool) => setSimplifyEnabled(bool) }
                                        title={ "Simplify" }
                                        className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
-                        relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
+                                       relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
                                    <span className={ "sr-only" }>Toggle simplify</span>
                                    <span className={ `${
                                        simplifyEnabled ? 'translate-x-6' : 'translate-x-1'

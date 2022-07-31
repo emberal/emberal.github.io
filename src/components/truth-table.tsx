@@ -2,7 +2,7 @@ import * as React from "react";
 import { Expression } from "../classes/expression";
 
 interface TruthTable {
-    expression: Expression | null,
+    expression: Expression,
     className?: string,
     id?: string,
 }
@@ -47,19 +47,41 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         changeIndex /= 2;
     }
 
-    // console.log(matrix);
-
+    console.log(matrix);
     return (
-        <div className={ `border border-gray-500 rounded-lg overflow-auto grid grid-flow-col w-fit ${ className }` }
-             id={ id }>
+        <table className={ `border border-gray-500 rounded-lg overflow-auto ${ className }` }
+               id={ id }>
+            <thead>
+            <tr>
+                {
+                    expressions.map((exp, index) => (
+                        <th key={ index }>
+                            <p className={ "w-fit px-2 border border-gray-500" }>{ exp.toString() }</p>
+                        </th>
+                    ))
+                }
+            </tr>
+            </thead>
             {
-                expressions.map((exp, index) => (
-                    <div key={ index }>
-                        <span className={ "w-fit px-2 border border-gray-500" }>{ exp.toString() }</span>
-                    </div>
+                matrix.map((array: boolean[], rowIndex: number) => (
+                    <tbody key={ rowIndex }>
+                    {
+                        matrix[rowIndex].map((value: boolean, colIndex: number) => (
+                            <tr key={ colIndex }>
+                                <td>
+                                    {
+                                        expressions[rowIndex].isAtomic ?
+                                            <p>{ matrix[rowIndex][colIndex] ? "T" : "F" }</p> :
+                                            null
+                                    }
+                                </td>
+                            </tr>
+                        ))
+                    }
+                    </tbody>
                 ))
             }
-        </div>
+        </table>
     );
 };
 
