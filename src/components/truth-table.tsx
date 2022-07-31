@@ -25,24 +25,29 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         }
     }
 
-    /*
-        TODO count nr of atomic values
-        2 atomic    3 atomic
-        T T         T T T
-        T F         T T F
-        F T         T F T
-        F F         T F F
-                    F T T
-                    F T F
-                    F F T
-                    F F F
-     */
+    const numberOfAtomics = Expression.getNumberOfAtomics(expression);
 
-    // Matrix of length 8 x 3
-    const list = new Array(3);
-    for (let i = 0; i < list.length; i++) {
-        list[i] = new Array(Math.pow(2, list.length));
+    const matrix = new Array(numberOfAtomics);
+    let changeIndex = Math.pow(2, matrix.length) / 2;
+
+    for (let i = 0; i < matrix.length; i++) {
+        let boolValue = true;
+        let counter = 0;
+
+        matrix[i] = new Array(Math.pow(2, matrix.length));
+
+        for (let j = 0; j < matrix[i].length; j++) {
+            if (counter === changeIndex) {
+                boolValue = !boolValue;
+                counter = 0;
+            }
+            matrix[i][j] = boolValue;
+            counter++;
+        }
+        changeIndex /= 2;
     }
+
+    // console.log(matrix);
 
     return (
         <div className={ `border border-gray-500 rounded-lg overflow-auto grid grid-flow-col w-fit ${ className }` }

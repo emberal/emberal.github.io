@@ -353,6 +353,21 @@ export class Expression {
         }
     }
 
+    /**
+     * Finds and returns the number of atomic values in the expression
+     * @param exp The Expression
+     * @returns {number} The number of atomic expressions in the expression
+     */
+    public static getNumberOfAtomics(exp: Expression | string | null): number {
+        if (typeof exp === "string") {
+            return 1;
+        }
+        else if (exp === null) {
+            return 0;
+        }
+        return this.getNumberOfAtomics(exp.exp1) + this.getNumberOfAtomics(exp.exp2);
+    }
+
     public toString(): string {
         let s = this.leading;
 

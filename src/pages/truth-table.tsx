@@ -6,6 +6,7 @@ import { Expression } from "../classes/expression";
 import { Operator } from "../classes/operator";
 import { Search } from "react-feather";
 import TruthTable from "../components/truth-table";
+import { Switch } from "@headlessui/react";
 
 interface TruthTablePage {
 
@@ -226,6 +227,7 @@ function removeUnnessesarryParentheses(stringExp: string): string {
 // TODO simplify truth expressions
 const TruthTablePage = ({}: TruthTablePage) => {
 
+    const [simplifyEnabled, setSimplifyEnabled] = React.useState(true);
     /**
      * The state element used to store the simplified string, "empty string" by default
      */
@@ -240,7 +242,16 @@ const TruthTablePage = ({}: TruthTablePage) => {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp) {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
-            const sExp = simplify(exp);
+            let sExp: Expression | undefined;
+
+            if (simplifyEnabled) {
+                sExp = simplify(exp);
+            }
+            else {
+                // TODO convert string to Expression
+                setSearch(exp);
+            }
+
             if (sExp) {
                 expression.current = sExp;
                 setSearch(sExp.toString());
@@ -284,13 +295,28 @@ const TruthTablePage = ({}: TruthTablePage) => {
                        placeholder={ "A&B>C" }
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
-                           <button id={ "truth-input-button" }
-                                   className={ "ml-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
-                                   onClick={ onClick }>
-                               Simplify
-                           </button> }/>
+                           <div>
+                               <button id={ "truth-input-button" }
+                                       className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
+                                       onClick={ onClick }>
+                                   Simplify
+                               </button>
+                               <Switch checked={ simplifyEnabled }
+                                       onChange={ (bool) => setSimplifyEnabled(bool) }
+                                       title={ "Simplify" }
+                                       className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
+                        relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
+                                   <span className={ "sr-only" }>Toggle simplify</span>
+                                   <span className={ `${
+                                       simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
+                                   } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
+                                   />
+                               </Switch>
+                           </div>
+                       }/>
+
                 <p>Output: { search }</p>
-                <TruthTable expression={ expression.current } className={"mt-2"}/>
+                <TruthTable expression={ expression.current } className={ "mt-2" }/>
             </div>
         </Layout>
     );

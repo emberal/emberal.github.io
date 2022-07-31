@@ -229,7 +229,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 <button className={ "fixed right-10 bottom-20 border rounded-xl shadow-sm shadow-primaryPurple p-1" }
                         title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
-                    <p className={ "hidden" }>{ t('goBackToTheTop') }</p>
+                    <p className={ "sr-only" }>{ t('goBackToTheTop') }</p>
                 </button>
             }
         </div>
