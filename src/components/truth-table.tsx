@@ -79,8 +79,15 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                         }
                     }
                 }
+
                 const right = tBodyMatrix[row][column - 1] === "T";
-                tBodyMatrix[row][column] = expressions[column].solve(left, right) ? "T" : "F";
+                let boolExp = expressions[column].solve(left, right);
+
+                if (expressions[column].leading.includes("!")) {
+                    boolExp = !boolExp;
+                }
+
+                tBodyMatrix[row][column] = boolExp ? "T" : "F";
             }
         }
     }
