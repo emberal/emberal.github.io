@@ -29,6 +29,7 @@ export function simplify(stringExp: string): Expression | undefined {
     return exp;
 }
 
+// FIXME A&B&C|D is read wrong!
 function simplifyRec(stringExp: string): Expression {
 
     // Basis
@@ -178,50 +179,6 @@ function isOuterParentheses(stringExp: string): boolean {
     return is;
 }
 
-// TODO? neccessarry?
-function removeUnnessesarryParentheses(stringExp: string): string {
-    let operators = 0;
-    let parenthesesAroundExp = false;
-
-    let leftPIndex = -1;
-    let removeParentheses = false;
-
-    if (stringExp.charAt(0) === "(") {
-        parenthesesAroundExp = true;
-    }
-    let index = 0;
-    while ( stringExp.charAt(index) === "(" || operators > 0 ) {
-        if (leftPIndex !== -1) {
-            const operator = Operator.getOperator(stringExp.charAt(index));
-            // TODO use Expression instead?
-            switch (operator) {
-                case Operator.and:
-                    removeParentheses = true;
-                    break;
-                case Operator.or:
-                case Operator.implication:
-                case Operator.not:
-            }
-        }
-
-        if (stringExp.charAt(index) === "(") {
-            operators++;
-            leftPIndex = index;
-        }
-        else if (stringExp.charAt(index) === ")") {
-            operators--;
-            if (leftPIndex !== -1 && removeParentheses) {
-                stringExp = stringExp.substring(0, leftPIndex) + stringExp.substring(index + 1, stringExp.length);
-            }
-            if (operators === 0 && index !== stringExp.length - 1) {
-                parenthesesAroundExp = false;
-            }
-        }
-        index++;
-    }
-    return stringExp;
-}
-
 // TODO translate
 // TODO generate truth tables
 // TODO simplify truth expressions
@@ -240,24 +197,26 @@ const TruthTablePage = ({}: TruthTablePage) => {
      */
     function onClick() {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
-        if (exp) {
+        if (exp && exp !== "") {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
             let sExp: Expression | undefined;
 
             if (simplifyEnabled) {
                 sExp = simplify(exp);
+
+                if (sExp) {
+                    expression.current = sExp;
+                    setSearch(sExp.toString());
+                }
             }
             else {
                 // TODO convert string to Expression
                 setSearch(exp);
             }
 
-            if (sExp) {
-                expression.current = sExp;
-                setSearch(sExp.toString());
-            }
         }
         else {
+            expression.current = new Expression(null, null, null, {});
             setSearch("");
         }
     }
@@ -313,10 +272,15 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                    />
                                </Switch>
                            </div>
-                       }/>
-
-                <p>Output: { search }</p>
-                <TruthTable expression={ expression.current } className={ "mt-2" }/>
+                       }
+                />
+                {
+                    search !== "" ?
+                        <>
+                            <p>Output: { search }</p>
+                            <TruthTable expression={ expression.current } className={ "mt-2" }/>
+                        </> : null
+                }
             </div>
         </Layout>
     );

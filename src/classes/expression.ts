@@ -368,6 +368,19 @@ export class Expression {
         return this.getNumberOfAtomics(exp.exp1) + this.getNumberOfAtomics(exp.exp2);
     }
 
+    public solve(exp1: boolean, exp2: boolean): boolean {
+        switch (this.operator) {
+            case Operator.and:
+                return exp1 && exp2;
+            case Operator.or:
+                return exp1 || exp2;
+            case Operator.implication:
+                return !exp1 || exp2;
+            default:
+                return false;
+        }
+    }
+
     public toString(): string {
         let s = this.leading;
 

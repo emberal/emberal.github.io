@@ -1,4 +1,17 @@
 import { simplify } from '../src/pages/truth-table'
+import { Expression } from "../src/classes/expression";
+import { Operator } from "../src/classes/operator";
+
+test("Equals", () => {
+    const innerExp1 = new Expression("A", null, null, { isAtomic: true });
+    const innerExp2 = new Expression("B", null, null, { isAtomic: true });
+
+    const exp1 = new Expression(innerExp1, Operator.and, innerExp2, {});
+    const exp2 = new Expression(innerExp1, Operator.and, innerExp2, {});
+
+    expect(exp1.equals(exp2)).toBeTruthy();
+    expect(exp2.equals(exp1)).toBeTruthy();
+});
 
 test("Absorption w/ same values", () => {
     expect(simplify("A&A")?.toString()).toBe("A");
