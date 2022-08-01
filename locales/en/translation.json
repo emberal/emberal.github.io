@@ -46,6 +46,11 @@
   "theme": "Theme",
   "followBrowser": "Follow browser",
   "dark": "Dark",
-  "light": "Light"
+  "light": "Light",
+
+  "truthTables": "Truth tables",
+  "generate": "Generate",
+  "simplify": "Simplify",
+  "output": "Output"
 
 }

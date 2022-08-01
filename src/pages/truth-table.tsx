@@ -7,6 +7,7 @@ import { Operator } from "../classes/operator";
 import { Search } from "react-feather";
 import TruthTable from "../components/truth-table";
 import { Switch } from "@headlessui/react";
+import { useTranslation } from "gatsby-plugin-react-i18next";
 
 interface TruthTablePage {
 
@@ -26,10 +27,13 @@ export function simplify(stringExp: string): Expression | undefined {
         exp.leading = "";
         exp.trailing = "";
     }
+    else {
+        // TODO popup!
+    }
     return exp;
 }
 
-// FIXME A&B&C|D is read wrong!
+// FIXME A&B&C|D is read wrong! compare the three center operators on odd numbers, and pick the weakest?
 function simplifyRec(stringExp: string): Expression {
 
     // Basis
@@ -133,9 +137,14 @@ function isLegalExpression(stringExp: string): boolean {
         }
     }
 
-    // If the first or las index is an operator, return false
-    if (operators.some((value) => value === stringExp.charAt(0) || value === stringExp.charAt(stringExp.length - 1))) {
-        console.error("Illegal input!");
+    // If the first index is an operator, return false
+    if (operators.some((value) => value === stringExp.charAt(0))) {
+        console.error("Illegal input at index: 0");
+        return false;
+    }
+    // If the last index is an operator, return false
+    if (operators.some((value) => value === stringExp.charAt(stringExp.length - 1))) {
+        console.error(`Illegal input at index: ${ stringExp.length - 1 }`);
         return false;
     }
 
@@ -143,8 +152,9 @@ function isLegalExpression(stringExp: string): boolean {
         if (stringExp.charAt(i) === Operator.not.operator) {
             continue;
         }
+        // Return false if two operators are following eachother, but not !
         if (Operator.isOperator(stringExp.charAt(i)) && Operator.isOperator(stringExp.charAt(i - 1))) {
-            console.error("Illegal input!");
+            console.error(`Illegal input at index ${ i }`);
             return false;
         }
     }
@@ -179,9 +189,6 @@ function isOuterParentheses(stringExp: string): boolean {
     return is;
 }
 
-// TODO translate
-// TODO generate truth tables
-// TODO simplify truth expressions
 const TruthTablePage = ({}: TruthTablePage) => {
 
     const [simplifyEnabled, setSimplifyEnabled] = React.useState(true);
@@ -216,7 +223,6 @@ const TruthTablePage = ({}: TruthTablePage) => {
 
         }
         else {
-            expression.current = new Expression(null, null, null, {});
             setSearch("");
         }
     }
@@ -246,8 +252,10 @@ const TruthTablePage = ({}: TruthTablePage) => {
         };
     }, []);
 
+    const { t } = useTranslation();
+
     return (
-        <Layout title={ "Truth tables" } description={ "Generate truth tables or simplify" }>
+        <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
             <div className={ "pt-2" }>
                 <Input className={ `rounded-xl !pl-7 h-10` }
                        id={ "truth-input" }
@@ -256,18 +264,19 @@ const TruthTablePage = ({}: TruthTablePage) => {
                        trailing={
                            <div>
                                <button id={ "truth-input-button" }
+                                       title={ t("generate") + " (Enter)" }
                                        className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
                                        onClick={ onClick }>
-                                   Simplify
+                                   { t("generate") }
                                </button>
+                               <span>{ t("simplify") }: </span>
                                <Switch checked={ simplifyEnabled }
-                                       onChange={ (bool) => setSimplifyEnabled(bool) }
-                                       title={ "Simplify" }
+                                       onChange={ (bool: boolean) => setSimplifyEnabled(bool) }
+                                       title={ t("simplify") }
                                        className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
                                        relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
-                                   <span className={ "sr-only" }>Toggle simplify</span>
-                                   <span className={ `${
-                                       simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
+                                   <span className={ "sr-only" }>{ t("toggleSimplify") }</span>
+                                   <span className={ `${ simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
                                    } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
                                    />
                                </Switch>
@@ -277,7 +286,9 @@ const TruthTablePage = ({}: TruthTablePage) => {
                 {
                     search !== "" ?
                         <>
-                            <p>Output: { search }</p>
+                            {
+                                simplifyEnabled ? <p>{ t("output") }: { search }</p> : null
+                            }
                             <TruthTable expression={ expression.current } className={ "mt-2" }/>
                         </> : null
                 }

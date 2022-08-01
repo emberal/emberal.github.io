@@ -269,13 +269,14 @@ export class Expression {
                 exp.operator = null;
                 exp.exp2 = null;
                 exp.trailing = "";
-                exp.isAtomic = true;
             };
 
+            // If both are atomic values
             if (this.exp1.isAtomic && this.exp2.isAtomic && this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
                 removeExp2(this);
+                this.isAtomic = true;
             }
-            else if (this.exp1.isAtomic || this.exp2.isAtomic) { // eg: A | (A & B)
+            else if (this.exp1.isAtomic || this.exp2.isAtomic) { // If one is atomic eg: A | (A & B)
 
                 const contains = (exp1: Expression, exp2: string): boolean => {
 
@@ -301,17 +302,20 @@ export class Expression {
                                     exp2.exp1 = exp2.exp2;
                                 }
                                 removeExp2(exp2);
+                                exp2.isAtomic = true;
                             }
                             else if (exp2.operator === Operator.or) { // Removes the unequal
                                 if (exp2.exp1?.getAtomicValue() !== atomic) {
                                     exp2.exp1 = exp2.exp2;
                                 }
                                 removeExp2(exp2);
+                                exp2.isAtomic = true;
                             }
                         }
                         else {
                             func();
                             removeExp2(this);
+                            this.isAtomic = true;
                         }
                     }
                 };
@@ -326,6 +330,10 @@ export class Expression {
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.exp1.equals(this.exp2)) {
                     removeExp2(this);
+                    if (!this.exp1.leading.includes("!")) {
+                        this.exp1.leading = "";
+                        this.exp1.trailing = "";
+                    }
                 }
             }
         }

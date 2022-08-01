@@ -112,7 +112,8 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     <tr key={ rowIndex }>
                         {
                             tBodyMatrix[rowIndex].map((value: string, colIndex: number) => (
-                                <td key={ colIndex } className={ "text-center border border-gray-500" }>
+                                <td key={ colIndex } className={ `text-center border border-gray-500 
+                                ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
                                     <p>{ value }</p>
                                 </td>
                             ))

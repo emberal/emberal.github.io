@@ -45,5 +45,10 @@
   "theme": "Tema",
   "followBrowser": "Følg nettleser",
   "dark": "Mørk",
-  "light": "Lys"
+  "light": "Lys",
+
+  "truthTables": "Sannhetstabeller",
+  "generate": "Generer",
+  "simplify": "Forenkle",
+  "output": "Forenklet"
 }
