@@ -16,13 +16,14 @@ interface TruthTablePage {
 /**
  * Takes in a string representation of a truth expression, then simplified it after multiple known laws.
  * @param stringExp The string that will be attempted simplified
+ * @param simplify If 'true' will simplify the expression as much as possible
  * @returns {string} A simplified string
  */
-export function simplify(stringExp: string): Expression | undefined {
+export function simplify(stringExp: string, simplify: boolean): Expression | undefined {
     const isLegal = isLegalExpression(stringExp);
     let exp: Expression | undefined = undefined;
     if (isLegal) {
-        exp = simplifyRec(stringExp);
+        exp = simplifyRec(stringExp, simplify);
         if (!exp.leading.includes("!")) {
             exp.leading = "";
             exp.trailing = "";
@@ -34,7 +35,7 @@ export function simplify(stringExp: string): Expression | undefined {
     return exp;
 }
 
-function simplifyRec(stringExp: string): Expression {
+function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     // Basis
     if (stringExp.length < 3) {
@@ -63,11 +64,13 @@ function simplifyRec(stringExp: string): Expression {
 
     const center = getCenterOperatorIndex(stringExp);
 
-    exp.exp1 = simplifyRec(stringExp.substring(0, center.index)); // Left
+    exp.exp1 = simplifyRec(stringExp.substring(0, center.index), simplify); // Left
     exp.operator = center.operator;
-    exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length)); // Right
+    exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length), simplify); // Right
 
-    exp.laws();
+    if (simplify) {
+        exp.laws();
+    }
     // Moves expressions up the tree structure
     if (exp.exp2 === null) {
         exp = exp.exp1;
@@ -218,10 +221,9 @@ const TruthTablePage = ({}: TruthTablePage) => {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
-            let sExp: Expression | undefined;
 
             if (simplifyEnabled) {
-                sExp = simplify(exp);
+                let sExp = simplify(exp, true);
 
                 if (sExp) {
                     expression.current = sExp;
@@ -229,10 +231,13 @@ const TruthTablePage = ({}: TruthTablePage) => {
                 }
             }
             else {
-                // TODO convert string to Expression
-                setSearch(exp);
-            }
+                let sExp = simplify(exp, false);
 
+                if (sExp) {
+                    expression.current = sExp;
+                    setSearch(exp);
+                }
+            }
         }
         else {
             setSearch("");
@@ -301,7 +306,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
                             {
                                 simplifyEnabled ? <p>{ t("output") }: { search }</p> : null
                             }
-                            <TruthTable expression={ expression.current } className={ "mt-2" }/>
+                            <TruthTable expression={ expression.current }
+                                        className={ "mt-2" }/> {/*TODO expand table when needed*/ }
                         </> : null
                 }
             </div>

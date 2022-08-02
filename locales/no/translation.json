@@ -48,6 +48,7 @@
   "light": "Lys",
 
   "truthTables": "Sannhetstabeller",
+  "truthTablesDesc": "Lag sannhetstabeller og forenkle uttykk",
   "generate": "Generer",
   "simplify": "Forenkle uttrykk",
   "output": "Forenklet"

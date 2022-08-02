@@ -49,6 +49,7 @@
   "light": "Light",
 
   "truthTables": "Truth tables",
+  "truthTablesDesc": "Create truth tables, and simplify expressions",
   "generate": "Generate",
   "simplify": "Simplify expression",
   "output": "Output"

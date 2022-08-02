@@ -92,13 +92,13 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     }
 
     return (
-        <table className={ `border border-gray-500 rounded-lg overflow-auto ${ className }` }
+        <table className={ `border border-gray-500 ${ className }` }
                id={ id }>
             <thead className={ "border-b-2 border-gray-500" }>
             <tr>
                 {
-                    expressions.map((exp, index) => (
-                        <th key={ index } className={ "border border-gray-500" }>
+                    expressions.map((exp: Expression, index: number) => (
+                        <th key={ index } scope={ "col" } className={ "border border-gray-500" }>
                             <p className={ "w-fit px-2" }>{ exp.toString() }</p>
                         </th>
                     ))
@@ -108,10 +108,10 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
             <tbody>
             {
                 tBodyMatrix.map((row: string[], rowIndex: number) => (
-                    <tr key={ rowIndex }>
+                    <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
                         {
                             tBodyMatrix[rowIndex].map((value: string, colIndex: number) => (
-                                <td key={ colIndex } className={ `text-center border border-gray-500 
+                                <td key={ colIndex } className={ `text-center border border-gray-500
                                 ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
                                     <p>{ value }</p>
                                 </td>
