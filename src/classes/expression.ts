@@ -24,10 +24,12 @@ export class Expression {
 
     // TODO add weight to each Expression used to compare and sort, using the "value" of noth child Expressions, atomic uses string value
 
-    private _isString({
-                          exp1 = null,
-                          exp2 = null
-                      }: { exp1: Expression | string | null, exp2: Expression | string | null }): boolean {
+    private _isString(
+        {
+            exp1 = null,
+            exp2 = null
+        }: { exp1: Expression | string | null, exp2: Expression | string | null }): boolean {
+
         let isString = false;
         if (exp1 !== null) {
             isString = typeof exp1 === "string";
@@ -113,6 +115,7 @@ export class Expression {
 
     /**
      * @example A & B | B & C <=> B & (A | C)
+     * @example (A | B) & (B | C) <=> B | A & C
      */
     public distributivity(): void {
 
@@ -272,15 +275,17 @@ export class Expression {
             };
 
             // If both are atomic values
-            if (this.exp1.isAtomic && this.exp2.isAtomic && this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
-                removeExp2(this);
-                this.isAtomic = true;
+            if (this.exp1.isAtomic && this.exp2.isAtomic) {
+                if (this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
+                    removeExp2(this);
+                    this.isAtomic = true;
+                }
             }
             else if (this.exp1.isAtomic || this.exp2.isAtomic) { // If one is atomic eg: A | (A & B)
 
                 const contains = (exp1: Expression, exp2: string): boolean => {
 
-                    let correctOperators = this.operator === Operator.and && exp1.operator === Operator.or;
+                    let correctOperators = this.operator === Operator.and;
                     if (!correctOperators) {
                         correctOperators = this.operator === Operator.or && exp1.operator === Operator.and;
                     }
@@ -295,7 +300,7 @@ export class Expression {
                 const removeRedundant = (exp1: Expression, exp2: Expression, func: Function): void => {
                     const atomic = exp1.getAtomicValue();
                     if (atomic && contains(exp2, atomic)) {
-                        if (typeof exp2.exp1 === "object" && exp2.exp1?.isAtomic && this.operator === Operator.implication) {
+                        if (typeof exp2.exp1 === "object" && exp2.exp1?.isAtomic && this.operator !== Operator.or) {
 
                             if (exp2.operator === Operator.and) { // Removes the equal
                                 if (exp2.exp1?.getAtomicValue() === atomic) {
@@ -333,6 +338,24 @@ export class Expression {
                     if (!this.exp1.leading.includes("!")) {
                         this.exp1.leading = "";
                         this.exp1.trailing = "";
+                    }
+                }
+                else { // Eg: (A | B) | (A & B), remove (A & B)
+                    if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
+                        typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 && this.exp1.exp1 && this.exp1.exp2 &&
+                        this.exp2.exp1 && this.exp2.exp2) {
+
+                        if (this.exp1.exp1.equals(this.exp2.exp1) && this.exp1.exp2.equals(this.exp2.exp2) ||
+                            this.exp1.exp1.equals(this.exp2.exp2) && this.exp1.exp2.equals(this.exp2.exp1)) {
+
+                            if (this.exp1.operator === Operator.and) {
+                                this.exp1 = this.exp2;
+                                removeExp2(this)
+                            }
+                            else if (this.exp2.operator === Operator.and) {
+                                removeExp2(this);
+                            }
+                        }
                     }
                 }
             }

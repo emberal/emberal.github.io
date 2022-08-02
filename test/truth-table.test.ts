@@ -26,9 +26,14 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&B|A")?.toString()).toBe("A");
     expect(simplify("A&(B|B)&C")?.toString()).toBe("A & B & C");
     expect(simplify("A&B|A&B")?.toString()).toBe("A & B");
+    expect(simplify("A&B&A&B")?.toString()).toBe("A & B");
     expect(simplify("(A&B|C&D)&(A&B|C&D)")?.toString()).toBe("A & B | C & D");
     expect(simplify("A>A&B")?.toString()).toBe("!A | B");
     expect(simplify("A>A|B")?.toString()).toBe("!A | A");
+    expect(simplify("A&B&A")?.toString()).toBe("A & B");
+    expect(simplify("A|B|A&B")?.toString()).toBe("A | B");
+    expect(simplify("A|B|A|B")?.toString()).toBe("A | B");
+    expect(simplify("A|B|C|A")?.toString()).toBe("A | B | C"); // TODO check distributivity!
 });
 
 test("Distributivity", () => {
@@ -58,6 +63,13 @@ test("Commutative", () => {
     expect(simplify("B&A")?.toString()).toBe("A & B");
     expect(simplify("B|A")?.toString()).toBe("A | B");
     expect(simplify("G&(H|B)>A&(J|C)")?.toString()).toBe("!(G & (B | H)) | A & (C | J)");
+});
+
+test("Operator weight", () => {
+    expect(simplify("A&B&C|D")?.operator).toBe(Operator.or);
+    expect(simplify("A|B&C&D")?.operator).toBe(Operator.or);
+    expect(simplify("A>B&C|D")?.exp1?.toString()).toBe("!A");
+    expect(simplify("A>B|C&D|E>F&G")?.exp2?.toString()).toBe("F & G");
 });
 
 test("Several", () => {

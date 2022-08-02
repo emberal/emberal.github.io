@@ -19,13 +19,14 @@ interface TruthTablePage {
  * @returns {string} A simplified string
  */
 export function simplify(stringExp: string): Expression | undefined {
-    // TODO parse string and remove all unnecessarry parenthesis, if needed
     const isLegal = isLegalExpression(stringExp);
     let exp: Expression | undefined = undefined;
     if (isLegal) {
         exp = simplifyRec(stringExp);
-        exp.leading = "";
-        exp.trailing = "";
+        if (!exp.leading.includes("!")) {
+            exp.leading = "";
+            exp.trailing = "";
+        }
     }
     else {
         // TODO popup!
@@ -33,7 +34,6 @@ export function simplify(stringExp: string): Expression | undefined {
     return exp;
 }
 
-// FIXME A&B&C|D is read wrong! compare the three center operators on odd numbers, and pick the weakest?
 function simplifyRec(stringExp: string): Expression {
 
     // Basis
@@ -46,7 +46,7 @@ function simplifyRec(stringExp: string): Expression {
         return new Expression(stringExp, null, null, { leading: leading, isAtomic: true });
     }
 
-    const exp = new Expression(null, null, null, {});
+    let exp = new Expression(null, null, null, {});
 
     if (stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length))) { // TODO what if several !!!!
         stringExp = stringExp.replace("!", "");
@@ -68,6 +68,13 @@ function simplifyRec(stringExp: string): Expression {
     exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length)); // Right
 
     exp.laws();
+    // Moves expressions up the tree structure
+    if (exp.exp2 === null) {
+        exp = exp.exp1;
+    }
+    else if (exp.exp1.isAtomic && typeof exp.exp1.exp1 === "object") {
+        exp.exp1 = exp.exp1.exp1;
+    }
     return exp;
 }
 
@@ -111,17 +118,19 @@ function getCenterOperatorIndex(stringExp: string): any {
         }
     }
 
-    let op = arr[Math.floor(arr.length / 2)];
+    let op = arr[0];
+    let allEqual = true;
 
-    // If even, use the one with the lowest weight
-    if (arr.length % 2 === 0) {
-
-        let secondOp = arr[Math.floor(arr.length / 2 - 1)];
-        if (op.operator.weight > secondOp.operator.weight) {
-            op = secondOp;
+    // Finds the rightmost operator with the lowest weight, if all the operators are equal, pick the center most
+    for (let i = 1; i < arr.length; i++) {
+        if (arr[i].operator.weight !== op.operator.weight) {
+            allEqual = false;
+        }
+        if (arr[i].operator.weight <= op.operator.weight) {
+            op = arr[i];
         }
     }
-    return op;
+    return allEqual ? arr[Math.floor(arr.length / 2)] : op;
 }
 
 /**
@@ -262,27 +271,27 @@ const TruthTablePage = ({}: TruthTablePage) => {
                        placeholder={ "A&B>C" }
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={
-                           <div>
+                           <>
                                <button id={ "truth-input-button" }
                                        title={ t("generate") + " (Enter)" }
                                        className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
                                        onClick={ onClick }>
                                    { t("generate") }
                                </button>
-                               <span>{ t("simplify") }: </span>
-                               <Switch checked={ simplifyEnabled }
-                                       onChange={ (bool: boolean) => setSimplifyEnabled(bool) }
-                                       title={ t("simplify") }
-                                       className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
-                                       relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
-                                   <span className={ "sr-only" }>{ t("toggleSimplify") }</span>
-                                   <span className={ `${ simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
-                                   } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
-                                   />
-                               </Switch>
-                           </div>
+                           </>
                        }
                 />
+                <span className={ "" }>{ t("simplify") }: </span>
+                <Switch checked={ simplifyEnabled }
+                        onChange={ (bool: boolean) => setSimplifyEnabled(bool) }
+                        title={ t("simplify") }
+                        className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
+                                       relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
+                    <span className={ "sr-only" }>{ t("toggleSimplify") }</span>
+                    <span className={ `${ simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
+                    />
+                </Switch>
                 {
                     search !== "" ?
                         <>
