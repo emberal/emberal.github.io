@@ -75,6 +75,9 @@ function simplifyRec(stringExp: string): Expression {
     else if (exp.exp1.isAtomic && typeof exp.exp1.exp1 === "object") {
         exp.exp1 = exp.exp1.exp1;
     }
+    else if (exp.exp2.isAtomic && typeof exp.exp2.exp1 === "object") {
+        exp.exp2 = exp.exp2.exp1;
+    }
     return exp;
 }
 

@@ -7,11 +7,9 @@ interface TruthTable {
     id?: string,
 }
 
-// FIXME sometimes shows duplicates: A&B&A&B, beacuse some expressions only contains another expression, so it's counted twice
-// Check todo in pages/truth-table, move expressions up the tree
 const TruthTable = ({ expression, className, id }: TruthTable) => {
 
-    console.log(expression)
+    // console.log(expression);
     let expressions: Expression[] = [];
 
     expToArray(expression);

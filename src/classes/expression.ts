@@ -108,8 +108,8 @@ export class Expression {
         this.eliminationOfImplication();
         this.deMorgansLaw();
         this.assosiativeLaw();
-        this.commutativeLaw();
         this.distributivity();
+        this.commutativeLaw();
         this.mergeNot();
     }
 
@@ -146,7 +146,7 @@ export class Expression {
             };
 
             // TODO prettify!
-            if (this.exp1.exp1 && this.exp1.exp2 && this.exp2.exp1 && this.exp2.exp2) {
+            if (this.exp1.exp1 && this.exp1.exp2 && this.exp2.exp1 && this.exp2.exp2 && this.exp1.operator !== this.operator) {
                 if ((this.exp1.exp1 as Expression).getAtomicValue() === (this.exp2.exp1 as Expression).getAtomicValue()) {
                     setObjects(this.exp1.exp2, this.exp2.exp2, this.exp1.exp1);
                 }
@@ -335,16 +335,18 @@ export class Expression {
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.exp1.equals(this.exp2)) {
                     removeExp2(this);
+
                     if (!this.exp1.leading.includes("!")) {
                         this.exp1.leading = "";
                         this.exp1.trailing = "";
                     }
                 }
-                else { // Eg: (A | B) | (A & B), remove (A & B)
+                else {
                     if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
                         typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 && this.exp1.exp1 && this.exp1.exp2 &&
                         this.exp2.exp1 && this.exp2.exp2) {
 
+                        // Eg: (A | B) | (A & B), remove (A & B)
                         if (this.exp1.exp1.equals(this.exp2.exp1) && this.exp1.exp2.equals(this.exp2.exp2) ||
                             this.exp1.exp1.equals(this.exp2.exp2) && this.exp1.exp2.equals(this.exp2.exp1)) {
 
@@ -354,6 +356,18 @@ export class Expression {
                             }
                             else if (this.exp2.operator === Operator.and) {
                                 removeExp2(this);
+                            }
+                        }
+                        else if (this.exp1.operator === this.operator && this.exp2.operator === this.operator) {
+                            // Eg: (A | B) | (A | C) <=> A | B | C
+                            if (this.exp1.exp1.equals(this.exp2.exp1) || this.exp1.exp2.equals(this.exp2.exp1)) {
+                                this.exp2.exp1 = this.exp2.exp2;
+                                removeExp2(this.exp2);
+                                this.exp2.isAtomic = true;
+                            }
+                            else if (this.exp1.exp1.equals(this.exp2.exp2) || this.exp1.exp2.equals(this.exp2.exp2)) {
+                                removeExp2(this.exp2);
+                                this.exp2.isAtomic = true;
                             }
                         }
                     }
