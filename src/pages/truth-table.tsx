@@ -43,6 +43,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     let exp = new Expression(null, null, null, {});
 
+    // TODO move this above the basis, so it removes outer parentheses
     if (stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length))) { // TODO what if several !!!!
         stringExp = stringExp.replace("!", "");
         exp.leading = "!";
@@ -139,39 +140,69 @@ function getCenterOperatorIndex(stringExp: string): any {
  */
 function isLegalExpression(stringExp: string): string {
 
-    let operators: string[] = [];
-    for (let i = 0; i < Operator.getValues().length; i++) {
-        if (Operator.getValues()[i] !== Operator.not) {
-            operators[i] = Operator.getValues()[i].operator;
-        }
-    }
-
-    // If the first index is an operator, return false
-    if (operators.some((value) => value === stringExp.charAt(0))) {
-        const error = `Illegal character "${ stringExp.charAt(0) }" at index: 0`;
+    const illegalCharError = (char: string, index: number): string => {
+        error = `Illegal character "${ char }" at index: ${ index }`; // TODO translate
         console.error(error);
         return error;
-    }
-    // If the last index is an operator, return false
-    if (operators.some((value) => value === stringExp.charAt(stringExp.length - 1))) {
-        const error = `Illegal character "${ stringExp.charAt(stringExp.length - 1) }" at index: ${ stringExp.length - 1 }`;
+    };
+
+    const missingCharError = (char: string, index: number): string => {
+        error = `Missing character "${ char }" at index: ${ index }`;
         console.error(error);
         return error;
+    };
+
+    const isParentheses = (char: string): boolean => {
+        return char === "(" || char === ")";
+    };
+
+    let error = "";
+    const stack: string[] = [];
+    let isTruthValue = false;
+
+    for (let i = 0; i < stringExp.length; i++) {
+        const char = stringExp.charAt(i);
+        if (char === "(") {
+            stack.push(char);
+        }
+        if (char === ")") {
+            const pop = stack.pop();
+            if (pop === undefined || pop !== "(") {
+                return illegalCharError(char, i);
+            }
+        }
+
+        if (!Operator.isOperator(char) && !isParentheses(char)) {
+            isTruthValue = true;
+        }
+
+        if (i > 0) {
+            if (char === Operator.not.operator) {
+                if (!Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1) {
+                    return illegalCharError(char, i);
+                }
+                continue;
+            }
+            // Return false if two operators are following eachother, but not !
+            if (Operator.isOperator(char)) {
+                if (Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1 || isParentheses(stringExp.charAt(i - 1))) {
+                    return illegalCharError(char, i);
+                }
+            }
+            else if (!Operator.isOperator(char) && !Operator.isOperator(stringExp.charAt(i - 1)) &&
+                !isParentheses(char) && !isParentheses(stringExp.charAt(i - 1))) {
+                return illegalCharError(char, i);
+            }
+        }
+    }
+    if (!isTruthValue) {
+        return missingCharError("A", stringExp.length);
+    }
+    if (stack.length > 0) {
+        return missingCharError(")", stringExp.length);
     }
 
-    for (let i = 1; i < stringExp.length - 1; i++) {
-        if (stringExp.charAt(i) === Operator.not.operator) {
-            continue;
-        }
-        // Return false if two operators are following eachother, but not !
-        if (Operator.isOperator(stringExp.charAt(i)) && Operator.isOperator(stringExp.charAt(i - 1))) {
-            const error = `Illegal character "${ stringExp.charAt(i) }" at index ${ i }`;
-            console.error(error);
-            return error;
-        }
-    }
-
-    return "";
+    return ""; // Legal expression
 }
 
 function removeOuterParentheses(stringExp: string): string {
@@ -272,7 +303,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
     return (
         <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
             <div className={ "pt-2" }>
-                <Input className={ `rounded-xl !pl-7 h-10` }
+                <Input className={ `rounded-xl !pl-7 h-10 w-52` }
                        id={ "truth-input" }
                        placeholder={ "A&B>C" }
                        leading={ <Search className={ "pl-2 absolute" }/> }

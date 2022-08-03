@@ -23,11 +23,19 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
             expToArray(exp.left);
             expToArray(exp.right);
 
+            let oppositeExists = false;
+
             // Checks if the expression is already in the array
             for (let i = 0; i < expressions.length; i++) {
                 if (exp.equals(expressions[i])) {
                     return;
                 }
+                else if (exp.equalsAndOpposite(expressions[i])) {
+                    oppositeExists = true;
+                }
+            }
+            if (!oppositeExists && exp.leading.includes("!")) {
+                expressions.push(new Expression(exp.left, exp.operator, exp.right, { isAtomic: exp.isAtomic }));
             }
             expressions.push(exp);
         }
@@ -92,7 +100,9 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         };
 
         for (let column = 0; column < expressions.length; column++) {
-            if (expressions[column].isAtomic) {
+            const exp = expressions[column];
+
+            if (exp.isAtomic && !exp.leading.includes("!")) {
 
                 tBodyMatrix[row][column] = truthMatrix[truthMatrixRowIndex][truthMatrixColIndex] ? "T" : "F";
 
@@ -103,14 +113,19 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     truthMatrixColIndex = (truthMatrixColIndex + 1) % truthMatrix[truthMatrixRowIndex].length;
                 }
             }
+            else if (exp.isAtomic) { // If using 'not' operator
+                tBodyMatrix[row][column] = findExp(
+                    new Expression(exp.left, exp.operator, exp.right, { isAtomic: exp.isAtomic })
+                ) ? "F" : "T";
+            }
             else {
 
-                const left = findExp(expressions[column].left);
-                const right = findExp(expressions[column].right);
+                const left = findExp(exp.left);
+                const right = findExp(exp.right);
 
-                let boolExp = expressions[column].solve(left, right);
+                let boolExp = exp.solve(left, right);
 
-                if (expressions[column].leading.includes("!")) {
+                if (exp.leading.includes("!")) {
                     boolExp = !boolExp;
                 }
 
