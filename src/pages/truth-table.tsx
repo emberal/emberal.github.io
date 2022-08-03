@@ -6,7 +6,6 @@ import { Expression } from "../classes/expression";
 import { Operator } from "../classes/operator";
 import { Search } from "react-feather";
 import TruthTable from "../components/truth-table";
-import { Switch } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox } from "../components/output";
 import MySwitch from "../components/switch";
@@ -59,22 +58,22 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     const center = getCenterOperatorIndex(stringExp);
 
-    exp.exp1 = simplifyRec(stringExp.substring(0, center.index), simplify); // Left
+    exp.left = simplifyRec(stringExp.substring(0, center.index), simplify); // Left
     exp.operator = center.operator;
-    exp.exp2 = simplifyRec(stringExp.substring(center.index + 1, stringExp.length), simplify); // Right
+    exp.right = simplifyRec(stringExp.substring(center.index + 1, stringExp.length), simplify); // Right
 
     if (simplify) {
         exp.laws();
     }
     // Moves expressions up the tree structure
-    if (exp.exp2 === null) {
-        exp = exp.exp1;
+    if (exp.right === null) {
+        exp = exp.left;
     }
-    else if (exp.exp1.isAtomic && typeof exp.exp1.exp1 === "object") {
-        exp.exp1 = exp.exp1.exp1;
+    else if (exp.left.isAtomic && typeof exp.left.left === "object") {
+        exp.left = exp.left.left;
     }
-    else if (exp.exp2.isAtomic && typeof exp.exp2.exp1 === "object") {
-        exp.exp2 = exp.exp2.exp1;
+    else if (exp.right.isAtomic && typeof exp.right.left === "object") {
+        exp.right = exp.right.left;
     }
     return exp;
 }
@@ -90,7 +89,7 @@ function getCenterOperatorIndex(stringExp: string): any {
     stringExp = removeOuterParentheses(stringExp);
 
     let index = 0;
-    const arr: any[] = [];
+    const operatorArray: any[] = [];
     for (let i = 0; i < stringExp.length; i++) {
 
         let operators = 0;
@@ -115,30 +114,30 @@ function getCenterOperatorIndex(stringExp: string): any {
         // Finds the matching Operator
         const operator = Operator.getOperator(stringExp.charAt(i));
         if (operator && operator !== Operator.not) {
-            arr[index++] = { operator: operator, index: i };
+            operatorArray[index++] = { operator: operator, index: i };
         }
     }
 
-    let op = arr[0];
+    let op = operatorArray[0];
     let allEqual = true;
 
     // Finds the rightmost operator with the lowest weight, if all the operators are equal, pick the center most
-    for (let i = 1; i < arr.length; i++) {
-        if (arr[i].operator.weight !== op.operator.weight) {
+    for (let i = 1; i < operatorArray.length; i++) {
+        if (operatorArray[i].operator.weight !== op.operator.weight) {
             allEqual = false;
         }
-        if (arr[i].operator.weight <= op.operator.weight) {
-            op = arr[i];
+        if (operatorArray[i].operator.weight <= op.operator.weight) {
+            op = operatorArray[i];
         }
     }
-    return allEqual ? arr[Math.floor(arr.length / 2)] : op;
+    return allEqual ? operatorArray[Math.floor(operatorArray.length / 2)] : op;
 }
 
 /**
  * TODO illegal if two or more operators are following eachother, or if ! is before an operator
  * @param stringExp
  */
-function isLegalExpression(stringExp: string): string { // TODO return "" if legal, otherwise return error message or boolean | string
+function isLegalExpression(stringExp: string): string {
 
     let operators: string[] = [];
     for (let i = 0; i < Operator.getValues().length; i++) {

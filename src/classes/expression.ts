@@ -2,23 +2,23 @@ import { Operator } from "./operator";
 
 export class Expression {
 
-    public constructor(exp1: Expression | string | null, operator: Operator | null, exp2: Expression | string | null, {
+    public constructor(left: Expression | string | null, operator: Operator | null, right: Expression | string | null, {
         leading = "",
         trailing = "",
         isAtomic = false,
     }) {
         this.leading = leading;
-        this.exp1 = exp1;
+        this.left = left;
         this.operator = operator;
-        this.exp2 = exp2;
+        this.right = right;
         this.trailing = trailing;
         this.isAtomic = isAtomic;
     }
 
     leading: string;
-    exp1: Expression | string | null;
+    left: Expression | string | null;
     operator: Operator | null;
-    exp2: Expression | string | null;
+    right: Expression | string | null;
     trailing: string;
     isAtomic: boolean;
 
@@ -26,16 +26,16 @@ export class Expression {
 
     private _isString(
         {
-            exp1 = null,
-            exp2 = null
-        }: { exp1: Expression | string | null, exp2: Expression | string | null }): boolean {
+            left = null,
+            right = null
+        }: { left: Expression | string | null, right: Expression | string | null }): boolean {
 
         let isString = false;
-        if (exp1 !== null) {
-            isString = typeof exp1 === "string";
+        if (left !== null) {
+            isString = typeof left === "string";
         }
-        if (exp2 !== null) {
-            isString = typeof exp2 === "string";
+        if (right !== null) {
+            isString = typeof right === "string";
         }
         return isString;
     }
@@ -51,20 +51,20 @@ export class Expression {
             return true;
         }
         else if (typeof this !== "string" && typeof other !== "string") {
-            if (this.isAtomic && other.isAtomic && this.exp1 === other.exp1 && this.leading === other.leading) {
+            if (this.isAtomic && other.isAtomic && this.left === other.left && this.leading === other.leading) {
                 return true;
             }
             else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
 
-                if (!(this._isString({ exp1: this.exp1, exp2: this.exp2 }) || this._isString({
-                    exp1: other.exp1,
-                    exp2: other.exp2
+                if (!(this._isString({ left: this.left, right: this.right }) || this._isString({
+                    left: other.left,
+                    right: other.right
                 }))) {
 
-                    if (this.exp1 && this.exp2 && other.exp1 && other.exp2) {
+                    if (this.left && this.right && other.left && other.right) {
 
-                        if (this.leading === other.leading && ((this.exp1 as Expression).equals(other.exp1) && (this.exp2 as Expression).equals(other.exp2) ||
-                            (this.exp1 as Expression).equals(other.exp2) && (this.exp1 as Expression).equals(other.exp2))) {
+                        if (this.leading === other.leading && ((this.left as Expression).equals(other.left) && (this.right as Expression).equals(other.right) ||
+                            (this.left as Expression).equals(other.right) && (this.left as Expression).equals(other.right))) {
                             return true;
                         }
                     }
@@ -73,8 +73,8 @@ export class Expression {
         }
         else { // One is a string while the other is an Expression
 
-            const isEqual = (exp1: Expression | string, exp2: Expression | string): boolean => {
-                return typeof exp1 === "string" && typeof exp2 !== "string" && exp1 === exp2.exp1;
+            const isEqual = (left: Expression | string, right: Expression | string): boolean => {
+                return typeof left === "string" && typeof right !== "string" && left === right.left;
             };
 
             return isEqual(this, other) || isEqual(other, this);
@@ -89,20 +89,20 @@ export class Expression {
      */
     public equalsAndOpposite(other: Expression | string): boolean {
         if (this.leading.includes("!")) {
-            return new Expression(this.exp1, this.operator, this.exp2, { isAtomic: this.isAtomic }).equals(other);
+            return new Expression(this.left, this.operator, this.right, { isAtomic: this.isAtomic }).equals(other);
         }
         else if (typeof other === "object" && other.leading.includes("!")) {
-            return new Expression(other.exp1, other.operator, other.exp2, { isAtomic: other.isAtomic }).equals(this);
+            return new Expression(other.left, other.operator, other.right, { isAtomic: other.isAtomic }).equals(this);
         }
         return false;
     }
 
     public getAtomicValue(): string | null {
-        if (typeof this.exp1 === "string") {
-            return this.exp1;
+        if (typeof this.left === "string") {
+            return this.left;
         }
-        else if (this.exp1 && this.exp1.isAtomic) {
-            return this.exp1.getAtomicValue();
+        else if (this.left && this.left.isAtomic) {
+            return this.left.getAtomicValue();
         }
         return null;
     }
@@ -123,12 +123,12 @@ export class Expression {
      */
     public distributivity(): void {
 
-        if (this.exp1 && this.exp2 && typeof this.exp1 === "object" && typeof this.exp2 === "object" &&
-            !this.exp1.isAtomic && !this.exp2.isAtomic) {
+        if (this.left && this.right && typeof this.left === "object" && typeof this.right === "object" &&
+            !this.left.isAtomic && !this.right.isAtomic) {
 
             const setObjects = (left: Expression | string, right: Expression | string, common: Expression | string | null): void => {
-                this.exp2 = new Expression(left, this.operator, right, {});
-                this.exp1 = new Expression(common, null, null, { isAtomic: true });
+                this.right = new Expression(left, this.operator, right, {});
+                this.left = new Expression(common, null, null, { isAtomic: true });
                 this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
 
                 if (this.operator !== Operator.and) {
@@ -140,36 +140,36 @@ export class Expression {
                     }
                 }
                 else { // exp2.operator === or
-                    if (!this.exp2.leading.includes("(")) {
-                        this.exp2.leading = "(";
+                    if (!this.right.leading.includes("(")) {
+                        this.right.leading = "(";
                     }
-                    if (!this.exp2.trailing.includes(")")) {
-                        this.exp2.trailing = ")";
+                    if (!this.right.trailing.includes(")")) {
+                        this.right.trailing = ")";
                     }
                 }
             };
 
             // TODO prettify!
-            if (this.exp1.exp1 && this.exp1.exp2 && this.exp2.exp1 && this.exp2.exp2 && this.exp1.operator !== this.operator) {
-                if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
-                    typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 === "object") {
+            if (this.left.left && this.left.right && this.right.left && this.right.right && this.left.operator !== this.operator) {
+                if (typeof this.left.left === "object" && typeof this.left.right === "object" &&
+                    typeof this.right.left === "object" && typeof this.right.right === "object") {
 
                     // TODO store as const instead, so it won't use the same method on the same object multiple times
-                    if (this.exp1.exp1.getAtomicValue() === this.exp2.exp1.getAtomicValue() &&
-                        this.exp1.exp2.getAtomicValue() !== this.exp2.exp2.getAtomicValue()) {
-                        setObjects(this.exp1.exp2, this.exp2.exp2, this.exp1.exp1);
+                    if (this.left.left.getAtomicValue() === this.right.left.getAtomicValue() &&
+                        this.left.right.getAtomicValue() !== this.right.right.getAtomicValue()) {
+                        setObjects(this.left.right, this.right.right, this.left.left);
                     }
-                    else if (this.exp1.exp1.getAtomicValue() === this.exp2.exp2.getAtomicValue() &&
-                        this.exp1.exp2.getAtomicValue() !== this.exp2.exp1.getAtomicValue()) {
-                        setObjects(this.exp1.exp2, this.exp2.exp1, this.exp1.exp1);
+                    else if (this.left.left.getAtomicValue() === this.right.right.getAtomicValue() &&
+                        this.left.right.getAtomicValue() !== this.right.left.getAtomicValue()) {
+                        setObjects(this.left.right, this.right.left, this.left.left);
                     }
-                    else if (this.exp1.exp2.getAtomicValue() === this.exp2.exp1.getAtomicValue() &&
-                        this.exp1.exp1.getAtomicValue() !== this.exp2.exp2.getAtomicValue()) {
-                        setObjects(this.exp1.exp1, this.exp2.exp2, this.exp1.exp2);
+                    else if (this.left.right.getAtomicValue() === this.right.left.getAtomicValue() &&
+                        this.left.left.getAtomicValue() !== this.right.right.getAtomicValue()) {
+                        setObjects(this.left.left, this.right.right, this.left.right);
                     }
-                    else if (this.exp1.exp2.getAtomicValue() === this.exp2.exp2.getAtomicValue() &&
-                        this.exp1.exp1.getAtomicValue() !== this.exp2.exp1.getAtomicValue()) {
-                        setObjects(this.exp1.exp1, this.exp2.exp1, this.exp1.exp2);
+                    else if (this.left.right.getAtomicValue() === this.right.right.getAtomicValue() &&
+                        this.left.left.getAtomicValue() !== this.right.left.getAtomicValue()) {
+                        setObjects(this.left.left, this.right.left, this.left.right);
                     }
                 }
             }
@@ -181,9 +181,9 @@ export class Expression {
      */
     public deMorgansLaw(): void {
 
-        if (this.exp1 && this.exp2) {
+        if (this.left && this.right) {
 
-            if (this._isNot(this.exp1) && this._isNot(this.exp2)) {
+            if (this._isNot(this.left) && this._isNot(this.right)) {
                 let newOperator = null;
 
                 switch (this.operator) {
@@ -195,12 +195,12 @@ export class Expression {
                 }
 
                 if (newOperator !== null) {
-                    this.exp1 = new Expression(this._removeNot(this.exp1), newOperator, this._removeNot(this.exp2), {
+                    this.left = new Expression(this._removeNot(this.left), newOperator, this._removeNot(this.right), {
                         leading: "!(",
                         trailing: ")"
                     });
                     this.operator = null;
-                    this.exp2 = null;
+                    this.right = null;
                 }
             }
         }
@@ -229,18 +229,18 @@ export class Expression {
     public commutativeLaw(): void {
 
         const swap = () => {
-            const help = this.exp1;
-            this.exp1 = this.exp2;
-            this.exp2 = help;
+            const help = this.left;
+            this.left = this.right;
+            this.right = help;
         }
 
-        if (this.exp1 && this.exp2) {
-            if (typeof this.exp1 === "string" && typeof this.exp2 === "string" && this.exp1 > this.exp2) {
+        if (this.left && this.right) {
+            if (typeof this.left === "string" && typeof this.right === "string" && this.left > this.right) {
                 swap();
             }
-            else if (typeof this.exp1 === "object" && typeof this.exp2 === "object" && this.exp1.isAtomic && this.exp2.isAtomic) {
-                const atomic1 = this.exp1.getAtomicValue();
-                const atomic2 = this.exp2.getAtomicValue();
+            else if (typeof this.left === "object" && typeof this.right === "object" && this.left.isAtomic && this.right.isAtomic) {
+                const atomic1 = this.left.getAtomicValue();
+                const atomic2 = this.right.getAtomicValue();
                 if (atomic1 && atomic2 && atomic1 > atomic2) {
                     swap();
                 }
@@ -253,21 +253,21 @@ export class Expression {
      */
     public eliminationOfImplication(): void {
 
-        if (this.exp1 && this.exp2 && this.operator === Operator.implication) {
+        if (this.left && this.right && this.operator === Operator.implication) {
 
-            if (typeof this.exp1 !== "string") {
-                if (!this.exp1.isAtomic) {
-                    if (!this.exp1.leading.includes("(")) {
-                        this.exp1.leading += "(";
+            if (typeof this.left !== "string") {
+                if (!this.left.isAtomic) {
+                    if (!this.left.leading.includes("(")) {
+                        this.left.leading += "(";
                     }
-                    if (!this.exp1.trailing.includes(")")) {
-                        this.exp1.trailing += ")";
+                    if (!this.left.trailing.includes(")")) {
+                        this.left.trailing += ")";
                     }
                 }
-                this.exp1.leading = "!" + this.exp1.leading;
+                this.left.leading = "!" + this.left.leading;
             }
             else {
-                this.exp1 = "!" + this.exp1;
+                this.left = "!" + this.left;
             }
             this.operator = Operator.or;
         }
@@ -278,116 +278,116 @@ export class Expression {
      */
     public absorption(): void {
 
-        if (this.exp1 && this.exp2 && typeof this.exp1 !== "string" && typeof this.exp2 !== "string") {
+        if (this.left && this.right && typeof this.left !== "string" && typeof this.right !== "string") {
 
-            const removeExp2 = (exp: Expression) => {
+            const removeRight = (exp: Expression) => {
                 exp.leading = "";
                 exp.operator = null;
-                exp.exp2 = null;
+                exp.right = null;
                 exp.trailing = "";
             };
 
             // If both are atomic values
-            if (this.exp1.isAtomic && this.exp2.isAtomic) {
-                if (this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
-                    if (!this.exp1.leading.includes("!") && !this.exp2.leading.includes("!") ||
-                        this.exp1.leading.includes("!") && this.exp2.leading.includes("!")) {
+            if (this.left.isAtomic && this.right.isAtomic) {
+                if (this.left.getAtomicValue() === this.right.getAtomicValue()) {
+                    if (!this.left.leading.includes("!") && !this.right.leading.includes("!") ||
+                        this.left.leading.includes("!") && this.right.leading.includes("!")) {
 
-                        removeExp2(this);
+                        removeRight(this);
                         this.isAtomic = true;
                     }
                 }
             }
-            else if (this.exp1.isAtomic || this.exp2.isAtomic) { // If one is atomic eg: A | (A & B)
+            else if (this.left.isAtomic || this.right.isAtomic) { // If one is atomic eg: A | (A & B)
 
-                const contains = (exp1: Expression, exp2: string): boolean => {
+                const contains = (exp: Expression, stringExp: string): boolean => {
 
                     let correctOperators = this.operator === Operator.and;
                     if (!correctOperators) {
-                        correctOperators = this.operator === Operator.or && exp1.operator === Operator.and;
+                        correctOperators = this.operator === Operator.or && exp.operator === Operator.and;
                     }
                     if (!correctOperators) {
                         correctOperators = this.operator === Operator.implication;
                     }
 
-                    return correctOperators && (typeof exp1.exp1 !== "string" && typeof exp1.exp2 !== "string" &&
-                        (exp2 === exp1.exp1?.getAtomicValue() || exp2 === exp1.exp2?.getAtomicValue()));
+                    return correctOperators && (typeof exp.left !== "string" && typeof exp.right !== "string" &&
+                        (stringExp === exp.left?.getAtomicValue() || stringExp === exp.right?.getAtomicValue()));
                 };
 
-                const removeRedundant = (exp1: Expression, exp2: Expression, func: Function): void => {
-                    const atomic = exp1.getAtomicValue();
-                    if (atomic && contains(exp2, atomic)) {
-                        if (typeof exp2.exp1 === "object" && exp2.exp1?.isAtomic && this.operator !== Operator.or) {
+                const removeRedundant = (left: Expression, right: Expression, func: Function): void => {
+                    const atomic = left.getAtomicValue();
+                    if (atomic && contains(right, atomic)) {
+                        if (typeof right.left === "object" && right.left?.isAtomic && this.operator !== Operator.or) {
 
-                            if (exp2.operator === Operator.and) { // Removes the equal
-                                if (exp2.exp1?.getAtomicValue() === atomic) {
-                                    exp2.exp1 = exp2.exp2;
+                            if (right.operator === Operator.and) { // Removes the equal
+                                if (right.left?.getAtomicValue() === atomic) {
+                                    right.left = right.right;
                                 }
-                                removeExp2(exp2);
-                                exp2.isAtomic = true;
+                                removeRight(right);
+                                right.isAtomic = true;
                             }
-                            else if (exp2.operator === Operator.or) { // Removes the unequal
-                                if (exp2.exp1?.getAtomicValue() !== atomic) {
-                                    exp2.exp1 = exp2.exp2;
+                            else if (right.operator === Operator.or) { // Removes the unequal
+                                if (right.left?.getAtomicValue() !== atomic) {
+                                    right.left = right.right;
                                 }
-                                removeExp2(exp2);
-                                exp2.isAtomic = true;
+                                removeRight(right);
+                                right.isAtomic = true;
                             }
                         }
                         else {
                             func();
-                            removeExp2(this);
+                            removeRight(this);
                             this.isAtomic = true;
                         }
                     }
                 };
 
-                if (this.exp1.isAtomic) {
-                    removeRedundant(this.exp1, this.exp2, () => null);
+                if (this.left.isAtomic) {
+                    removeRedundant(this.left, this.right, () => null);
                 }
                 else {
-                    removeRedundant(this.exp2, this.exp1, () => this.exp1 = this.exp2);
+                    removeRedundant(this.right, this.left, () => this.left = this.right);
                 }
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
-                if (this.exp1.equals(this.exp2)) {
-                    if (!this.exp1.leading.includes("!") && !this.exp2.leading.includes("!") ||
-                        this.exp1.leading.includes("!") && this.exp2.leading.includes("!")) {
+                if (this.left.equals(this.right)) {
+                    if (!this.left.leading.includes("!") && !this.right.leading.includes("!") ||
+                        this.left.leading.includes("!") && this.right.leading.includes("!")) {
 
-                        removeExp2(this);
+                        removeRight(this);
                     }
-                    if (!this.exp1.leading.includes("!")) {
-                        this.exp1.leading = "";
-                        this.exp1.trailing = "";
+                    if (!this.left.leading.includes("!")) {
+                        this.left.leading = "";
+                        this.left.trailing = "";
                     }
                 }
                 else {
-                    if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
-                        typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 && this.exp1.exp1 && this.exp1.exp2 &&
-                        this.exp2.exp1 && this.exp2.exp2 && this.exp1.leading === this.exp2.leading) {
+                    if (typeof this.left.left === "object" && typeof this.left.right === "object" &&
+                        typeof this.right.left === "object" && typeof this.right.right && this.left.left && this.left.right &&
+                        this.right.left && this.right.right && this.left.leading === this.right.leading) {
 
                         // Eg: (A | B) | (A & B), remove (A & B)
-                        if (this.exp1.exp1.equals(this.exp2.exp1) && this.exp1.exp2.equals(this.exp2.exp2) ||
-                            this.exp1.exp1.equals(this.exp2.exp2) && this.exp1.exp2.equals(this.exp2.exp1)) {
+                        if (this.left.left.equals(this.right.left) && this.left.right.equals(this.right.right) ||
+                            this.left.left.equals(this.right.right) && this.left.right.equals(this.right.left)) {
 
-                            if (this.exp1.operator === Operator.and) {
-                                this.exp1 = this.exp2;
-                                removeExp2(this)
+                            if (this.left.operator === Operator.and) {
+                                this.left = this.right;
+                                removeRight(this)
                             }
-                            else if (this.exp2.operator === Operator.and) {
-                                removeExp2(this);
+                            else if (this.right.operator === Operator.and) {
+                                removeRight(this);
                             }
                         }
-                        else if (this.exp1.operator === this.operator && this.exp2.operator === this.operator) {
+                        else if (this.left.operator === this.operator && this.right.operator === this.operator) {
                             // Eg: (A | B) | (A | C) <=> A | B | C
-                            if (this.exp1.exp1.equals(this.exp2.exp1) || this.exp1.exp2.equals(this.exp2.exp1)) {
-                                this.exp2.exp1 = this.exp2.exp2;
-                                removeExp2(this.exp2);
-                                this.exp2.isAtomic = true;
+                            if (this.left.left.equals(this.right.left) || this.left.right.equals(this.right.left)) {
+                                this.right.left = this.right.right;
+                                removeRight(this.right);
+                                this.right.isAtomic = true;
                             }
-                            else if (this.exp1.exp1.equals(this.exp2.exp2) || this.exp1.exp2.equals(this.exp2.exp2)) {
-                                removeExp2(this.exp2);
-                                this.exp2.isAtomic = true;
+                            else if (this.left.left.equals(this.right.right) || this.left.right.equals(this.right.right)) {
+                                removeRight(this.right);
+                                this.right.isAtomic = true;
                             }
                         }
                     }
@@ -412,11 +412,11 @@ export class Expression {
                 this.leading = "!" + this.leading;
             }
         }
-        if (typeof this.exp1 !== "string") {
-            this.exp1?.mergeNot();
+        if (typeof this.left !== "string") {
+            this.left?.mergeNot();
         }
-        if (typeof this.exp2 !== "string") {
-            this.exp2?.mergeNot();
+        if (typeof this.right !== "string") {
+            this.right?.mergeNot();
         }
     }
 
@@ -432,23 +432,23 @@ export class Expression {
         else if (exp === null) {
             return 0;
         }
-        return this.getNumberOfAtomics(exp.exp1) + this.getNumberOfAtomics(exp.exp2);
+        return this.getNumberOfAtomics(exp.left) + this.getNumberOfAtomics(exp.right);
     }
 
     /**
      * Takes in an expression with a true or false value for each side, then calculates the correct truth value
-     * @param exp1 Left side of the expression.
-     * @param exp2 right side of the expression.
+     * @param left Left side of the expression.
+     * @param right right side of the expression.
      * @returns {boolean} If the expression is truthy, returns 'true', otherwise 'false'
      */
-    public solve(exp1: boolean, exp2: boolean): boolean {
+    public solve(left: boolean, right: boolean): boolean {
         switch (this.operator) {
             case Operator.and:
-                return exp1 && exp2;
+                return left && right;
             case Operator.or:
-                return exp1 || exp2;
+                return left || right;
             case Operator.implication:
-                return !exp1 || exp2;
+                return !left || right;
             default:
                 return false;
         }
@@ -457,14 +457,14 @@ export class Expression {
     public toString(): string {
         let s = this.leading;
 
-        if (this.exp1 !== null) {
-            s += this.exp1.toString();
+        if (this.left !== null) {
+            s += this.left.toString();
 
             if (this.operator !== null) {
                 s += " " + this.operator.toString();
 
-                if (this.exp2 !== null) {
-                    s += " " + this.exp2.toString();
+                if (this.right !== null) {
+                    s += " " + this.right.toString();
                 }
             }
             s += this.trailing;

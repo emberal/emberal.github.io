@@ -20,8 +20,8 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     function expToArray(exp: Expression | string | null) {
 
         if (exp && typeof exp !== "string") {
-            expToArray(exp.exp1);
-            expToArray(exp.exp2);
+            expToArray(exp.left);
+            expToArray(exp.right);
 
             // Checks if the expression is already in the array
             for (let i = 0; i < expressions.length; i++) {
@@ -105,8 +105,8 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
             }
             else {
 
-                const left = findExp(expressions[column].exp1);
-                const right = findExp(expressions[column].exp2);
+                const left = findExp(expressions[column].left);
+                const right = findExp(expressions[column].right);
 
                 let boolExp = expressions[column].solve(left, right);
 

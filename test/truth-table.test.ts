@@ -3,20 +3,19 @@ import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
 test("Equals", () => {
-    const innerExp1 = new Expression("A", null, null, { isAtomic: true });
-    const notInnerExp1 = new Expression("A", null, null, { isAtomic: true, leading: "!" });
-    const innerExp2 = new Expression("B", null, null, { isAtomic: true });
+    const innerLeft = new Expression("A", null, null, { isAtomic: true });
+    const notInnerLeft = new Expression("A", null, null, { isAtomic: true, leading: "!" });
+    const innerRight = new Expression("B", null, null, { isAtomic: true });
 
-    const exp1 = new Expression(innerExp1, Operator.and, innerExp2, {});
-    const exp2 = new Expression(innerExp1, Operator.and, innerExp2, {});
-
-    const notExp1 = new Expression(innerExp1, Operator.and, innerExp2, {leading: "!(", trailing: ")"});
+    const exp1 = new Expression(innerLeft, Operator.and, innerRight, {});
+    const exp2 = new Expression(innerLeft, Operator.and, innerRight, {});
+    const notExp1 = new Expression(innerLeft, Operator.and, innerRight, { leading: "!(", trailing: ")" });
 
     expect(exp1.equals(exp2)).toBeTruthy();
     expect(exp2.equals(exp1)).toBeTruthy();
-    expect(innerExp1.equals(notInnerExp1)).toBeFalsy();
+    expect(innerLeft.equals(notInnerLeft)).toBeFalsy();
     expect(exp1.equals(notExp1)).toBeFalsy();
-    expect(innerExp1.equalsAndOpposite(notInnerExp1)).toBeTruthy();
+    expect(innerLeft.equalsAndOpposite(notInnerLeft)).toBeTruthy();
 });
 
 test("Absorption w/ same values", () => {
@@ -74,8 +73,8 @@ test("Commutative", () => {
 test("Operator weight", () => {
     expect(simplify("A&B&C|D", true)?.operator).toBe(Operator.or);
     expect(simplify("A|B&C&D", true)?.operator).toBe(Operator.or);
-    expect(simplify("A>B&C|D", true)?.exp1?.toString()).toBe("!A");
-    expect(simplify("A>B|C&D|E>F&G", true)?.exp2?.toString()).toBe("F & G");
+    expect(simplify("A>B&C|D", true)?.left?.toString()).toBe("!A");
+    expect(simplify("A>B|C&D|E>F&G", true)?.right?.toString()).toBe("F & G");
 });
 
 test("Several", () => {
