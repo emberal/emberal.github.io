@@ -37,6 +37,13 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
 
     for (let i = 0; i < expressions.length; i++) {
         if (expressions[i].isAtomic) {
+            for (let j = i - 1; j >= 0; j--) {
+
+                if (expressions[j].isAtomic && expressions[i].equalsAndOpposite(expressions[j])) {
+                    numberOfAtomics--;
+                    break;
+                }
+            }
             numberOfAtomics++;
         }
     }
@@ -71,6 +78,19 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     for (let row = 0; truthMatrix.length > 0 && row < truthMatrix[0].length; row++) {
         tBodyMatrix[row] = [];
 
+        // Finds the location of an expression, then checks the value
+        const findExp = (exp: Expression | string | null): boolean => {
+            if (typeof exp === "object") {
+                for (let i = 0; i < expressions.length; i++) {
+
+                    if (exp?.equals(expressions[i])) {
+                        return tBodyMatrix[row][i] === "T";
+                    }
+                }
+            }
+            return false;
+        };
+
         for (let column = 0; column < expressions.length; column++) {
             if (expressions[column].isAtomic) {
 
@@ -78,23 +98,12 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
 
                 // Iterates through the truthMatrix
                 truthMatrixRowIndex = (truthMatrixRowIndex + 1) % truthMatrix.length;
+
                 if (truthMatrixRowIndex === 0) {
                     truthMatrixColIndex = (truthMatrixColIndex + 1) % truthMatrix[truthMatrixRowIndex].length;
                 }
             }
             else {
-                // Finds the location of an expression, then checks the value
-                const findExp = (exp: Expression | string | null): boolean => {
-                    if (typeof exp === "object") {
-                        for (let i = 0; i < expressions.length; i++) {
-
-                            if (exp?.equals(expressions[i])) {
-                                return  tBodyMatrix[row][i] === "T";
-                            }
-                        }
-                    }
-                    return false;
-                };
 
                 const left = findExp(expressions[column].exp1);
                 const right = findExp(expressions[column].exp2);
@@ -130,7 +139,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
                         {
                             tBodyMatrix[rowIndex].map((value: string, colIndex: number) => (
-                                <td key={ colIndex } className={ `text-center border border-gray-500
+                                <td key={ colIndex } className={ `text-center border border-gray-500 last:font-extrabold
                                 ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
                                     <p>{ value }</p>
                                 </td>

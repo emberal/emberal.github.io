@@ -4,13 +4,19 @@ import { Operator } from "../src/classes/operator";
 
 test("Equals", () => {
     const innerExp1 = new Expression("A", null, null, { isAtomic: true });
+    const notInnerExp1 = new Expression("A", null, null, { isAtomic: true, leading: "!" });
     const innerExp2 = new Expression("B", null, null, { isAtomic: true });
 
     const exp1 = new Expression(innerExp1, Operator.and, innerExp2, {});
     const exp2 = new Expression(innerExp1, Operator.and, innerExp2, {});
 
+    const notExp1 = new Expression(innerExp1, Operator.and, innerExp2, {leading: "!(", trailing: ")"});
+
     expect(exp1.equals(exp2)).toBeTruthy();
     expect(exp2.equals(exp1)).toBeTruthy();
+    expect(innerExp1.equals(notInnerExp1)).toBeFalsy();
+    expect(exp1.equals(notExp1)).toBeFalsy();
+    expect(innerExp1.equalsAndOpposite(notInnerExp1)).toBeTruthy();
 });
 
 test("Absorption w/ same values", () => {
@@ -77,6 +83,16 @@ test("Several", () => {
 });
 
 test("Always true / false", () => {
-    expect(simplify("A&!A", true)?.toString()).toBe("A & !A"); // FIXME absorbtion?
+    const innerA = new Expression("A", null, null, { isAtomic: true });
+    const innerB = new Expression("B", null, null, { isAtomic: true });
+    const aAndB = new Expression(innerA, Operator.and, innerB, {});
+    const notAAndB = new Expression(innerB, Operator.and, innerB, { leading: "!(", trailing: ")" });
+    const alwaysFalse = new Expression(aAndB, Operator.and, notAAndB, {});
+
+    expect(simplify("A&!A", true)?.toString()).toBe("A & !A");
     expect(simplify("A|!A", true)?.toString()).toBe("A | !A");
+    expect(simplify("A&B&!A", true)?.toString()).toBe("A & !A");
+    expect(simplify("A&B&!(A&B)", true)?.toString()).toBe("A & B & !(A & B)");
+    expect(simplify("A&B|!(A&B)", true)?.toString()).toBe("A & B | !(A & B)");
+    expect(alwaysFalse.solve(true, false)).toBeFalsy();
 });

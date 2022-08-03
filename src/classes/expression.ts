@@ -51,29 +51,20 @@ export class Expression {
             return true;
         }
         else if (typeof this !== "string" && typeof other !== "string") {
-            if (this.isAtomic && other.isAtomic && this.exp1 === other.exp1) {
+            if (this.isAtomic && other.isAtomic && this.exp1 === other.exp1 && this.leading === other.leading) {
                 return true;
             }
             else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
 
-                if (this._isString({ exp1: this.exp1, exp2: this.exp2 }) && this._isString({
-                    exp1: other.exp1,
-                    exp2: other.exp2
-                })) {
-
-                    if (this.exp1 === other.exp1 && this.exp2 === other.exp2 ||
-                        this.exp1 === other.exp2 && this.exp2 === other.exp1) {
-                        return true;
-                    }
-                }
-                else if (!(this._isString({ exp1: this.exp1, exp2: this.exp2 }) || this._isString({
+                if (!(this._isString({ exp1: this.exp1, exp2: this.exp2 }) || this._isString({
                     exp1: other.exp1,
                     exp2: other.exp2
                 }))) {
+
                     if (this.exp1 && this.exp2 && other.exp1 && other.exp2) {
 
-                        if ((this.exp1 as Expression).equals(other.exp1) && (this.exp2 as Expression).equals(other.exp2) ||
-                            (this.exp1 as Expression).equals(other.exp2) && (this.exp1 as Expression).equals(other.exp2)) {
+                        if (this.leading === other.leading && ((this.exp1 as Expression).equals(other.exp1) && (this.exp2 as Expression).equals(other.exp2) ||
+                            (this.exp1 as Expression).equals(other.exp2) && (this.exp1 as Expression).equals(other.exp2))) {
                             return true;
                         }
                     }
@@ -86,9 +77,22 @@ export class Expression {
                 return typeof exp1 === "string" && typeof exp2 !== "string" && exp1 === exp2.exp1;
             };
 
-            if (isEqual(this, other) || isEqual(other, this)) {
-                return true;
-            }
+            return isEqual(this, other) || isEqual(other, this);
+        }
+        return false;
+    }
+
+    /**
+     * @example A & !A => true, A & A => false
+     * @param other
+     * @returns {boolean}
+     */
+    public equalsAndOpposite(other: Expression | string): boolean {
+        if (this.leading.includes("!")) {
+            return new Expression(this.exp1, this.operator, this.exp2, { isAtomic: this.isAtomic }).equals(other);
+        }
+        else if (typeof other === "object" && other.leading.includes("!")) {
+            return new Expression(other.exp1, other.operator, other.exp2, { isAtomic: other.isAtomic }).equals(this);
         }
         return false;
     }
@@ -147,17 +151,26 @@ export class Expression {
 
             // TODO prettify!
             if (this.exp1.exp1 && this.exp1.exp2 && this.exp2.exp1 && this.exp2.exp2 && this.exp1.operator !== this.operator) {
-                if ((this.exp1.exp1 as Expression).getAtomicValue() === (this.exp2.exp1 as Expression).getAtomicValue()) {
-                    setObjects(this.exp1.exp2, this.exp2.exp2, this.exp1.exp1);
-                }
-                else if ((this.exp1.exp1 as Expression).getAtomicValue() === (this.exp2.exp2 as Expression).getAtomicValue()) {
-                    setObjects(this.exp1.exp2, this.exp2.exp1, this.exp1.exp1);
-                }
-                else if ((this.exp1.exp2 as Expression).getAtomicValue() === (this.exp2.exp1 as Expression).getAtomicValue()) {
-                    setObjects(this.exp1.exp1, this.exp2.exp2, this.exp1.exp2);
-                }
-                else if ((this.exp1.exp2 as Expression).getAtomicValue() === (this.exp2.exp2 as Expression).getAtomicValue()) {
-                    setObjects(this.exp1.exp1, this.exp2.exp1, this.exp1.exp2);
+                if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
+                    typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 === "object") {
+
+                    // TODO store as const instead, so it won't use the same method on the same object multiple times
+                    if (this.exp1.exp1.getAtomicValue() === this.exp2.exp1.getAtomicValue() &&
+                        this.exp1.exp2.getAtomicValue() !== this.exp2.exp2.getAtomicValue()) {
+                        setObjects(this.exp1.exp2, this.exp2.exp2, this.exp1.exp1);
+                    }
+                    else if (this.exp1.exp1.getAtomicValue() === this.exp2.exp2.getAtomicValue() &&
+                        this.exp1.exp2.getAtomicValue() !== this.exp2.exp1.getAtomicValue()) {
+                        setObjects(this.exp1.exp2, this.exp2.exp1, this.exp1.exp1);
+                    }
+                    else if (this.exp1.exp2.getAtomicValue() === this.exp2.exp1.getAtomicValue() &&
+                        this.exp1.exp1.getAtomicValue() !== this.exp2.exp2.getAtomicValue()) {
+                        setObjects(this.exp1.exp1, this.exp2.exp2, this.exp1.exp2);
+                    }
+                    else if (this.exp1.exp2.getAtomicValue() === this.exp2.exp2.getAtomicValue() &&
+                        this.exp1.exp1.getAtomicValue() !== this.exp2.exp1.getAtomicValue()) {
+                        setObjects(this.exp1.exp1, this.exp2.exp1, this.exp1.exp2);
+                    }
                 }
             }
         }
@@ -277,8 +290,12 @@ export class Expression {
             // If both are atomic values
             if (this.exp1.isAtomic && this.exp2.isAtomic) {
                 if (this.exp1.getAtomicValue() === this.exp2.getAtomicValue()) {
-                    removeExp2(this);
-                    this.isAtomic = true;
+                    if (!this.exp1.leading.includes("!") && !this.exp2.leading.includes("!") ||
+                        this.exp1.leading.includes("!") && this.exp2.leading.includes("!")) {
+
+                        removeExp2(this);
+                        this.isAtomic = true;
+                    }
                 }
             }
             else if (this.exp1.isAtomic || this.exp2.isAtomic) { // If one is atomic eg: A | (A & B)
@@ -334,8 +351,11 @@ export class Expression {
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.exp1.equals(this.exp2)) {
-                    removeExp2(this);
+                    if (!this.exp1.leading.includes("!") && !this.exp2.leading.includes("!") ||
+                        this.exp1.leading.includes("!") && this.exp2.leading.includes("!")) {
 
+                        removeExp2(this);
+                    }
                     if (!this.exp1.leading.includes("!")) {
                         this.exp1.leading = "";
                         this.exp1.trailing = "";
@@ -344,7 +364,7 @@ export class Expression {
                 else {
                     if (typeof this.exp1.exp1 === "object" && typeof this.exp1.exp2 === "object" &&
                         typeof this.exp2.exp1 === "object" && typeof this.exp2.exp2 && this.exp1.exp1 && this.exp1.exp2 &&
-                        this.exp2.exp1 && this.exp2.exp2) {
+                        this.exp2.exp1 && this.exp2.exp2 && this.exp1.leading === this.exp2.leading) {
 
                         // Eg: (A | B) | (A & B), remove (A & B)
                         if (this.exp1.exp1.equals(this.exp2.exp1) && this.exp1.exp2.equals(this.exp2.exp2) ||
