@@ -377,6 +377,8 @@ export class Expression {
     }
 
     /**
+     * Removes unnesessarry 'not' operators, if there's an even number, removes them completely.
+     * If there's an odd number, remove all but one.
      * @example !!A <=> A or !!!A <=> !A
      */
     public mergeNot(): void {
@@ -413,6 +415,12 @@ export class Expression {
         return this.getNumberOfAtomics(exp.exp1) + this.getNumberOfAtomics(exp.exp2);
     }
 
+    /**
+     * Takes in an expression with a true or false value for each side, then calculates the correct truth value
+     * @param exp1 Left side of the expression.
+     * @param exp2 right side of the expression.
+     * @returns {boolean} If the expression is truthy, returns 'true', otherwise 'false'
+     */
     public solve(exp1: boolean, exp2: boolean): boolean {
         switch (this.operator) {
             case Operator.and:

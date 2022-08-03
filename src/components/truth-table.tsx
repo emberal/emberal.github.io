@@ -9,22 +9,37 @@ interface TruthTable {
 
 const TruthTable = ({ expression, className, id }: TruthTable) => {
 
-    // console.log(expression);
     let expressions: Expression[] = [];
 
     expToArray(expression);
 
+    /**
+     * Takes an expression and pushes all parts of it to a one dimentional array
+     * @param exp An Expression
+     */
     function expToArray(exp: Expression | string | null) {
 
         if (exp && typeof exp !== "string") {
             expToArray(exp.exp1);
             expToArray(exp.exp2);
 
+            // Checks if the expression is already in the array
+            for (let i = 0; i < expressions.length; i++) {
+                if (exp.equals(expressions[i])) {
+                    return;
+                }
+            }
             expressions.push(exp);
         }
     }
 
-    const numberOfAtomics = Expression.getNumberOfAtomics(expression);
+    let numberOfAtomics = 0;
+
+    for (let i = 0; i < expressions.length; i++) {
+        if (expressions[i].isAtomic) {
+            numberOfAtomics++;
+        }
+    }
 
     const truthMatrix: boolean[][] = new Array(numberOfAtomics);
     let changeIndex = Math.pow(2, truthMatrix.length) / 2;
@@ -50,6 +65,8 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     let truthMatrixRowIndex = 0;
     let truthMatrixColIndex = 0;
 
+    // Creates a matrix with the body of the table, using the helper matrix truthMatrix to fill in the correct values.
+    // The expressions that aren't atomic, uses the atomic values to see if they're truthy
     const tBodyMatrix: string[][] = new Array(expressions.length);
     for (let row = 0; truthMatrix.length > 0 && row < truthMatrix[0].length; row++) {
         tBodyMatrix[row] = [];
@@ -66,20 +83,22 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                 }
             }
             else {
-                // Finds the location of the first expression, then checks the value
-                let left = false;
-                const exp = expressions[column].exp1;
-                if (typeof exp === "object") {
-                    for (let i = 0; i < expressions.length; i++) {
+                // Finds the location of an expression, then checks the value
+                const findExp = (exp: Expression | string | null): boolean => {
+                    if (typeof exp === "object") {
+                        for (let i = 0; i < expressions.length; i++) {
 
-                        if (exp?.equals(expressions[i])) {
-                            left = tBodyMatrix[row][i] === "T";
-                            break;
+                            if (exp?.equals(expressions[i])) {
+                                return  tBodyMatrix[row][i] === "T";
+                            }
                         }
                     }
-                }
+                    return false;
+                };
 
-                const right = tBodyMatrix[row][column - 1] === "T";
+                const left = findExp(expressions[column].exp1);
+                const right = findExp(expressions[column].exp2);
+
                 let boolExp = expressions[column].solve(left, right);
 
                 if (expressions[column].leading.includes("!")) {

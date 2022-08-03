@@ -52,6 +52,7 @@
   "truthTablesDesc": "Create truth tables, and simplify expressions",
   "generate": "Generate",
   "simplify": "Simplify expression",
-  "output": "Output"
+  "output": "Output",
+  "inputError": "Input error"
 
 }

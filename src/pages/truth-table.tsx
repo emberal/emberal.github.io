@@ -8,6 +8,8 @@ import { Search } from "react-feather";
 import TruthTable from "../components/truth-table";
 import { Switch } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import { InfoBox } from "../components/output";
+import MySwitch from "../components/switch";
 
 interface TruthTablePage {
 
@@ -19,18 +21,11 @@ interface TruthTablePage {
  * @param simplify If 'true' will simplify the expression as much as possible
  * @returns {string} A simplified string
  */
-export function simplify(stringExp: string, simplify: boolean): Expression | undefined {
-    const isLegal = isLegalExpression(stringExp);
-    let exp: Expression | undefined = undefined;
-    if (isLegal) {
-        exp = simplifyRec(stringExp, simplify);
-        if (!exp.leading.includes("!")) {
-            exp.leading = "";
-            exp.trailing = "";
-        }
-    }
-    else {
-        // TODO popup!
+export function simplify(stringExp: string, simplify: boolean): Expression {
+    let exp = simplifyRec(stringExp, simplify);
+    if (!exp.leading.includes("!")) {
+        exp.leading = "";
+        exp.trailing = "";
     }
     return exp;
 }
@@ -143,7 +138,7 @@ function getCenterOperatorIndex(stringExp: string): any {
  * TODO illegal if two or more operators are following eachother, or if ! is before an operator
  * @param stringExp
  */
-function isLegalExpression(stringExp: string): boolean {
+function isLegalExpression(stringExp: string): string { // TODO return "" if legal, otherwise return error message or boolean | string
 
     let operators: string[] = [];
     for (let i = 0; i < Operator.getValues().length; i++) {
@@ -154,13 +149,15 @@ function isLegalExpression(stringExp: string): boolean {
 
     // If the first index is an operator, return false
     if (operators.some((value) => value === stringExp.charAt(0))) {
-        console.error("Illegal input at index: 0");
-        return false;
+        const error = `Illegal character "${ stringExp.charAt(0) }" at index: 0`;
+        console.error(error);
+        return error;
     }
     // If the last index is an operator, return false
     if (operators.some((value) => value === stringExp.charAt(stringExp.length - 1))) {
-        console.error(`Illegal input at index: ${ stringExp.length - 1 }`);
-        return false;
+        const error = `Illegal character "${ stringExp.charAt(stringExp.length - 1) }" at index: ${ stringExp.length - 1 }`;
+        console.error(error);
+        return error;
     }
 
     for (let i = 1; i < stringExp.length - 1; i++) {
@@ -169,12 +166,13 @@ function isLegalExpression(stringExp: string): boolean {
         }
         // Return false if two operators are following eachother, but not !
         if (Operator.isOperator(stringExp.charAt(i)) && Operator.isOperator(stringExp.charAt(i - 1))) {
-            console.error(`Illegal input at index ${ i }`);
-            return false;
+            const error = `Illegal character "${ stringExp.charAt(i) }" at index ${ i }`;
+            console.error(error);
+            return error;
         }
     }
 
-    return true;
+    return "";
 }
 
 function removeOuterParentheses(stringExp: string): string {
@@ -213,6 +211,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
     const [search, setSearch] = React.useState("");
     let expression = React.useRef(new Expression(null, null, null, {}));
 
+    const [errorMessage, setErrorMessage] = React.useState("");
+
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
@@ -222,8 +222,11 @@ const TruthTablePage = ({}: TruthTablePage) => {
         if (exp && exp !== "") {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
 
-            if (simplifyEnabled) {
-                let sExp = simplify(exp, true);
+            const errorMsg = isLegalExpression(exp);
+            if (errorMsg === "") {
+                setErrorMessage("");
+
+                let sExp = simplify(exp, simplifyEnabled);
 
                 if (sExp) {
                     expression.current = sExp;
@@ -231,12 +234,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
                 }
             }
             else {
-                let sExp = simplify(exp, false);
-
-                if (sExp) {
-                    expression.current = sExp;
-                    setSearch(exp);
-                }
+                setErrorMessage(errorMsg);
+                setSearch("");
             }
         }
         else {
@@ -290,25 +289,27 @@ const TruthTablePage = ({}: TruthTablePage) => {
                        }
                 />
                 <span className={ "" }>{ t("simplify") }: </span>
-                <Switch checked={ simplifyEnabled }
-                        onChange={ (bool: boolean) => setSimplifyEnabled(bool) }
-                        title={ t("simplify") }
-                        className={ `${ simplifyEnabled ? "bg-primaryPurple" : "bg-gray-500" } 
-                                       relative inline-flex h-6 w-11 items-center rounded-full mt-2` }>
-                    <span className={ "sr-only" }>{ t("toggleSimplify") }</span>
-                    <span className={ `${ simplifyEnabled ? 'translate-x-6' : 'translate-x-1'
-                    } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
-                    />
-                </Switch>
+                <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
+                          name={ t("toggleSimplify") }/>
                 {
                     search !== "" ?
                         <>
                             {
-                                simplifyEnabled ? <p>{ t("output") }: { search }</p> : null
+                                simplifyEnabled ?
+                                    <InfoBox className={ "w-fit" }
+                                             title={ t("output") + ":" }
+                                             content={ search }/> : null
                             }
                             <TruthTable expression={ expression.current }
-                                        className={ "mt-2" }/> {/*TODO expand table when needed*/ }
+                                        className={ "mt-2" }/> { /*TODO expand table when needed*/ }
                         </> : null
+                }
+                {
+                    errorMessage !== "" ?
+                        <InfoBox className={ "w-fit" }
+                                 title={ t("inputError") }
+                                 content={ errorMessage }
+                                 error={ true }/> : null
                 }
             </div>
         </Layout>
