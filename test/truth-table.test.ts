@@ -1,4 +1,4 @@
-import { simplify } from '../src/pages/truth-table'
+import { simplify } from '../src/classes/expression_utils';
 import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
@@ -40,7 +40,6 @@ test("Absorption w/ different values", () => {
     expect(simplify("A|B|A|B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|C|A", true)?.toString()).toBe("A | B | C");
     expect(simplify("A&!(A|B)", true)?.toString()).toBe("A & !B");
-
 });
 
 test("Distributivity", () => {
@@ -93,6 +92,7 @@ test("Always true / false", () => {
     expect(simplify("A&!A", true)?.toString()).toBe("A & !A");
     expect(simplify("A|!A", true)?.toString()).toBe("A | !A");
     expect(simplify("A&B&!A", true)?.toString()).toBe("A & !A");
+    expect(simplify("!A&B&A", true)?.toString()).toBe("!A & A");
     expect(simplify("A&B&!(A&B)", true)?.toString()).toBe("A & B & !(A & B)");
     expect(simplify("A&B|!(A&B)", true)?.toString()).toBe("A & B | !(A & B)");
     expect(alwaysFalse.solve(true, false)).toBeFalsy();

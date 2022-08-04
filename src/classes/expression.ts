@@ -319,14 +319,14 @@ export class Expression {
                     if (atomic && contains(right, atomic)) {
                         if (typeof right.left === "object" && right.left?.isAtomic && this.operator !== Operator.or) {
 
-                            if (right.operator === Operator.and && left.leading === right.leading) { // Removes the equal
+                            if (right.operator === Operator.and && left.leading === right.left.leading) { // Removes the equal
                                 if (right.left?.getAtomicValue() === atomic) {
                                     right.left = right.right;
                                 }
                                 removeRight(right);
                                 right.isAtomic = true;
                             }
-                            else if (right.operator === Operator.or || left.leading !== right.leading) { // Removes the unequal
+                            else if (right.operator === Operator.or || left.leading !== right.left.leading) { // Removes the unequal
                                 if (right.left?.getAtomicValue() !== atomic) {
                                     right.left = right.right;
                                 }

@@ -35,8 +35,9 @@ export class Operator {
         return null;
     }
 
-    public static isOperator(char: string): boolean {
-        return this.getValues().some((value) => value.operator === char);
+    public static isOperator(stringOp: string): boolean {
+        return this.getValues().some((operator: Operator) => operator.operator === stringOp ||
+            operator.values.some((value: string) => value === stringOp));
     }
 
     public append(val: string): void {
