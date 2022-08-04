@@ -53,6 +53,9 @@
   "generate": "Generate",
   "simplify": "Simplify expression",
   "output": "Output",
-  "inputError": "Input error"
+  "inputError": "Input error",
+  "illegalChar": "Illegal character",
+  "missingChar": "Missing character",
+  "atIndex": "at index:"
 
 }

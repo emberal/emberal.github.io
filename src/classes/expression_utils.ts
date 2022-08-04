@@ -115,6 +115,12 @@ function getCenterOperatorIndex(stringExp: string): any {
     return allEqual ? operatorArray[Math.floor(operatorArray.length / 2)] : op;
 }
 
+interface isLegalExpressionTranslations {
+    illegalChar?: string,
+    missingChar?: string,
+    atIndex?: string
+}
+
 /**
  * Checks if a string is a valid truth expression. If the string is valid, it will return "empty string", otherwise an error message
  * It is not true if either of the following are present.
@@ -123,17 +129,24 @@ function getCenterOperatorIndex(stringExp: string): any {
  * Not operator prior to another different operator.
  * The parentheses do not match.
  * @param stringExp A string in the style of a truth expression
+ * @param illegalChar A string message for illegal characters
+ * @param missingChar A string message for missing characters
+ * @param atIndex A string message for displaying index
  */
-export function isLegalExpression(stringExp: string): string { // TODO use regex?
+export function isLegalExpression(stringExp: string, {
+    illegalChar = "Illegal character",
+    missingChar = "Missing character",
+    atIndex = "at index:"
+}: isLegalExpressionTranslations): string { // TODO use regex?
 
     const illegalCharError = (char: string, index: number): string => {
-        error = `Illegal character "${ char }" at index: ${ index }`; // TODO translate
+        error = `${ illegalChar } "${ char }" ${ atIndex } ${ index }`;
         console.error(error);
         return error;
     };
 
     const missingCharError = (char: string, index: number): string => {
-        error = `Missing character "${ char }" at index: ${ index }`;
+        error = `${ missingChar } "${ char }" ${ atIndex } ${ index }`;
         console.error(error);
         return error;
     };

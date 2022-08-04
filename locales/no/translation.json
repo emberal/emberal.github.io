@@ -4,21 +4,17 @@
   "contactMe": "Kontakt meg",
   "toggleDarkMode": "Veksle \"dark mode\"",
   "goBackToTheTop": "Tilbake til toppen",
-
   "changeLang": "Endre språk: ",
   "createdWith": "Laget med ",
   "iconsFrom": "Ikoner fra ",
-
   "welcome": "Velkommen!",
   "aboutMeDesc": "Hei, jeg heter Martin og studerer for tiden Informasjonsteknologi på Høgskulen på Vestlandet i Bergen.",
   "aboutMePicAlt": "Et bilde av meg på fjelltur",
-
   "yourName": "Ditt navn",
   "subject": "Emne",
   "yourEmail": "Din epostadresse",
   "message": "Melding",
   "messageSent": "Melding sent",
-
   "myProjects": "Mine prosjekter",
   "openInGitHub": "Åpne i GitHub",
   "timeToRead": "Tid å lese: ",
@@ -33,24 +29,23 @@
   "noResults": "Ingen resultater",
   "search": "Søk",
   "clear": "Tøm søk",
-
   "pageNotFound": "Siden ble ikke funnet",
   "sorry": "Beklager",
   "pageWasNotFound": "siden du lette etter fins ikke.",
-
   "links": "Linker",
   "myLinks": "Mine linker",
   "linksDescription": "Martin Berg Alstads linker",
-
   "theme": "Tema",
   "followBrowser": "Følg nettleser",
   "dark": "Mørk",
   "light": "Lys",
-
   "truthTables": "Sannhetstabeller",
   "truthTablesDesc": "Lag sannhetstabeller og forenkle uttykk",
   "generate": "Generer",
   "simplify": "Forenkle uttrykk",
   "output": "Forenklet",
-  "inputError": "Input error"
+  "inputError": "Input error",
+  "illegalChar": "Ulovlig tegn",
+  "missingChar": "Manglende tegn",
+  "atIndex": "ved indeks:"
 }

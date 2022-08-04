@@ -18,7 +18,7 @@ export class Operator {
 
     // TODO use correct operators, and allow the use of different kinds
     static implication = new Operator(">", 0, { values: ["implication", "imp", "impliserer", "->", "=>"] });
-    static or = new Operator("|", 1, { values: ["or", "eller", "V", "\\/"] });
+    static or = new Operator("|", 1, { values: ["or", "eller", "\\/"] });
     static and = new Operator("&", 2, { values: ["and", "og", "/\\"] });
     static not = new Operator("!", 3, { values: ["not", "ikke", "¬", "~", "-"] });
 

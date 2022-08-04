@@ -42,7 +42,11 @@ const TruthTablePage = ({}: TruthTablePage) => {
         if (exp && exp !== "") {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
 
-            const errorMsg = isLegalExpression(exp);
+            const errorMsg = isLegalExpression(exp, {
+                atIndex: t("atIndex"),
+                missingChar: t("missingChar"),
+                illegalChar: t("illegalChar")
+            });
             setErrorMessage(errorMsg);
 
             if (errorMsg === "") {
