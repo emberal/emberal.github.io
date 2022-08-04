@@ -68,7 +68,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
 
     function onTyping() {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
-        if (el) {
+        if (el && (el.value !== "") !== typing) {
             setTyping(el.value !== "");
         }
     }
@@ -78,6 +78,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
         if (el) {
             el.value = "";
             setSearch(el.value);
+            setErrorMessage("");
             setTyping(false);
             el.focus();
         }

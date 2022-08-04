@@ -98,10 +98,10 @@ export class Expression {
     }
 
     public getAtomicValue(): string | null {
-        if (typeof this.left === "string") {
-            return this.left;
+        if (this.isAtomic) {
+            return this.toString();
         }
-        else if (this.left && this.left.isAtomic) {
+        else if (this.left && typeof this.left === "object") {
             return this.left.getAtomicValue();
         }
         return null;
@@ -232,7 +232,7 @@ export class Expression {
             const help = this.left;
             this.left = this.right;
             this.right = help;
-        }
+        };
 
         if (this.left && this.right) {
             if (typeof this.left === "string" && typeof this.right === "string" && this.left > this.right) {
@@ -281,6 +281,9 @@ export class Expression {
         if (this.left && this.right && typeof this.left !== "string" && typeof this.right !== "string") {
 
             const removeRight = (exp: Expression) => {
+                if (exp.leading.includes("!") && typeof exp.left === "object" && exp.left) {
+                    exp.left.leading = "!";
+                }
                 exp.leading = "";
                 exp.operator = null;
                 exp.right = null;
@@ -290,12 +293,8 @@ export class Expression {
             // If both are atomic values
             if (this.left.isAtomic && this.right.isAtomic) {
                 if (this.left.getAtomicValue() === this.right.getAtomicValue()) {
-                    if (!this.left.leading.includes("!") && !this.right.leading.includes("!") ||
-                        this.left.leading.includes("!") && this.right.leading.includes("!")) {
-
-                        removeRight(this);
-                        this.isAtomic = true;
-                    }
+                    removeRight(this);
+                    this.isAtomic = true;
                 }
             }
             else if (this.left.isAtomic || this.right.isAtomic) { // If one is atomic eg: A | (A & B)
@@ -310,13 +309,22 @@ export class Expression {
                         correctOperators = this.operator === Operator.implication;
                     }
 
-                    return correctOperators && (typeof exp.left !== "string" && typeof exp.right !== "string" &&
+                    return correctOperators && (typeof exp.left === "object" && typeof exp.right === "object" &&
                         (stringExp === exp.left?.getAtomicValue() || stringExp === exp.right?.getAtomicValue()));
                 };
 
+                // FIXME Bug infested hive
                 const removeRedundant = (left: Expression, right: Expression, func: Function): void => {
+                    // if (right.left && left.equals(right.left)) { // TODO
+                    //
+                    // }
+                    // else if (right.right && left.equals(right.right)) {
+                    //
+                    // }
                     const atomic = left.getAtomicValue();
-                    if (atomic && contains(right, atomic)) {
+                    if (atomic && contains(right, atomic) && right.left && right.right && typeof right.left === "object" && typeof right.right === "object" &&
+                        (left.leading === right.left.leading || left.leading === right.right.leading || this.operator === Operator.and)) {
+
                         if (typeof right.left === "object" && right.left?.isAtomic && this.operator !== Operator.or) {
 
                             if (right.operator === Operator.and && left.leading === right.left.leading) { // Removes the equal
@@ -327,7 +335,7 @@ export class Expression {
                                 right.isAtomic = true;
                             }
                             else if (right.operator === Operator.or || left.leading !== right.left.leading) { // Removes the unequal
-                                if (right.left?.getAtomicValue() !== atomic) {
+                                if (right.left?.getAtomicValue() !== atomic && right.right.getAtomicValue() === atomic) {
                                     right.left = right.right;
                                 }
                                 removeRight(right);

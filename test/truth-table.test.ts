@@ -39,7 +39,6 @@ test("Absorption w/ different values", () => {
     expect(simplify("A|B|A&B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|A|B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|C|A", true)?.toString()).toBe("A | B | C");
-    expect(simplify("A&!(A|B)", true)?.toString()).toBe("A & !B");
 });
 
 test("Distributivity", () => {
@@ -89,11 +88,17 @@ test("Always true / false", () => {
     const notAAndB = new Expression(innerB, Operator.and, innerB, { leading: "!(", trailing: ")" });
     const alwaysFalse = new Expression(aAndB, Operator.and, notAAndB, {});
 
-    expect(simplify("A&!A", true)?.toString()).toBe("A & !A");
-    expect(simplify("A|!A", true)?.toString()).toBe("A | !A");
-    expect(simplify("A&B&!A", true)?.toString()).toBe("A & !A");
+    expect(simplify("A&!A", true)?.toString()).toBe("!A & A");
+    expect(simplify("A|!A", true)?.toString()).toBe("!A | A");
+    expect(simplify("A&B&!A", true)?.toString()).toBe("!A & A");
     expect(simplify("!A&B&A", true)?.toString()).toBe("!A & A");
+    expect(simplify("A&!(A|B)", true)?.toString()).toBe("!A & A");
     expect(simplify("A&B&!(A&B)", true)?.toString()).toBe("A & B & !(A & B)");
     expect(simplify("A&B|!(A&B)", true)?.toString()).toBe("A & B | !(A & B)");
     expect(alwaysFalse.solve(true, false)).toBeFalsy();
+});
+
+test("Don't simplify", () => {
+    expect(simplify("A&B|!A", true)?.toString()).toBe("A & B | !A");
+    expect(simplify("A|B&!A", true)?.toString()).toBe("A | !A & B");
 });
