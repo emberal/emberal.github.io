@@ -10,6 +10,7 @@ export function simplify(stringExp: string, simplify: boolean): Expression {
     return exp;
 }
 
+// TODO allow expressions written like: A & [TEST], where [string] can be used as an atomic value
 function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     // Basis
@@ -58,6 +59,16 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
         exp.right = exp.right.left;
     }
     return exp;
+}
+
+// TODO check if string is atomic, REGEX?
+function isAtomic(exp: string): boolean {
+    for (let i = 0; i < exp.length; i++) {
+        if (exp.charAt(i)) {
+
+        }
+    }
+    return false;
 }
 
 /**

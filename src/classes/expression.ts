@@ -45,39 +45,41 @@ export class Expression {
      * @param other The object this is compared to
      * @returns {boolean} If this and the other expressions are the same returns 'true' (regardless or order) otherwise 'false'
      */
-    public equals(other: Expression | string): boolean {
+    public equals(other: Expression | string | null): boolean {
 
-        if (this === other) { // If they are the same object, or a string with the same content, return true
-            return true;
-        }
-        else if (typeof this !== "string" && typeof other !== "string") {
-            if (this.isAtomic && other.isAtomic && this.left === other.left && this.leading === other.leading) {
+        if (other) {
+            if (this === other) { // If they are the same object, or a string with the same content, return true
                 return true;
             }
-            else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
+            else if (typeof this !== "string" && typeof other !== "string") {
+                if (this.isAtomic && other.isAtomic && this.left === other.left && this.leading === other.leading) {
+                    return true;
+                }
+                else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
 
-                if (!(this._isString({ left: this.left, right: this.right }) || this._isString({
-                    left: other.left,
-                    right: other.right
-                }))) {
+                    if (!(this._isString({ left: this.left, right: this.right }) || this._isString({
+                        left: other.left,
+                        right: other.right
+                    }))) {
 
-                    if (this.left && this.right && other.left && other.right) {
+                        if (this.left && this.right && other.left && other.right) {
 
-                        if (this.leading === other.leading && ((this.left as Expression).equals(other.left) && (this.right as Expression).equals(other.right) ||
-                            (this.left as Expression).equals(other.right) && (this.left as Expression).equals(other.right))) {
-                            return true;
+                            if (this.leading === other.leading && ((this.left as Expression).equals(other.left) && (this.right as Expression).equals(other.right) ||
+                                (this.left as Expression).equals(other.right) && (this.left as Expression).equals(other.right))) {
+                                return true;
+                            }
                         }
                     }
                 }
             }
-        }
-        else { // One is a string while the other is an Expression
+            else { // One is a string while the other is an Expression
 
-            const isEqual = (left: Expression | string, right: Expression | string): boolean => {
-                return typeof left === "string" && typeof right !== "string" && left === right.left;
-            };
+                const isEqual = (left: Expression | string, right: Expression | string): boolean => {
+                    return typeof left === "string" && typeof right !== "string" && left === right.left;
+                };
 
-            return isEqual(this, other) || isEqual(other, this);
+                return isEqual(this, other) || isEqual(other, this);
+            }
         }
         return false;
     }
@@ -299,62 +301,44 @@ export class Expression {
             }
             else if (this.left.isAtomic || this.right.isAtomic) { // If one is atomic eg: A | (A & B)
 
-                const contains = (exp: Expression, stringExp: string): boolean => {
+                // TODO simplify
+                const removeRedundant = (left: Expression, right: Expression, removeLeft: boolean): void => {
 
-                    let correctOperators = this.operator === Operator.and;
-                    if (!correctOperators) {
-                        correctOperators = this.operator === Operator.or && exp.operator === Operator.and;
-                    }
-                    if (!correctOperators) {
-                        correctOperators = this.operator === Operator.implication;
-                    }
+                    if (right.left && right.right && typeof right.left === "object" && typeof right.right === "object") {
 
-                    return correctOperators && (typeof exp.left === "object" && typeof exp.right === "object" &&
-                        (stringExp === exp.left?.getAtomicValue() || stringExp === exp.right?.getAtomicValue()));
-                };
+                        const leftEqualsLeft = left.equals(right.left);
+                        const leftEqualsRight = left.equals(right.right);
 
-                // FIXME Bug infested hive
-                const removeRedundant = (left: Expression, right: Expression, func: Function): void => {
-                    // if (right.left && left.equals(right.left)) { // TODO
-                    //
-                    // }
-                    // else if (right.right && left.equals(right.right)) {
-                    //
-                    // }
-                    const atomic = left.getAtomicValue();
-                    if (atomic && contains(right, atomic) && right.left && right.right && typeof right.left === "object" && typeof right.right === "object" &&
-                        (left.leading === right.left.leading || left.leading === right.right.leading || this.operator === Operator.and)) {
-
-                        if (typeof right.left === "object" && right.left?.isAtomic && this.operator !== Operator.or) {
-
-                            if (right.operator === Operator.and && left.leading === right.left.leading) { // Removes the equal
-                                if (right.left?.getAtomicValue() === atomic) {
-                                    right.left = right.right;
-                                }
-                                removeRight(right);
-                                right.isAtomic = true;
+                        // Removed the entire right side
+                        if (this.operator === Operator.or && (leftEqualsLeft || leftEqualsRight)) {
+                            if (removeLeft) {
+                                this.left = this.right;
                             }
-                            else if (right.operator === Operator.or || left.leading !== right.left.leading) { // Removes the unequal
-                                if (right.left?.getAtomicValue() !== atomic && right.right.getAtomicValue() === atomic) {
-                                    right.left = right.right;
-                                }
-                                removeRight(right);
-                                right.isAtomic = true;
-                            }
-                        }
-                        else {
-                            func();
                             removeRight(this);
                             this.isAtomic = true;
+                        }
+                        // removes the left side of the right side
+                        else if ((leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
+                            left.leading === right.leading) || left.equalsAndOpposite(right.right)) {
+                            right.left = right.right;
+                            removeRight(right);
+                            right.isAtomic = true;
+                        }
+                        // Removes the right side of the right side
+                        else if (leftEqualsRight || leftEqualsLeft && (this.operator === Operator.implication &&
+                                right.operator === Operator.or || left.leading !== right.leading) ||
+                            left.equalsAndOpposite(right.left) && this.operator !== Operator.or) {
+                            removeRight(right);
+                            right.isAtomic = true;
                         }
                     }
                 };
 
                 if (this.left.isAtomic) {
-                    removeRedundant(this.left, this.right, () => null);
+                    removeRedundant(this.left, this.right, false);
                 }
                 else {
-                    removeRedundant(this.right, this.left, () => this.left = this.right);
+                    removeRedundant(this.right, this.left, true);
                 }
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
