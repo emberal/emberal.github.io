@@ -34,6 +34,7 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&B&A&B", true)?.toString()).toBe("A & B");
     expect(simplify("(A&B|C&D)&(A&B|C&D)", true)?.toString()).toBe("A & B | C & D");
     expect(simplify("A>A&B", true)?.toString()).toBe("!A | B");
+    expect(simplify("A&B|!A", true)?.toString()).toBe("B | !A");
     expect(simplify("A&B&A", true)?.toString()).toBe("A & B");
     expect(simplify("A|B|A&B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|A|B", true)?.toString()).toBe("A | B");
@@ -99,6 +100,5 @@ test("Always true / false", () => {
 });
 
 test("Don't simplify", () => {
-    expect(simplify("A&B|!A", true)?.toString()).toBe("A & B | !A");
     expect(simplify("A|B&!A", true)?.toString()).toBe("A | !A & B");
 });
