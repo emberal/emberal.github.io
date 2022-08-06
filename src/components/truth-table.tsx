@@ -34,7 +34,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     oppositeExists = true;
                 }
             }
-            if (!oppositeExists && exp.leading.includes("!")) {
+            if (!oppositeExists && exp.numberOfChar(exp.leading, "!") % 2 === 1) {
                 expressions.push(new Expression(exp.left, exp.operator, exp.right, { isAtomic: exp.isAtomic }));
             }
             expressions.push(exp);
@@ -102,7 +102,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         for (let column = 0; column < expressions.length; column++) {
             const exp = expressions[column];
 
-            if (exp.isAtomic && !exp.leading.includes("!")) {
+            if (exp.isAtomic && exp.numberOfChar(exp.leading, "!") % 2 === 0) { // If not using 'not' operator
 
                 tBodyMatrix[row][column] = truthMatrix[truthMatrixRowIndex][truthMatrixColIndex] ? "T" : "F";
 

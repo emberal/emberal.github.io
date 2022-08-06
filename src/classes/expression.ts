@@ -90,13 +90,23 @@ export class Expression {
      * @returns {boolean}
      */
     public equalsAndOpposite(other: Expression | string): boolean {
-        if (this.leading.includes("!")) {
+        if (this.numberOfChar(this.leading, "!") % 2 === 1) {
             return new Expression(this.left, this.operator, this.right, { isAtomic: this.isAtomic }).equals(other);
         }
-        else if (typeof other === "object" && other.leading.includes("!")) {
+        else if (typeof other === "object" && this.numberOfChar(other.leading, "!") % 2 === 1) {
             return new Expression(other.left, other.operator, other.right, { isAtomic: other.isAtomic }).equals(this);
         }
         return false;
+    }
+
+    public numberOfChar(s: string, char: string): number {
+        let numberOf = 0;
+        for (let i = 0; i < s.length; i++) {
+            if (s.charAt(i) === char) {
+                numberOf++;
+            }
+        }
+        return numberOf;
     }
 
     public getAtomicValue(): string | null {
@@ -309,8 +319,15 @@ export class Expression {
                         const leftEqualsLeft = left.equals(right.left);
                         const leftEqualsRight = left.equals(right.right);
 
+                        // Remove the entire left side
+                        if (this.operator === Operator.and && right.left.equalsAndOpposite(right.right)) {
+                            if (!removeLeft) {
+                                this.left = this.right;
+                            }
+                            removeRight(this);
+                        }
                         // Removed the entire right side
-                        if (this.operator === Operator.or && (leftEqualsLeft || leftEqualsRight)) {
+                        else if (this.operator === Operator.or && (leftEqualsLeft || leftEqualsRight)) {
                             if (removeLeft) {
                                 this.left = this.right;
                             }
@@ -319,7 +336,7 @@ export class Expression {
                         }
                         // removes the left side of the right side
                         else if ((leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            left.leading === right.leading) || left.equalsAndOpposite(right.right)) {
+                            left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or) {
                             right.left = right.right;
                             removeRight(right);
                             right.isAtomic = true;

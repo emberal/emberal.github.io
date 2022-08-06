@@ -13,22 +13,26 @@ export function simplify(stringExp: string, simplify: boolean): Expression {
 // TODO allow expressions written like: A & [TEST], where [string] can be used as an atomic value
 function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
-    // Basis
-    if (stringExp.length < 3) { // FIXME crashes when using more than 1 "!" in a row. Eg: !!A
-        let leading = "";
-        if (stringExp.includes("!")) {
-            stringExp = stringExp.replace("!", "");
-            leading = "!";
-        }
-        return new Expression(stringExp, null, null, { leading: leading, isAtomic: true });
-    }
-
     let exp = new Expression(null, null, null, {});
 
-    // TODO move this above the basis, so it removes outer parentheses and unnesessarry "!!!!!"
-    if (stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length))) { // TODO what if several !!!!
+    // Basis
+    if (isAtomic(stringExp)) {
+        while ( stringExp.includes("!") ) {
+            stringExp = stringExp.replace("!", "");
+            exp.leading += "!";
+        }
+        exp.left = stringExp;
+        exp.isAtomic = true;
+        if (simplify) {
+            exp.mergeNot();
+        }
+        return exp;
+    }
+
+    // TODO move this above the basis?
+    while ( stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length)) ) {
         stringExp = stringExp.replace("!", "");
-        exp.leading = "!";
+        exp.leading += "!";
     }
 
     const oldStringLen = stringExp.length;
@@ -61,14 +65,21 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     return exp;
 }
 
-// TODO check if string is atomic, REGEX?
 function isAtomic(exp: string): boolean {
-    for (let i = 0; i < exp.length; i++) {
-        if (exp.charAt(i)) {
 
+    const regex = new RegExp(/[a-zA-Z]/);
+    let atomic = regex.test(exp);
+    let nrOfAtomics = 0;
+
+    for (let i = 0; atomic && i < exp.length; i++) {
+        if (regex.test(exp.charAt(i))) {
+            nrOfAtomics++;
+            if (nrOfAtomics > 1) {
+                atomic = false;
+            }
         }
     }
-    return false;
+    return atomic;
 }
 
 /**
@@ -222,11 +233,15 @@ function removeOuterParentheses(stringExp: string): string {
 function isOuterParentheses(stringExp: string): boolean {
     let operators = 0;
     let is = false;
+    let index = 0;
 
-    if (stringExp.charAt(0) === "(") {
+    while ( stringExp.charAt(index) === "!" ) {
+        index++;
+    }
+
+    if (stringExp.charAt(index) === "(") {
         is = true;
     }
-    let index = 0;
     while ( is && (stringExp.charAt(index) === "(" || operators > 0) ) {
         if (stringExp.charAt(index) === "(") {
             operators++;
