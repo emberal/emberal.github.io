@@ -2,7 +2,7 @@ interface Values {
     values?: string[],
 }
 
-// TODO remember strength: !, &, |, ->
+// TODO remember strength: ¬, &, |, ->
 
 export class Operator {
 
@@ -20,10 +20,16 @@ export class Operator {
     static implication = new Operator(">", 0, { values: ["implication", "imp", "impliserer", "->", "=>"] });
     static or = new Operator("|", 1, { values: ["or", "eller", "\\/"] });
     static and = new Operator("&", 2, { values: ["and", "og", "/\\"] });
-    static not = new Operator("!", 3, { values: ["not", "ikke", "¬", "~", "-"] });
+    static not = new Operator("¬", 3, { values: ["not", "ikke", "!", "~"] });
 
     public static getValues(): Operator[] {
         return [Operator.implication, Operator.or, Operator.and, Operator.not];
+    }
+
+    public getOperatorValues(): string[] {
+        const values = this.values;
+        values.push(this.operator);
+        return values;
     }
 
     public static getOperator(operator: string): Operator | null {

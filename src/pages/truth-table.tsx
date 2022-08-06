@@ -8,7 +8,7 @@ import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox } from "../components/output";
 import MySwitch from "../components/switch";
-import { isLegalExpression, simplify } from "../classes/expression_utils";
+import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 
 interface TruthTablePage {
 
@@ -31,6 +31,9 @@ const TruthTablePage = ({}: TruthTablePage) => {
      */
     const [errorMessage, setErrorMessage] = React.useState("");
 
+    /**
+     * If the searchbar is empty, this state is 'false', otherwise 'true'
+     */
     const [typing, setTyping] = React.useState(false);
 
     /**
@@ -41,6 +44,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
             exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
+            exp = replaceOperators(exp);
 
             const errorMsg = isLegalExpression(exp, {
                 atIndex: t("atIndex"),
@@ -116,9 +120,10 @@ const TruthTablePage = ({}: TruthTablePage) => {
     return (
         <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
             <div className={ "pt-2" }>
+                { /*TODO Description of how to use it here!*/ }
                 <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
                        id={ "truth-input" }
-                       placeholder={ "A&B>C" }
+                       placeholder={ "¬A&B>C" }
                        onChange={ onTyping }
                        leading={ <Search className={ "pl-2 absolute" }/> }
                        trailing={

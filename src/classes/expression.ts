@@ -24,22 +24,6 @@ export class Expression {
 
     // TODO add weight to each Expression used to compare and sort, using the "value" of noth child Expressions, atomic uses string value
 
-    private _isString(
-        {
-            left = null,
-            right = null
-        }: { left: Expression | string | null, right: Expression | string | null }): boolean {
-
-        let isString = false;
-        if (left !== null) {
-            isString = typeof left === "string";
-        }
-        if (right !== null) {
-            isString = typeof right === "string";
-        }
-        return isString;
-    }
-
     /**
      * Compared an object with an other object and returns true if they contain the same values
      * @param other The object this is compared to
@@ -57,10 +41,8 @@ export class Expression {
                 }
                 else if (!(this.isAtomic || other.isAtomic) && this.operator === other.operator) { // If neither is atomic
 
-                    if (!(this._isString({ left: this.left, right: this.right }) || this._isString({
-                        left: other.left,
-                        right: other.right
-                    }))) {
+                    if (typeof this.left !== "string" && typeof this.right !== "string" ||
+                        typeof other.left !== "string" && typeof other.right !== "string") {
 
                         if (this.left && this.right && other.left && other.right) {
 
@@ -90,10 +72,10 @@ export class Expression {
      * @returns {boolean}
      */
     public equalsAndOpposite(other: Expression | string): boolean {
-        if (this.numberOfChar(this.leading, "!") % 2 === 1) {
+        if (this.numberOfChar(this.leading, "¬") % 2 === 1) {
             return new Expression(this.left, this.operator, this.right, { isAtomic: this.isAtomic }).equals(other);
         }
-        else if (typeof other === "object" && this.numberOfChar(other.leading, "!") % 2 === 1) {
+        else if (typeof other === "object" && this.numberOfChar(other.leading, "¬") % 2 === 1) {
             return new Expression(other.left, other.operator, other.right, { isAtomic: other.isAtomic }).equals(this);
         }
         return false;
@@ -122,11 +104,11 @@ export class Expression {
     public laws(): void {
         this.absorption();
         this.eliminationOfImplication();
+        this.commutativeLaw();
+        this.mergeNot();
         this.deMorgansLaw();
         this.assosiativeLaw();
         this.distributivity();
-        this.commutativeLaw();
-        this.mergeNot();
     }
 
     /**
@@ -208,7 +190,7 @@ export class Expression {
 
                 if (newOperator !== null) {
                     this.left = new Expression(this._removeNot(this.left), newOperator, this._removeNot(this.right), {
-                        leading: "!(",
+                        leading: "¬(",
                         trailing: ")"
                     });
                     this.operator = null;
@@ -220,17 +202,17 @@ export class Expression {
 
     private _isNot(exp: Expression | string): boolean {
         if (typeof exp === "string") {
-            return exp.charAt(0) === "!";
+            return exp.charAt(0) === "¬";
         }
-        return exp.leading.includes("!");
+        return exp.leading.includes("¬");
     }
 
     private _removeNot(exp: Expression | string): Expression | string {
 
         if (typeof exp === "string") {
-            return exp.replace("!", "");
+            return exp.replace("¬", "");
         }
-        exp.leading = exp.leading.replace("!", "");
+        exp.leading = exp.leading.replace("¬", "");
         return exp;
     }
 
@@ -276,10 +258,10 @@ export class Expression {
                         this.left.trailing += ")";
                     }
                 }
-                this.left.leading = "!" + this.left.leading;
+                this.left.leading = "¬" + this.left.leading;
             }
             else {
-                this.left = "!" + this.left;
+                this.left = "¬" + this.left;
             }
             this.operator = Operator.or;
         }
@@ -293,8 +275,8 @@ export class Expression {
         if (this.left && this.right && typeof this.left !== "string" && typeof this.right !== "string") {
 
             const removeRight = (exp: Expression) => {
-                if (exp.leading.includes("!") && typeof exp.left === "object" && exp.left) {
-                    exp.left.leading = "!";
+                if (exp.leading.includes("¬") && typeof exp.left === "object" && exp.left) {
+                    exp.left.leading = "¬";
                 }
                 exp.leading = "";
                 exp.operator = null;
@@ -336,7 +318,8 @@ export class Expression {
                         }
                         // removes the left side of the right side
                         else if ((leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or) {
+                            left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or ||
+                        left.equalsAndOpposite(right.right) && this.operator !== Operator.or) {
                             right.left = right.right;
                             removeRight(right);
                             right.isAtomic = true;
@@ -344,7 +327,7 @@ export class Expression {
                         // Removes the right side of the right side
                         else if (leftEqualsRight || leftEqualsLeft && (this.operator === Operator.implication &&
                                 right.operator === Operator.or || left.leading !== right.leading) ||
-                            left.equalsAndOpposite(right.left) && this.operator !== Operator.or) {
+                            left.equalsAndOpposite(right.right) || left.equalsAndOpposite(right.left)) {
                             removeRight(right);
                             right.isAtomic = true;
                         }
@@ -360,12 +343,12 @@ export class Expression {
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.left.equals(this.right)) {
-                    if (!this.left.leading.includes("!") && !this.right.leading.includes("!") ||
-                        this.left.leading.includes("!") && this.right.leading.includes("!")) {
+                    if (!this.left.leading.includes("¬") && !this.right.leading.includes("¬") ||
+                        this.left.leading.includes("¬") && this.right.leading.includes("¬")) {
 
                         removeRight(this);
                     }
-                    if (!this.left.leading.includes("!")) {
+                    if (!this.left.leading.includes("¬")) {
                         this.left.leading = "";
                         this.left.trailing = "";
                     }
@@ -412,13 +395,13 @@ export class Expression {
      */
     public mergeNot(): void {
         let index = 0;
-        while ( this.leading.charAt(index) === "!" ) {
+        while ( this.leading.charAt(index) === "¬" ) {
             index++;
         }
         if (index > 1) {
-            this.leading = this.leading.replace(/!/g, "");
+            this.leading = this.leading.replace(/¬/g, "");
             if (index % 2 !== 0) {
-                this.leading = "!" + this.leading;
+                this.leading = "¬" + this.leading;
             }
         }
         if (typeof this.left !== "string") {

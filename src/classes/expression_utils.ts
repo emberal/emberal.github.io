@@ -3,7 +3,7 @@ import { Operator } from "./operator";
 
 export function simplify(stringExp: string, simplify: boolean): Expression {
     let exp = simplifyRec(stringExp, simplify);
-    if (!exp.leading.includes("!")) {
+    if (!exp.leading.includes("¬")) {
         exp.leading = "";
         exp.trailing = "";
     }
@@ -17,9 +17,9 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     // Basis
     if (isAtomic(stringExp)) {
-        while ( stringExp.includes("!") ) {
-            stringExp = stringExp.replace("!", "");
-            exp.leading += "!";
+        while ( stringExp.includes("¬") ) {
+            stringExp = stringExp.replace("¬", "");
+            exp.leading += "¬";
         }
         exp.left = stringExp;
         exp.isAtomic = true;
@@ -30,9 +30,9 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     }
 
     // TODO move this above the basis?
-    while ( stringExp[0] === "!" && isOuterParentheses(stringExp.substring(1, stringExp.length)) ) {
-        stringExp = stringExp.replace("!", "");
-        exp.leading += "!";
+    while ( stringExp[0] === "¬" && isOuterParentheses(stringExp.substring(1, stringExp.length)) ) {
+        stringExp = stringExp.replace("¬", "");
+        exp.leading += "¬";
     }
 
     const oldStringLen = stringExp.length;
@@ -177,6 +177,7 @@ export function isLegalExpression(stringExp: string, {
         return char === "(" || char === ")";
     };
 
+    const regex = new RegExp(/^[a-zA-Z0-9()&|¬\[\]]/); // TODO check entire string!
     let error = "";
     const stack: string[] = [];
     let isTruthValue = false;
@@ -198,7 +199,7 @@ export function isLegalExpression(stringExp: string, {
         }
 
         if (i > 0) {
-            if (char === Operator.not.operator) {
+            if (Operator.not.getOperatorValues().some((value: string) => char === value)) {
                 if (!Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
@@ -206,7 +207,8 @@ export function isLegalExpression(stringExp: string, {
             }
             // Return false if two operators are following eachother, but not !
             if (Operator.isOperator(char)) {
-                if (Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1 || isParentheses(stringExp.charAt(i - 1))) {
+                if (Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1) {
+                    console.log(stringExp, char, i)
                     return illegalCharError(char, i);
                 }
             }
@@ -235,7 +237,7 @@ function isOuterParentheses(stringExp: string): boolean {
     let is = false;
     let index = 0;
 
-    while ( stringExp.charAt(index) === "!" ) {
+    while ( stringExp.charAt(index) === "¬" ) {
         index++;
     }
 
@@ -255,4 +257,14 @@ function isOuterParentheses(stringExp: string): boolean {
         index++;
     }
     return is;
+}
+
+export function replaceOperators(exp: string): string {
+
+    exp = exp.replace(/[!~]|not|ikke +/ig, "¬");
+    exp = exp.replace(/and|og|\/\\+/ig, "&");
+    exp = exp.replace(/or|eller|\\\/+/ig, "|");
+    exp = exp.replace(/>|=>|implication|impliserer|imp+/ig, ">");
+
+    return exp;
 }
