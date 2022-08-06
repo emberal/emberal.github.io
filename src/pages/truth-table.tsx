@@ -36,6 +36,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
      */
     const [typing, setTyping] = React.useState(false);
 
+    const fullWidthTable = React.useRef(false);
+
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
@@ -43,8 +45,10 @@ const TruthTablePage = ({}: TruthTablePage) => {
     function onClick() {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
-            exp = exp.replace(/\s+/g, ""); // Replace All (/g) whitespace (/s) in the string
+            exp = exp.replace(/\s+/g, ""); // Replace All (g) whitespace (\s) in the string
             exp = replaceOperators(exp);
+
+            (document.getElementById("truth-input") as HTMLInputElement).value = exp;
 
             const errorMsg = isLegalExpression(exp, {
                 atIndex: t("atIndex"),
@@ -59,6 +63,13 @@ const TruthTablePage = ({}: TruthTablePage) => {
                 if (sExp) {
                     expression.current = sExp;
                     setSearch(sExp.toString());
+
+                    const table = document.getElementById("table");
+                    const container = document.getElementById("main-container");
+
+                    if (table && container) {
+                        fullWidthTable.current = table.clientWidth + 30 >= container.clientWidth;
+                    }
                 }
             }
             else {
@@ -120,7 +131,13 @@ const TruthTablePage = ({}: TruthTablePage) => {
     return (
         <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
             <div className={ "pt-2" }>
-                { /*TODO Description of how to use it here!*/ }
+                <div className={ "pb-2" }>
+                    <p>{ t("truthTableHowTo") }</p>
+                    <p>{ t("not") }</p>
+                    <p>{ t("and") }</p>
+                    <p>{ t("or") }</p>
+                    <p>{ t("implication") }</p>
+                </div>
                 <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
                        id={ "truth-input" }
                        placeholder={ "¬A&B>C" }
@@ -145,7 +162,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                            </>
                        }
                 />
-                <span className={ "" }>{ t("simplify") }: </span>
+                <span>{ t("simplify") }: </span>
                 <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
                           name={ t("toggleSimplify") }/>
                 {
@@ -153,12 +170,13 @@ const TruthTablePage = ({}: TruthTablePage) => {
                         <>
                             {
                                 simplifyEnabled ?
-                                    <InfoBox className={ "w-fit" }
+                                    <InfoBox className={ "w-fit mx-auto" }
                                              title={ t("output") + ":" }
                                              content={ search }/> : null
                             }
-                            <TruthTable expression={ expression.current }
-                                        className={ "my-2" }/> { /*TODO expand table when needed*/ }
+                            <TruthTable id={ "table" } // TODO center
+                                        expression={ expression.current }
+                                        className={ `my-2 ${ fullWidthTable.current && "break-out-of-container" }` }/>
                         </> : null
                 }
                 {
@@ -166,7 +184,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
                         <InfoBox className={ "w-fit" }
                                  title={ t("inputError") }
                                  content={ errorMessage }
-                                 error={ true }/> : null
+                                 error={ true }
+                        /> : null
                 }
             </div>
         </Layout>

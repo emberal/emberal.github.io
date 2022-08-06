@@ -261,10 +261,10 @@ function isOuterParentheses(stringExp: string): boolean {
 
 export function replaceOperators(exp: string): string {
 
-    exp = exp.replace(/[!~]|not|ikke +/ig, "¬");
+    exp = exp.replace(/[!~]|not|ikke+/ig, "¬");
     exp = exp.replace(/and|og|\/\\+/ig, "&");
     exp = exp.replace(/or|eller|\\\/+/ig, "|");
-    exp = exp.replace(/>|=>|implication|impliserer|imp+/ig, ">");
+    exp = exp.replace(/->|=>|implication|impliserer|imp+/ig, ">");
 
     return exp;
 }

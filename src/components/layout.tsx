@@ -168,7 +168,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
+            <div id={ "main-container"} className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
                 <h1
                     className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
                     { (headline) ? headline : title }
