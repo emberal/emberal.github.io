@@ -36,10 +36,6 @@ const TruthTablePage = ({}: TruthTablePage) => {
      */
     const [typing, setTyping] = React.useState(false);
 
-    const fullWidthTable = React.useRef(false);
-
-    const tableClass = React.useRef("");
-
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
@@ -60,21 +56,11 @@ const TruthTablePage = ({}: TruthTablePage) => {
             setErrorMessage(errorMsg);
 
             if (errorMsg === "") {
-                let sExp = simplify(exp, simplifyEnabled);
+                const sExp = simplify(exp, simplifyEnabled);
 
                 if (sExp) {
                     expression.current = sExp;
                     setSearch(sExp.toString());
-
-                    const table = document.getElementById("table");
-                    const container = document.getElementById("main-container");
-
-                    // if (table && container) { // TODO?
-                    //     if (table.clientWidth > 600) {
-                    //         tableClass.current = "break-out-of-container-lg";
-                    //     }
-                    //     fullWidthTable.current = table.clientWidth + 30 >= container.clientWidth;
-                    // }
                 }
             }
             else {
@@ -85,6 +71,18 @@ const TruthTablePage = ({}: TruthTablePage) => {
             setSearch("");
         }
     }
+
+    /**
+     * Sets the hidden div behind the table's height
+     */
+    React.useEffect(() => {
+        const table = document.getElementById("table") as HTMLTableElement | null;
+        const filler = document.getElementById("table-filler") as HTMLDivElement | null;
+
+        if (table && filler) {
+            filler.style.height = table.clientHeight + 100 + "px";
+        }
+    }, [expression.current])
 
     function onTyping() {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
@@ -134,66 +132,76 @@ const TruthTablePage = ({}: TruthTablePage) => {
     const { t } = useTranslation();
 
     return (
-        <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
-            <div className={ "pt-2" }>
-                <div className={ "pb-2" }>
-                    <p>{ t("truthTableHowTo") }</p>
-                    <p>{ t("not") }</p>
-                    <p>{ t("and") }</p>
-                    <p>{ t("or") }</p>
-                    <p>{ t("implication") }</p>
+        <>
+            {
+                search !== "" ?
+                    <div className={ "flex justify-center" }>
+                        <TruthTable id={ "table" }
+                                    expression={ expression.current }
+                                    className={ `absolute w-max top-[30rem] mx-auto text-black dark:text-white` /*TODO dynamic top*/ }/>
+                    </div> : null
+            }
+            <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
+                <div className={ "pt-2" }>
+                    <div className={ "pb-2" }>
+                        <p>{ t("truthTableHowTo") }</p>
+                        <p>{ t("not") }</p>
+                        <p>{ t("and") }</p>
+                        <p>{ t("or") }</p>
+                        <p>{ t("implication") }</p>
+                    </div>
+                    <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
+                           id={ "truth-input" }
+                           placeholder={ "¬A&B>C" }
+                           onChange={ onTyping }
+                           leading={ <Search className={ "pl-2 absolute" }/> }
+                           trailing={
+                               <>
+                                   {
+                                       typing ?
+                                           <button className={ "absolute left-44" }
+                                                   title={ t("clear") }
+                                                   onClick={ clearSearch }>
+                                               <X/>
+                                           </button> : null
+                                   }
+                                   <button id={ "truth-input-button" }
+                                           title={ t("generate") + " (Enter)" }
+                                           className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
+                                           onClick={ onClick }>
+                                       { t("generate") }
+                                   </button>
+                               </>
+                           }
+                    />
+                    <span>{ t("simplify") }: </span>
+                    <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
+                              name={ t("toggleSimplify") }/>
+                    {
+                        search !== "" ?
+                            <>
+                                {
+                                    simplifyEnabled ?
+                                        <InfoBox className={ "w-fit mx-auto" }
+                                                 title={ t("output") + ":" }
+                                                 content={ search }/> : null
+                                }
+                                <div id={ "table-filler" }/>
+                                { /*The relative backdrop used to move content down behind the table*/ }
+                            </> : null
+                    }
+                    {
+                        errorMessage !== "" ?
+                            <InfoBox className={ "w-fit" }
+                                     title={ t("inputError") }
+                                     content={ errorMessage }
+                                     error={ true }
+                            /> : null
+                    }
                 </div>
-                <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
-                       id={ "truth-input" }
-                       placeholder={ "¬A&B>C" }
-                       onChange={ onTyping }
-                       leading={ <Search className={ "pl-2 absolute" }/> }
-                       trailing={
-                           <>
-                               {
-                                   typing ?
-                                       <button className={ "absolute left-44" }
-                                               title={ t("clear") }
-                                               onClick={ clearSearch }>
-                                           <X/>
-                                       </button> : null
-                               }
-                               <button id={ "truth-input-button" }
-                                       title={ t("generate") + " (Enter)" }
-                                       className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
-                                       onClick={ onClick }>
-                                   { t("generate") }
-                               </button>
-                           </>
-                       }
-                />
-                <span>{ t("simplify") }: </span>
-                <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
-                          name={ t("toggleSimplify") }/>
-                {
-                    search !== "" ?
-                        <>
-                            {
-                                simplifyEnabled ?
-                                    <InfoBox className={ "w-fit mx-auto" }
-                                             title={ t("output") + ":" }
-                                             content={ search }/> : null
-                            }
-                            <TruthTable id={ "table" } // TODO center
-                                        expression={ expression.current }
-                                        className={ `my-2 mx-auto break-out-of-container-lg` }/>
-                        </> : null
-                }
-                {
-                    errorMessage !== "" ?
-                        <InfoBox className={ "w-fit" }
-                                 title={ t("inputError") }
-                                 content={ errorMessage }
-                                 error={ true }
-                        /> : null
-                }
-            </div>
-        </Layout>
+            </Layout>
+        </>
+
     );
 }
 
