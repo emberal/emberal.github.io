@@ -9,13 +9,28 @@
         @apply border-dashed;
     }
 
-    /*Source: https://gomakethings.com/how-to-break-an-image-out-of-its-parent-container-with-css/*/
-    .break-out-of-container {
+    .break-out-of-container-lg {
+        /*margin-left: calc(-50vw + 50% + 25vw) !important;*/
+        /*margin-right: calc(-50vw + 50% + 25vw) !important;*/
         @apply relative;
-        @apply left-1/2;
-        @apply right-1/2;
-        margin-left: -50vw;
-        margin-right: -50vw;
+        left: calc(-50vw + 50%);
+        width: max-content;
         max-width: 100vw;
+    }
+
+    .break-out-of-container-xl {
+        margin-left: calc(-50vw + 50% + 15vw) !important;
+        margin-right: calc(-50vw + 50% + 15vw) !important;
+    }
+
+    .break-out-of-container-2xl {
+        margin-left: calc(-50vw + 50% + 10vw) !important;
+        margin-right: calc(-50vw + 50% + 10vw) !important;
+    }
+
+    .break-out-of-container-full {
+        margin-left: calc(-50vw + 50%) !important;
+        margin-right: calc(-50vw + 50%) !important;
+        width: 100vw;
     }
 }

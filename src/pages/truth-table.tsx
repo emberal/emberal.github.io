@@ -38,6 +38,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
 
     const fullWidthTable = React.useRef(false);
 
+    const tableClass = React.useRef("");
+
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
@@ -45,10 +47,10 @@ const TruthTablePage = ({}: TruthTablePage) => {
     function onClick() {
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
-            exp = exp.replace(/\s+/g, ""); // Replace All (g) whitespace (\s) in the string
             exp = replaceOperators(exp);
-
             (document.getElementById("truth-input") as HTMLInputElement).value = exp;
+
+            exp = exp.replace(/\s+/g, ""); // Replace All (g) whitespace (\s) in the string
 
             const errorMsg = isLegalExpression(exp, {
                 atIndex: t("atIndex"),
@@ -67,9 +69,12 @@ const TruthTablePage = ({}: TruthTablePage) => {
                     const table = document.getElementById("table");
                     const container = document.getElementById("main-container");
 
-                    if (table && container) {
-                        fullWidthTable.current = table.clientWidth + 30 >= container.clientWidth;
-                    }
+                    // if (table && container) { // TODO?
+                    //     if (table.clientWidth > 600) {
+                    //         tableClass.current = "break-out-of-container-lg";
+                    //     }
+                    //     fullWidthTable.current = table.clientWidth + 30 >= container.clientWidth;
+                    // }
                 }
             }
             else {
@@ -176,7 +181,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                             }
                             <TruthTable id={ "table" } // TODO center
                                         expression={ expression.current }
-                                        className={ `my-2 ${ fullWidthTable.current && "break-out-of-container" }` }/>
+                                        className={ `my-2 mx-auto break-out-of-container-lg` }/>
                         </> : null
                 }
                 {

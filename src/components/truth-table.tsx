@@ -135,14 +135,14 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     }
 
     return (
-        <table className={ `border border-gray-500 ${ className }` }
+        <table className={ `border border-gray-500 table ${ className }` }
                id={ id }>
             <thead className={ "border-b-2 border-gray-500" }>
             <tr>
-                {
+                { // TODO sticky header when scrolling below it
                     expressions.map((exp: Expression, index: number) => (
-                        <th key={ index } scope={ "col" } className={ "border border-gray-500" }>
-                            <p className={ "w-fit px-2" }>{ exp.toString() }</p>
+                        <th key={ index } scope={ "col" } className={ "border border-gray-500 text-center" }>
+                            <p className={ "px-2" }>{ exp.toString() }</p>
                         </th>
                     ))
                 }
