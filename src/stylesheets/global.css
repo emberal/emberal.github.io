@@ -4,14 +4,24 @@
 
 @layer base {
     .border-outline {
-        @apply border;
-        @apply border-red-600;
-        @apply border-dashed;
+        @apply border border-red-600 border-dashed;
     }
 
     .break-out-container {
         @apply relative;
         left: calc(-50vw + 50%);
         max-width: 100vw;
+    }
+
+    .bg-standard {
+        @apply bg-white dark:bg-gray-900;
+    }
+
+    .text-standard {
+        @apply text-primaryPurple dark:text-primaryPink;
+    }
+
+    .border-rounded {
+        @apply border rounded-xl;
     }
 }

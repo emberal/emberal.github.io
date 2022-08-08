@@ -29,17 +29,17 @@ interface MyDisclosure {
 
 export const MyDisclosure = ({ title, content, defaultOpen = false, className, id, isOpen }: MyDisclosure) => {
     return (
-        <div id={ id } className={ `border dark:border-gray-900 dark:bg-gray-900 bg-white rounded-lg ${ className }` }>
+        <div id={ id } className={ `border-rounded dark:border-gray-900 bg-standard text-standard ${ className }` }>
             <Disclosure defaultOpen={ defaultOpen }>
                 { ({ open }) => (
                     <>
                         <Disclosure.Button onClick={ isOpen ? () => isOpen(open) : undefined }
-                                           className={ `flex flex-row items-center w-full justify-between pr-2` }>
-                            <p className={ `pl-2 py-1` }>{ title }</p>
+                                           className={ `flex flex-row items-center w-full justify-between px-2` }>
+                            <p className={ `py-1` }>{ title }</p>
                             <ArrowUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
                         </Disclosure.Button>
                         <Disclosure.Panel>
-                            <div className={ "pl-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
+                            <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
                         </Disclosure.Panel>
                     </>
                 ) }

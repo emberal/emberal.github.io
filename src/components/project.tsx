@@ -46,7 +46,7 @@ const ProjectCard = (
                     <div className={ "mx-2 mb-2" }>
                         <div className={ "flex items-center my-3" }>
                             <Link
-                                className={ "text-primaryPurple dark:text-primaryPink hover:underline mr-2" }
+                                className={ "text-standard hover:underline mr-2" }
                                 to={ slug }>
                                 <h2 className={ "text-xl" }>{ title }</h2>
                             </Link>

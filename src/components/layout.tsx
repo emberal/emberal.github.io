@@ -198,7 +198,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                         <li className={ "mr-6 w-fit relative" }>
                             <Menu>
                                 <Menu.Button
-                                    className={ "text-primaryPurple dark:text-primaryPink flex items-center text-lg" }>
+                                    className={ "text-standard flex items-center text-lg" }>
                                     <>
                                         { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
                                     </>
@@ -235,7 +235,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
             </div>
             { isTop ? null :
                 <button
-                    className={ "fixed right-10 bottom-20 border rounded-xl shadow-sm shadow-primaryPurple p-1 z-50" }
+                    className={ "fixed right-10 bottom-20 border-rounded shadow-sm shadow-primaryPurple p-1 z-50" }
                     title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
                     <p className={ "sr-only" }>{ t('goBackToTheTop') }</p>

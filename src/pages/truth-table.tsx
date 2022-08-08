@@ -166,7 +166,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
             }
             <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
                 <div className={ "pt-2" } id={ "truth-content" }>
-                    <div className={ `dark:bg-gray-800 bg-gray-300 border dark:border-gray-800 rounded-lg p-2 mb-2
+                    <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
                      flex flex-col gap-1` }>
                         <MyDisclosure title={ t("howTo") }
                                       isOpen={ setSetOpenDisclosure }
@@ -201,7 +201,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                    }
                                    <button id={ "truth-input-button" }
                                            title={ t("generate") + " (Enter)" }
-                                           className={ "mx-1 px-1 border border-gray-500 rounded-xl shadow shadow-primaryPurple h-10" }
+                                           className={ "mx-1 px-1 border-rounded border-gray-500 shadow shadow-primaryPurple h-10" }
                                            onClick={ onClick }>
                                        { t("generate") }
                                    </button>

@@ -25,7 +25,7 @@ interface Tag {
 export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) => {
 
     const text = <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>;
-    const classes = "border rounded-xl border-gray-500"
+    const classes = "border-rounded border-gray-500"
 
     if (onClick) {
         return (
