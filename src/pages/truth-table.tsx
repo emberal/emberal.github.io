@@ -142,11 +142,13 @@ const TruthTablePage = ({}: TruthTablePage) => {
         <>
             {
                 search !== "" ?
-                    <div className={ "flex justify-center" }>
-                        <TruthTable id={ "table" } // TODO use scrollbar on wide expressions?
-                                    expression={ expression.current }
-                                    className={ `absolute w-max max-w-full text-black dark:text-white` } // FIXME hover not working
-                        />
+                    <div id={ "table" } className={ "absolute" }>
+                        <div className={ "mx-2 relative w-[calc(100vw-1rem)] overflow-x-scroll" }>
+                            <TruthTable
+                                expression={ expression.current }
+                                className={ `relative mx-auto w-max text-black dark:text-white` }
+                            />
+                        </div>
                     </div> : null
             }
             <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
@@ -194,8 +196,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                                  title={ t("output") + ":" }
                                                  content={ search }/> : null
                                 }
-                                <div id={ "table-filler" }/>
                                 { /*The relative backdrop used to move content down behind the table*/ }
+                                <div id={ "table-filler" }/>
                             </> : null
                     }
                     {

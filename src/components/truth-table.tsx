@@ -135,7 +135,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     }
 
     return (
-        <table className={ `border border-gray-500 table z-50 ${ className }` }
+        <table className={ `border border-gray-500 table z-10 ${ className }` }
                id={ id }>
             <thead className={ "border-b-2 border-gray-500" }>
             <tr>

@@ -234,8 +234,9 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 </main>
             </div>
             { isTop ? null :
-                <button className={ "fixed right-10 bottom-20 border rounded-xl shadow-sm shadow-primaryPurple p-1" }
-                        title={ t('goBackToTheTop') } onClick={ backUp }>
+                <button
+                    className={ "fixed right-10 bottom-20 border rounded-xl shadow-sm shadow-primaryPurple p-1 z-50" }
+                    title={ t('goBackToTheTop') } onClick={ backUp }>
                     <ArrowUp/>
                     <p className={ "sr-only" }>{ t('goBackToTheTop') }</p>
                 </button>
