@@ -218,7 +218,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                     simplifyEnabled ?
                                         <InfoBox className={ "w-fit mx-auto" }
                                                  title={ t("output") + ":" }
-                                                 content={ search }/> : null
+                                                 content={ search }
+                                        /> : null
                                 }
                                 { /*The relative backdrop used to move content down behind the table*/ }
                                 <div id={ "table-filler" }/>

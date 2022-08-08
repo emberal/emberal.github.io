@@ -38,6 +38,7 @@ export const MyDisclosure = ({ title, content, defaultOpen = false, className, i
                             <p className={ `py-1` }>{ title }</p>
                             <ArrowUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
                         </Disclosure.Button>
+                        { /*TODO try to make Transition work, creates problems for table margin!*/ }
                         <Disclosure.Panel>
                             <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
                         </Disclosure.Panel>
