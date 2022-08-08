@@ -6,7 +6,7 @@ import { Expression } from "../classes/expression";
 import { Search, X } from "react-feather";
 import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { InfoBox } from "../components/output";
+import { InfoBox, MyDisclosure } from "../components/output";
 import MySwitch from "../components/switch";
 import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 
@@ -35,6 +35,11 @@ const TruthTablePage = ({}: TruthTablePage) => {
      * If the searchbar is empty, this state is 'false', otherwise 'true'
      */
     const [typing, setTyping] = React.useState(false);
+
+    /**
+     * Used to update the state and recalculate the marginTop of the table
+     */
+    const [openDisclosure, setOpenDisclosure] = React.useState(false);
 
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
@@ -89,7 +94,15 @@ const TruthTablePage = ({}: TruthTablePage) => {
             }
             table.style.marginTop = margin + 100 + "px";
         }
-    }, [expression.current, simplifyEnabled]);
+    }, [expression.current, simplifyEnabled, openDisclosure]);
+
+    /**
+     * Updates the state and calls the useEffect above, which will calculate the new marginTop of the table
+     * @param value
+     */
+    function setSetOpenDisclosure(value: boolean) {
+        setOpenDisclosure(!openDisclosure);
+    }
 
     function onTyping() {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
@@ -153,12 +166,23 @@ const TruthTablePage = ({}: TruthTablePage) => {
             }
             <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
                 <div className={ "pt-2" } id={ "truth-content" }>
-                    <div className={ "pb-2" }>
-                        <p>{ t("truthTableHowTo") }</p>
-                        <p>{ t("not") }</p>
-                        <p>{ t("and") }</p>
-                        <p>{ t("or") }</p>
-                        <p>{ t("implication") }</p>
+                    <div className={ `dark:bg-gray-800 bg-gray-300 border dark:border-gray-800 rounded-lg p-2 mb-2
+                     flex flex-col gap-1` }>
+                        <MyDisclosure title={ t("howTo") }
+                                      isOpen={ setSetOpenDisclosure }
+                                      content={ t("truthTableHowTo") }
+                        />
+                        <MyDisclosure title={ t("keywords") }
+                                      isOpen={ setSetOpenDisclosure }
+                                      content={
+                                          <div>
+                                              <p>{ t("not") }</p>
+                                              <p>{ t("and") }</p>
+                                              <p>{ t("or") }</p>
+                                              <p>{ t("implication") }</p>
+                                          </div>
+                                      }
+                        />
                     </div>
                     <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
                            id={ "truth-input" }

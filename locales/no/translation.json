@@ -52,5 +52,7 @@
   "not": "Ikke: \"¬\", \"!\", \"~\", ikke \"ikke\"",
   "and": "Og: \"&\", \"/\\\", eller \"og\"",
   "or": "Eller: \"|\", \"\\/\", eller \"eller\"",
-  "implication": "Impliserer: \">\", \"->\", \"=>\", \"imp\" or \"impliserer\""
+  "implication": "Impliserer: \">\", \"->\", \"=>\", \"imp\" or \"impliserer\"",
+  "howTo": "Hvordan bruke?",
+  "keywords": "Nøkkelord"
 }

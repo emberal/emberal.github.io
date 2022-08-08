@@ -53,5 +53,7 @@
   "not": "Not: \"¬\", \"!\", \"~\", or \"not\"",
   "and": "And: \"&\", \"/\\\", or \"and\"",
   "or": "Or: \"|\", \"\\/\", or \"or\"",
-  "implication": "Implication: \">\", \"->\", \"=>\", \"imp\" or \"implication\""
+  "implication": "Implication: \">\", \"->\", \"=>\", \"imp\" or \"implication\"",
+  "howTo": "How to?",
+  "keywords": "Keywords"
 }
