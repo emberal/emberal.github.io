@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout from "../components/layout";
+import Layout, { getHeaderHeight } from "../components/layout";
 import Input from "../components/input";
 import { graphql } from "gatsby";
 import { Expression } from "../classes/expression";
@@ -73,16 +73,23 @@ const TruthTablePage = ({}: TruthTablePage) => {
     }
 
     /**
-     * Sets the hidden div behind the table's height
+     * Sets the hidden div behind the table's height, and the marginTop
      */
     React.useEffect(() => {
         const table = document.getElementById("table") as HTMLTableElement | null;
         const filler = document.getElementById("table-filler") as HTMLDivElement | null;
+        const layout = document.getElementById("truth-content") as HTMLDivElement | null;
 
-        if (table && filler) {
+        if (table && filler && layout) {
             filler.style.height = table.clientHeight + 100 + "px";
+            let margin = getHeaderHeight();
+
+            for (let i = 0; i < layout.children.length - 1; i++) {
+                margin += layout.children[i].clientHeight;
+            }
+            table.style.marginTop = margin + 100 + "px";
         }
-    }, [expression.current])
+    }, [expression.current, simplifyEnabled]);
 
     function onTyping() {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
@@ -136,13 +143,14 @@ const TruthTablePage = ({}: TruthTablePage) => {
             {
                 search !== "" ?
                     <div className={ "flex justify-center" }>
-                        <TruthTable id={ "table" }
+                        <TruthTable id={ "table" } // TODO use scrollbar on wide expressions?
                                     expression={ expression.current }
-                                    className={ `absolute w-max top-[30rem] mx-auto text-black dark:text-white` /*TODO dynamic top*/ }/>
+                                    className={ `absolute w-max max-w-full text-black dark:text-white` } // FIXME hover not working
+                        />
                     </div> : null
             }
             <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
-                <div className={ "pt-2" }>
+                <div className={ "pt-2" } id={ "truth-content" }>
                     <div className={ "pb-2" }>
                         <p>{ t("truthTableHowTo") }</p>
                         <p>{ t("not") }</p>

@@ -6,6 +6,14 @@ import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 
+export function getHeaderHeight(): number {
+    const el = document.getElementById("main-container") as HTMLDivElement | null;
+    if (el) {
+        return el.children[0].clientHeight + el.children[1].clientHeight;
+    }
+    return 0;
+}
+
 export const Links = {
     home: "/",
     projects: "/projects",
@@ -168,7 +176,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div id={ "main-container"} className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
+            <div id={ "main-container" } className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
                 <h1
                     className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
                     { (headline) ? headline : title }
@@ -221,7 +229,7 @@ const Layout = ({ title, headline, description, children, current, className }: 
                     </ul>
                 </nav>
                 <main className={ "relative min-h-[90.85vh]" }>
-                    <div className={ "pb-24" }>{ children }</div>
+                    <div className={ "pb-24" } id={ "main-content" }>{ children }</div>
                     <Footer/>
                 </main>
             </div>
