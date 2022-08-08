@@ -48,11 +48,11 @@
   "illegalChar": "Ulovlig tegn",
   "missingChar": "Manglende tegn",
   "atIndex": "ved indeks:",
-  "truthTableHowTo": "Fyll inn et sannhetsuttrykk, som vil bli forenklet så mye som mulig. Det vil også generere en sannhetsverditabell med alle mulige verdier. Hvis du ikke ønsker å forenkle uttrykket, bare slå av bryteren. Du kan bruke operatorene: \"ikke\", \"og\", \"eller\" og \"impliserer\".",
-  "not": "Ikke: \"¬\", \"!\", \"~\", ikke \"ikke\"",
+  "truthTableHowTo": "Fyll inn et sannhetsuttrykk, som vil bli forenklet så mye som mulig. Det vil også generere en sannhetsverditabell med alle mulige verdier. Hvis du ikke ønsker å forenkle uttrykket, er det bare å slå av bryteren. Du kan bruke operatorene: \"ikke\", \"og\", \"eller\" og \"impliserer\".",
+  "not": "Ikke: \"¬\", \"!\", \"~\", eller \"ikke\"",
   "and": "Og: \"&\", \"/\\\", eller \"og\"",
   "or": "Eller: \"|\", \"\\/\", eller \"eller\"",
-  "implication": "Impliserer: \">\", \"->\", \"=>\", \"imp\" or \"impliserer\"",
+  "implication": "Impliserer: \">\", \"->\", \"=>\", \"imp\" eller \"impliserer\"",
   "howTo": "Hvordan bruke?",
   "keywords": "Nøkkelord"
 }

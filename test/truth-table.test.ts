@@ -58,6 +58,8 @@ test("De Morgan's law", () => {
     expect(simplify("¬A&¬B", true)?.toString()).toBe("¬(A | B)");
     expect(simplify("¬A|¬B", true)?.toString()).toBe("¬(A & B)");
     expect(simplify("¬(A|B)&¬(C|D)", true)?.toString()).toBe("¬((A | B) | (C | D))");
+    expect(simplify("¬(¬A&B)", true)?.toString()).toBe("A & ¬B"); // TODO
+    expect(simplify("A&B>C>D", true)?.toString()).toBe("A & B & ¬C | D"); // TODO
 });
 
 test("Parenthesis", () => {

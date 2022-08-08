@@ -199,8 +199,8 @@ export function isLegalExpression(stringExp: string, {
         }
 
         if (i > 0) {
-            if (Operator.not.getOperatorValues().some((value: string) => char === value)) {
-                if (!Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1) {
+            if (Operator.not.operator === char) {
+                if (!Operator.isOperator(stringExp.charAt(i - 1)) && stringExp.charAt(i - 1) !== "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
                 continue;

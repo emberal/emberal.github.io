@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Disclosure } from "@headlessui/react";
-import { ArrowUp } from "react-feather";
+import { ChevronUp } from "react-feather";
 
 interface InfoBox {
     title?: string,
@@ -36,7 +36,7 @@ export const MyDisclosure = ({ title, content, defaultOpen = false, className, i
                         <Disclosure.Button onClick={ isOpen ? () => isOpen(open) : undefined }
                                            className={ `flex flex-row items-center w-full justify-between px-2` }>
                             <p className={ `py-1` }>{ title }</p>
-                            <ArrowUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
+                            <ChevronUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
                         </Disclosure.Button>
                         { /*TODO try to make Transition work, creates problems for table margin!*/ }
                         <Disclosure.Panel>
