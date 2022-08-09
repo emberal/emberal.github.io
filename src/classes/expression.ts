@@ -202,6 +202,7 @@ export class Expression {
                     this.leading = "";
                     this.trailing = "";
                     this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
+
                     if (typeof this.left === "object" && this.left && !this.left.isAtomic) {
                         this.left.leading = "";
                         this.left.trailing = "";
@@ -359,7 +360,7 @@ export class Expression {
                         // removes the left side of the right side
                         else if ((leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
                                 left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or ||
-                            left.equalsAndOpposite(right.right) && this.operator !== Operator.or) {
+                            left.equalsAndOpposite(right.right)) {
                             right.left = right.right;
                             removeRight(right);
                             right.isAtomic = true;
