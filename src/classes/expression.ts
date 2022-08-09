@@ -196,9 +196,38 @@ export class Expression {
                     this.right = null;
                 }
             }
-            else if (this.isNot(this) && typeof this.right === "object" && (this.right.left && this.isNot(this.right.left) ||
-                this.right.right && this.isNot(this.right.right))) {
-                // TODO
+            else if (this.isNot(this)) {
+
+                const inverse = (): void => {
+                    this.leading = "";
+                    this.trailing = "";
+                    this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
+                    if (typeof this.left === "object" && this.left && !this.left.isAtomic) {
+                        this.left.leading = "";
+                        this.left.trailing = "";
+                    }
+                    else if (typeof this.right === "object" && this.right && !this.right.isAtomic) {
+                        this.right.leading = "";
+                        this.right.trailing = "";
+                    }
+                };
+
+                if (typeof this.left === "object" && typeof this.right === "object" && this.left.left && this.right.left) {
+
+                    if (this.isNot(this.left)) {
+                        inverse();
+                        this.left.leading = this.left.leading.replace("¬", "");
+                        this.right.leading = "¬" + this.right.leading;
+                    }
+                    else if (this.isNot(this.right)) {
+                        inverse();
+                        this.right.leading = this.right.leading.replace("¬", "");
+                        this.left.leading = "¬" + this.left.leading;
+                    }
+                }
+            }
+            else if (this.isNot(this.left) && !this.isNot(this.right) && typeof this.left === "object") {
+                this.left.deMorgansLaw();
             }
         }
     }
@@ -223,7 +252,7 @@ export class Expression {
         // TODO?
     }
 
-    public commutativeLaw(): void { // TODO sort in order of characters, ignoring 'not' operator
+    public commutativeLaw(): void {
 
         const swap = () => {
             const help = this.left;
