@@ -104,7 +104,6 @@ export class Expression {
     public laws(): void {
         this.absorption();
         this.eliminationOfImplication();
-        this.commutativeLaw();
         this.mergeNot();
         this.deMorgansLaw();
         this.assosiativeLaw();
@@ -171,13 +170,13 @@ export class Expression {
     }
 
     /**
-     * @example !A & !B <=> !(A | B)
+     * @example !A & !B <=> !(A | B) or !(!A | B) <=> A & !B
      */
     public deMorgansLaw(): void {
 
         if (this.left && this.right) {
 
-            if (this._isNot(this.left) && this._isNot(this.right)) {
+            if (this.isNot(this.left) && this.isNot(this.right)) {
                 let newOperator = null;
 
                 switch (this.operator) {
@@ -197,10 +196,14 @@ export class Expression {
                     this.right = null;
                 }
             }
+            else if (this.isNot(this) && typeof this.right === "object" && (this.right.left && this.isNot(this.right.left) ||
+                this.right.right && this.isNot(this.right.right))) {
+                // TODO
+            }
         }
     }
 
-    private _isNot(exp: Expression | string): boolean {
+    public isNot(exp: Expression | string): boolean {
         if (typeof exp === "string") {
             return exp.charAt(0) === "¬";
         }
@@ -220,7 +223,7 @@ export class Expression {
         // TODO?
     }
 
-    public commutativeLaw(): void {
+    public commutativeLaw(): void { // TODO sort in order of characters, ignoring 'not' operator
 
         const swap = () => {
             const help = this.left;
@@ -233,10 +236,18 @@ export class Expression {
                 swap();
             }
             else if (typeof this.left === "object" && typeof this.right === "object" && this.left.isAtomic && this.right.isAtomic) {
-                const atomic1 = this.left.getAtomicValue();
-                const atomic2 = this.right.getAtomicValue();
-                if (atomic1 && atomic2 && atomic1 > atomic2) {
-                    swap();
+                let atomic1 = this.left.getAtomicValue();
+                let atomic2 = this.right.getAtomicValue();
+
+                if (atomic1 && atomic2) {
+                    if (this.left.equalsAndOpposite(atomic2) && atomic1.includes("¬")) {
+                        swap();
+                    }
+                    atomic1 = atomic1.replace("¬", "");
+                    atomic2 = atomic2.replace("¬", "");
+                    if (atomic1 > atomic2) {
+                        swap();
+                    }
                 }
             }
         }
@@ -318,8 +329,8 @@ export class Expression {
                         }
                         // removes the left side of the right side
                         else if ((leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or ||
-                        left.equalsAndOpposite(right.right) && this.operator !== Operator.or) {
+                                left.leading === right.leading) || left.equalsAndOpposite(right.left) && this.operator === Operator.or ||
+                            left.equalsAndOpposite(right.right) && this.operator !== Operator.or) {
                             right.left = right.right;
                             removeRight(right);
                             right.isAtomic = true;

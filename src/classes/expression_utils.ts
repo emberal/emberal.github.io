@@ -62,6 +62,8 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     else if (exp.right.isAtomic && typeof exp.right.left === "object") {
         exp.right = exp.right.left;
     }
+
+    exp.commutativeLaw(); // Sorts the expression
     return exp;
 }
 
