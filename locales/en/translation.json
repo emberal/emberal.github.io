@@ -49,7 +49,7 @@
   "illegalChar": "Illegal character",
   "missingChar": "Missing character",
   "atIndex": "at index:",
-  "truthTableHowTo": "Fill in a truth expression and it will be simplified for you as much as possible. It will also genereate a truth table with all possible values. If you do not want to simplify the expression, simply turn of the toggle. You can use the operators: \"not\", \"and\", \"or\" and \"implication\".",
+  "truthTableHowTo": "Fill in a truth expression and it will be simplified for you as much as possible. It will also genereate a truth table with all possible values. You can use a single letter for each atomic value, or use [] to write a word, like: [expression]. If you do not want to simplify the expression, simply turn of the toggle. You can use the operators: \"not\", \"and\", \"or\" and \"implication\".",
   "not": "Not: \"¬\", \"!\", \"~\", or \"not\"",
   "and": "And: \"&\", \"/\\\", or \"and\"",
   "or": "Or: \"|\", \"\\/\", or \"or\"",

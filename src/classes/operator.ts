@@ -1,26 +1,41 @@
 interface Values {
     values?: string[],
+    regex?: RegExp,
 }
 
 // TODO remember strength: ¬, &, |, ->
 
 export class Operator {
 
-    public constructor(operator: string, weight: number, { values = [] }: Values) {
+    public constructor(operator: string, weight: number, { values = [], regex }: Values) {
         this.operator = operator;
         this.weight = weight;
         this.values = values;
+        this.regex = regex;
     }
 
     operator: string;
     weight: number;
     values: string[];
+    regex?: RegExp;
 
     // TODO use correct operators, and allow the use of different kinds
-    static implication = new Operator(">", 0, { values: ["implication", "imp", "impliserer", "->", "=>"] });
-    static or = new Operator("|", 1, { values: ["or", "eller", "\\/"] });
-    static and = new Operator("&", 2, { values: ["and", "og", "/\\"] });
-    static not = new Operator("¬", 3, { values: ["not", "ikke", "!", "~"] });
+    static implication = new Operator(">", 0, {
+        values: ["implication", "imp", "impliserer", "->", "=>"],
+        regex: /->|=>|implication|impliserer|imp+/ig
+    });
+    static or = new Operator("|", 1, {
+        values: ["or", "eller", "\\/"],
+        regex: /or|eller|\\\/+/ig
+    });
+    static and = new Operator("&", 2, {
+        values: ["and", "og", "/\\"],
+        regex: /and|og|\/\\+/ig
+    });
+    static not = new Operator("¬", 3, {
+        values: ["not", "ikke", "!", "~"],
+        regex: /[!~]|not|ikke+/ig
+    });
 
     public static getValues(): Operator[] {
         return [Operator.implication, Operator.or, Operator.and, Operator.not];

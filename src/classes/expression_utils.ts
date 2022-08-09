@@ -69,12 +69,23 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
 function isAtomic(exp: string): boolean {
 
-    const regex = new RegExp(/[a-zA-Z]/);
+    const regex = new RegExp(/[a-zA-Z0-9\[\]]/);
     let atomic = regex.test(exp);
     let nrOfAtomics = 0;
+    let isSquareBracket = false;
 
     for (let i = 0; atomic && i < exp.length; i++) {
-        if (regex.test(exp.charAt(i))) {
+        if (exp.charAt(i) === "[") {
+            isSquareBracket = true;
+        }
+        else if (exp.charAt(i) === "]") {
+            nrOfAtomics++;
+            isSquareBracket = false;
+            if (nrOfAtomics > 1) {
+                atomic = false;
+            }
+        }
+        else if (regex.test(exp.charAt(i)) && !isSquareBracket) {
             nrOfAtomics++;
             if (nrOfAtomics > 1) {
                 atomic = false;
@@ -98,17 +109,17 @@ function getCenterOperatorIndex(stringExp: string): any {
     const operatorArray: any[] = [];
     for (let i = 0; i < stringExp.length; i++) {
 
-        let operators = 0;
+        let parentheses = 0;
         try {
             // Skips all lines within parenthesis
             let c = stringExp.charAt(i);
-            while ( c === "(" || operators > 0 ) {
+            while ( c === "(" || c === "[" || parentheses > 0 ) {
                 c = stringExp.charAt(i);
-                if (c === "(") {
-                    operators++;
+                if (c === "(" || c === "[") {
+                    parentheses++;
                 }
-                else if (c === ")") {
-                    operators--;
+                else if (c === ")" || c === "]") {
+                    parentheses--;
                 }
                 i++;
             }
@@ -161,7 +172,7 @@ export function isLegalExpression(stringExp: string, {
     illegalChar = "Illegal character",
     missingChar = "Missing character",
     atIndex = "at index:"
-}: isLegalExpressionTranslations): string { // TODO use regex?
+}: isLegalExpressionTranslations): string {
 
     const illegalCharError = (char: string, index: number): string => {
         error = `${ illegalChar } "${ char }" ${ atIndex } ${ index }`;
@@ -179,43 +190,55 @@ export function isLegalExpression(stringExp: string, {
         return char === "(" || char === ")";
     };
 
-    const regex = new RegExp(/^[a-zA-Z0-9()&|¬\[\]]/); // TODO check entire string!
+    const regex = new RegExp(/[^a-zA-Z0-9()&|¬>\[\]]|]\[|\)\[|\)\(|\(\)/);
+    const match = stringExp.match(regex);
+    if (match) {
+        return illegalCharError(match[0], stringExp.indexOf(match[0]));
+    }
     let error = "";
     const stack: string[] = [];
     let isTruthValue = false;
+    let insideSquare = false;
 
     for (let i = 0; i < stringExp.length; i++) {
         const char = stringExp.charAt(i);
-        if (char === "(") {
-            stack.push(char);
+
+        if (char === "(" || char === "[") {
+            stack.push(char)
+            if (char === "[") {
+                insideSquare = true;
+            }
         }
-        if (char === ")") {
+        else if (char === ")" || char === "]") {
             const pop = stack.pop();
-            if (pop === undefined || pop !== "(") {
+            if (char === "]") {
+                insideSquare = false;
+            }
+            if (char === ")" && pop !== "(" || char === "]" && pop !== "[") {
                 return illegalCharError(char, i);
             }
         }
-
-        if (!Operator.isOperator(char) && !isParentheses(char)) {
+        else if (!Operator.isOperator(char) && !isParentheses(char)) {
             isTruthValue = true;
         }
 
-        if (i > 0) {
+        if (i > 0 && !insideSquare) {
+            const prevChar = stringExp.charAt(i - 1);
+
             if (Operator.not.operator === char) {
-                if (!Operator.isOperator(stringExp.charAt(i - 1)) && stringExp.charAt(i - 1) !== "(" || i === stringExp.length - 1) {
+                if (!Operator.isOperator(stringExp.charAt(i - 1)) && prevChar !== "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
                 continue;
             }
             // Return false if two operators are following eachother, but not !
             if (Operator.isOperator(char)) {
-                if (Operator.isOperator(stringExp.charAt(i - 1)) || i === stringExp.length - 1) {
-                    console.log(stringExp, char, i)
+                if (Operator.isOperator(prevChar) || prevChar === "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
             }
-            else if (!Operator.isOperator(char) && !Operator.isOperator(stringExp.charAt(i - 1)) &&
-                !isParentheses(char) && !isParentheses(stringExp.charAt(i - 1))) {
+            else if (!(Operator.isOperator(char) || Operator.isOperator(prevChar) ||
+                isParentheses(char)) && (prevChar === ")" || prevChar === "]")) {
                 return illegalCharError(char, i);
             }
         }
@@ -224,7 +247,7 @@ export function isLegalExpression(stringExp: string, {
         return missingCharError("A", stringExp.length);
     }
     if (stack.length > 0) {
-        return missingCharError(")", stringExp.length);
+        return missingCharError(stack.pop() === "(" ? ")" : "]", stringExp.length);
     }
 
     return ""; // Legal expression
@@ -263,10 +286,29 @@ function isOuterParentheses(stringExp: string): boolean {
 
 export function replaceOperators(exp: string): string {
 
-    exp = exp.replace(/[!~]|not|ikke+/ig, "¬");
-    exp = exp.replace(/and|og|\/\\+/ig, "&");
-    exp = exp.replace(/or|eller|\\\/+/ig, "|");
-    exp = exp.replace(/->|=>|implication|impliserer|imp+/ig, ">");
+    const regex = (start: number, end: number) => {
+        if (start < end) {
+            for (const operator of Operator.getValues()) {
+                if (operator.regex) {
+                    exp = exp.substring(0, start) +
+                        exp.substring(start, end).replace(operator.regex, operator.operator) +
+                        exp.substring(end, exp.length);
+                }
+            }
+        }
+    };
+
+    let startIndex = 0;
+
+    for (let i = 1; i < exp.length; i++) {
+        if (exp.charAt(i) === "[") {
+            regex(startIndex, i);
+        }
+        else if (exp.charAt(i) === "]") {
+            startIndex = i + 1;
+        }
+    }
+    regex(startIndex, exp.length);
 
     return exp;
 }

@@ -112,3 +112,9 @@ test("Merge not", () => {
 test("Don't simplify", () => {
     expect(simplify("¬A", true)?.toString()).toBe("¬A");
 });
+
+test("Word expressions", () => {
+    expect(simplify("[first]&[last]|[first]", true)?.toString()).toBe("[first]");
+    expect(simplify("[first]&B|B", true)?.toString()).toBe("B");
+    expect(simplify("[|]|A", true)?.toString()).toBe("A | [|]");
+});

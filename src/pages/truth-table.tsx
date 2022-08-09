@@ -184,7 +184,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                       }
                         />
                     </div>
-                    <Input className={ `rounded-xl !pl-7 h-10 w-52 pr-8` }
+                    <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
                            id={ "truth-input" }
                            placeholder={ "¬A&B>C" }
                            onChange={ onTyping }
@@ -193,7 +193,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
                                <>
                                    {
                                        typing ?
-                                           <button className={ "absolute left-44" }
+                                           <button className={ "absolute left-44 sm:left-[22rem]" }
                                                    title={ t("clear") }
                                                    onClick={ clearSearch }>
                                                <X/>

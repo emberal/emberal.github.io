@@ -313,7 +313,7 @@ export class Expression {
      */
     public absorption(): void {
 
-        if (this.left && this.right && typeof this.left !== "string" && typeof this.right !== "string") {
+        if (this.left && this.right && typeof this.left === "object" && typeof this.right === "object") {
 
             const removeRight = (exp: Expression) => {
                 if (exp.leading.includes("¬") && typeof exp.left === "object" && exp.left) {
