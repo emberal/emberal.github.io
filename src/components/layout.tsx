@@ -30,6 +30,8 @@ interface Layout {
     children?: React.ReactNode,
     current?: string,
     className?: string,
+    titleAndNavClass?: string,
+    containerClass?: string,
 }
 
 /**
@@ -40,10 +42,22 @@ interface Layout {
  * @param children The contents of the page
  * @param current Defines the current page using the layout
  * @param className Styling of the root element
+ * @param titleAndNavClass
+ * @param containerClass
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = ({ title, headline, description, children, current, className }: Layout) => {
+const Layout = (
+    {
+        title,
+        headline,
+        description,
+        children,
+        current,
+        className,
+        titleAndNavClass,
+        containerClass
+    }: Layout) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -168,7 +182,6 @@ const Layout = ({ title, headline, description, children, current, className }: 
         },
     ];
 
-
     return (
         <div className={ `dark:bg-gray-900 dark:text-white ${ className }` }>
             <Helmet> { /*TODO Use new Head, instead of Helmet*/ }
@@ -176,58 +189,62 @@ const Layout = ({ title, headline, description, children, current, className }: 
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div id={ "main-container" } className={ "max-w-2xl mx-auto px-2" /*Container*/ }>
-                <h1
-                    className={ "text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6" }>
-                    { (headline) ? headline : title }
-                </h1>
-                { /*TODO Popover or Menu (headlessUI) menu on small screens*/ }
-                <nav>
-                    <ul className={ "list-none flex gap-3 mb-2" }>
-                        {
-                            navLinks.map(link => (
-                                <li key={ link.to } className={ "w-fit text-lg" }>
-                                    <Link
-                                        className={ `text-primaryPurple dark:text-primaryPink hover:underline 
+            <div id={ "main-container" } className={ `max-w-2xl mx-auto px-2 ${ containerClass }` /*Container*/ }>
+                <div className={ ` ${ titleAndNavClass }` }>
+                    <h1
+                        className={ `bg-clip-text text-transparent bg-gradient-to-r from-primaryPink to-primaryPurple
+                         font-bold text-4xl mb-6 pt-6` }>
+                        { (headline) ? headline : title }
+                    </h1>
+                    { /*TODO Popover or Menu (headlessUI) menu on small screens*/ }
+                    <nav>
+                        <ul className={ "list-none flex gap-3 mb-2" }>
+                            {
+                                navLinks.map(link => (
+                                    <li key={ link.to } className={ "w-fit text-lg" }>
+                                        <Link
+                                            className={ `text-primaryPurple dark:text-primaryPink hover:underline 
                                         ${ current === link.to ? "after:content-['<']" : "" }` }
-                                        to={ link.to }> { link.name }
-                                    </Link>
-                                </li>
-                            ))
-                        }
-                        <li className={ "mr-6 w-fit relative" }>
-                            <Menu>
-                                <Menu.Button
-                                    className={ "text-standard flex items-center text-lg" }>
-                                    <>
-                                        { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
-                                    </>
-                                </Menu.Button>
-                                { /*TODO transition*/ }
-                                <Menu.Items className={
-                                    "bg-white dark:bg-gray-900 border border-gray-500 rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
-                                    {
-                                        themeMenu.map(item => (
-                                            <div key={ item.id }>
-                                                <Menu.Item>
-                                                    { ({ active }) => (
-                                                        <button onClick={ () => toggleDarkMode(item.id) }>
+                                            to={ link.to }> { link.name }
+                                        </Link>
+                                    </li>
+                                ))
+                            }
+                            <li className={ "mr-6 w-fit relative" }>
+                                <Menu>
+                                    <Menu.Button
+                                        className={ "text-standard flex items-center text-lg" }>
+                                        <>
+                                            { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
+                                        </>
+                                    </Menu.Button>
+                                    { /*TODO transition*/ }
+                                    <Menu.Items className={
+                                        "bg-white dark:bg-gray-900 border border-gray-500 rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
+                                        {
+                                            themeMenu.map(item => (
+                                                <div key={ item.id }>
+                                                    <Menu.Item>
+                                                        { ({ active }) => (
+                                                            <button onClick={ () => toggleDarkMode(item.id) }>
                                                             <span
                                                                 className={ `flex items-center ${ active && "underline" }` }>
                                                                 { item.icon }
                                                                 <p className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
-                                                        </button>
-                                                    ) }
-                                                </Menu.Item>
-                                            </div>
-                                        ))
-                                    }
-                                </Menu.Items>
-                            </Menu>
-                        </li>
-                    </ul>
-                </nav>
+                                                            </button>
+                                                        ) }
+                                                    </Menu.Item>
+                                                </div>
+                                            ))
+                                        }
+                                    </Menu.Items>
+                                </Menu>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
                 <main className={ "relative min-h-[90.85vh]" }>
                     <div className={ "pb-24" } id={ "main-content" }>{ children }</div>
                     <Footer/>

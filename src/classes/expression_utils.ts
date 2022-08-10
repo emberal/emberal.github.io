@@ -231,14 +231,14 @@ export function isLegalExpression(stringExp: string, {
                 }
                 continue;
             }
-            // Return false if two operators are following eachother, but not !
+            // Return false if two operators are following eachother, but not ¬
             if (Operator.isOperator(char)) {
                 if (Operator.isOperator(prevChar) || prevChar === "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
             }
-            else if (!(Operator.isOperator(char) || Operator.isOperator(prevChar) ||
-                isParentheses(char)) && (prevChar === ")" || prevChar === "]")) {
+            else if (!(Operator.isOperator(char) || Operator.isOperator(prevChar)) ||
+                isParentheses(char) && (prevChar === ")" || prevChar === "]")) {
                 return illegalCharError(char, i);
             }
         }

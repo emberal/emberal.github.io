@@ -77,33 +77,6 @@ const TruthTablePage = ({}: TruthTablePage) => {
         }
     }
 
-    /**
-     * Sets the hidden div behind the table's height, and the marginTop
-     */
-    React.useEffect(() => {
-        const table = document.getElementById("table") as HTMLTableElement | null;
-        const filler = document.getElementById("table-filler") as HTMLDivElement | null;
-        const layout = document.getElementById("truth-content") as HTMLDivElement | null;
-
-        if (table && filler && layout) {
-            filler.style.height = table.clientHeight + 100 + "px";
-            let margin = getHeaderHeight();
-
-            for (let i = 0; i < layout.children.length - 1; i++) {
-                margin += layout.children[i].clientHeight;
-            }
-            table.style.marginTop = margin + 100 + "px";
-        }
-    }, [expression.current, simplifyEnabled, openDisclosure]);
-
-    /**
-     * Updates the state and calls the useEffect above, which will calculate the new marginTop of the table
-     * @param value
-     */
-    function setSetOpenDisclosure(value: boolean) {
-        setOpenDisclosure(!openDisclosure);
-    }
-
     function onTyping() {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
         if (el && (el.value !== "") !== typing) {
@@ -152,28 +125,18 @@ const TruthTablePage = ({}: TruthTablePage) => {
     const { t } = useTranslation();
 
     return (
-        <>
-            {
-                search !== "" ?
-                    <div id={ "table" } className={ "absolute" }>
-                        <div className={ "mx-2 relative w-[calc(100vw-1rem)] overflow-x-scroll" }>
-                            <TruthTable
-                                expression={ expression.current }
-                                className={ `relative mx-auto w-max text-black dark:text-white` }
-                            />
-                        </div>
-                    </div> : null
-            }
-            <Layout title={ t("truthTables") } description={ t("truthTablesDesc") }>
-                <div className={ "pt-2" } id={ "truth-content" }>
+        <Layout title={ t("truthTables") }
+                description={ t("truthTablesDesc") }
+                containerClass={ "!max-w-full" }
+                titleAndNavClass={ "max-w-2xl mx-auto" }>
+            <div className={ "pt-2" } id={ "truth-content" }>
+                <div className={ "max-w-2xl mx-auto" }>
                     <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
-                     flex flex-col gap-1` }>
+                                flex flex-col gap-1` }>
                         <MyDisclosure title={ t("howTo") }
-                                      isOpen={ setSetOpenDisclosure }
                                       content={ t("truthTableHowTo") }
                         />
                         <MyDisclosure title={ t("keywords") }
-                                      isOpen={ setSetOpenDisclosure }
                                       content={
                                           <div>
                                               <p>{ t("not") }</p>
@@ -212,20 +175,6 @@ const TruthTablePage = ({}: TruthTablePage) => {
                     <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
                               name={ t("toggleSimplify") }/>
                     {
-                        search !== "" ?
-                            <>
-                                {
-                                    simplifyEnabled ?
-                                        <InfoBox className={ "w-fit mx-auto" }
-                                                 title={ t("output") + ":" }
-                                                 content={ search }
-                                        /> : null
-                                }
-                                { /*The relative backdrop used to move content down behind the table*/ }
-                                <div id={ "table-filler" }/>
-                            </> : null
-                    }
-                    {
                         errorMessage !== "" ?
                             <InfoBox className={ "w-fit" }
                                      title={ t("inputError") }
@@ -234,9 +183,29 @@ const TruthTablePage = ({}: TruthTablePage) => {
                             /> : null
                     }
                 </div>
-            </Layout>
-        </>
-
+                {
+                    search !== "" ?
+                        <>
+                            {
+                                simplifyEnabled ?
+                                    <InfoBox className={ "w-fit mx-auto" }
+                                             title={ t("output") + ":" }
+                                             content={ search }
+                                    /> : null
+                            }
+                            <div className={ "flex justify-center m-2" }>
+                                <div id={ "table" }
+                                     className={ "h-[45rem] overflow-scroll" }>
+                                    <TruthTable
+                                        expression={ expression.current }
+                                        className={ `relative w-max text-black dark:text-white` }
+                                    />
+                                </div>
+                            </div>
+                        </> : null
+                }
+            </div>
+        </Layout>
     );
 }
 
