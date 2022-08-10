@@ -137,13 +137,13 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     return (
         <table className={ `border-2 border-gray-500 border-collapse table z-10 ${ className }` }
                id={ id }>
-            <thead className={ "border-b-2 border-gray-500" }>
+            <thead>
             <tr>
                 {
                     expressions.map((exp: Expression, index: number) => (
                         <th key={ index } scope={ "col" }
-                            className={ `border border-gray-500 bg-standard text-center sticky top-0
-                             [position:-webkit-sticky;] bg-clip-padding` /*TODO sticky header at the top of the screen*/ }>
+                            className={ `bg-standard text-center sticky top-0 [position:-webkit-sticky;] bg-clip-padding
+                             outline outline-2 outline-offset-[-1px] outline-gray-500` /*TODO sticky header at the top of the screen*/ }>
                             <p className={ "px-2" }>{ exp.toString() }</p>
                         </th>
                     ))
