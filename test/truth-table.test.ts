@@ -46,6 +46,7 @@ test("Distributivity", () => {
     expect(simplify("A&B|B&C", true)?.toString()).toBe("B & (A | C)");
     expect(simplify("(A|B)&(B|C)", true)?.toString()).toBe("B | A & C");
     expect(simplify("(A|B)&(B|C)&D|(A|B)&(B|C)&E", true)?.toString()).toBe("(B | A & C) & (D | E)");
+    expect(simplify("A&B|¬C>D", true)?.toString()).toBe("¬(A & B) & C | D");
 });
 
 test("Elimination of implication", () => {

@@ -219,11 +219,24 @@ export class Expression {
                         inverse();
                         this.left.leading = this.left.leading.replace("¬", "");
                         this.right.leading = "¬" + this.right.leading;
+                        if (this.right.isAtomic) {
+                            this.right.leading = "¬";
+                        }
+                        else {
+                            this.right.leading = "¬(" + this.left.leading;
+                            this.right.trailing = ")";
+                        }
                     }
                     else if (this.isNot(this.right)) {
                         inverse();
                         this.right.leading = this.right.leading.replace("¬", "");
-                        this.left.leading = "¬" + this.left.leading;
+                        if (this.left.isAtomic) {
+                            this.left.leading = "¬";
+                        }
+                        else {
+                            this.left.leading = "¬(" + this.left.leading;
+                            this.left.trailing = ")";
+                        }
                     }
                 }
             }
