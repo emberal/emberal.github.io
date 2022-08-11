@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { getHeaderHeight } from "../components/layout";
+import Layout from "../components/layout";
 import Input from "../components/input";
 import { graphql } from "gatsby";
 import { Expression } from "../classes/expression";
@@ -35,11 +35,6 @@ const TruthTablePage = ({}: TruthTablePage) => {
      * If the searchbar is empty, this state is 'false', otherwise 'true'
      */
     const [typing, setTyping] = React.useState(false);
-
-    /**
-     * Used to update the state and recalculate the marginTop of the table
-     */
-    const [openDisclosure, setOpenDisclosure] = React.useState(false);
 
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
