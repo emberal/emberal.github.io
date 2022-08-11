@@ -19,10 +19,9 @@ export class Operator {
     values: string[];
     regex?: RegExp;
 
-    // TODO use correct operators, and allow the use of different kinds
-    static implication = new Operator(">", 0, {
-        values: ["implication", "imp", "impliserer", "->", "=>"],
-        regex: /->|=>|implication|impliserer|imp+/ig
+    static implication = new Operator("->", 0, {
+        values: ["implication", "imp", "impliserer", ">", "=>"],
+        regex: />|=>|implication|impliserer|imp+/ig
     });
     static or = new Operator("|", 1, {
         values: ["or", "eller", "\\/"],

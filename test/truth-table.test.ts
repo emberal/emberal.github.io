@@ -21,10 +21,10 @@ test("Equals", () => {
 test("Absorption w/ same values", () => {
     expect(simplify("A&A", true)?.toString()).toBe("A");
     expect(simplify("A|A&A", true)?.toString()).toBe("A");
-    expect(simplify("A>A&A|A", true)?.toString()).toBe("A");
+    expect(simplify("A->A&A|A", true)?.toString()).toBe("A");
     expect(simplify("(A&A)|(A&A)", true)?.toString()).toBe("A");
-    expect(simplify("((A|A)>(A&(A|A)))", true)?.toString()).toBe("A");
-    expect(simplify("A|A|(A>A)&(A|A&A)>A", true)?.toString()).toBe("A");
+    expect(simplify("((A|A)->(A&(A|A)))", true)?.toString()).toBe("A");
+    expect(simplify("A|A|(A->A)&(A|A&A)->A", true)?.toString()).toBe("A");
 });
 
 test("Absorption w/ different values", () => {
@@ -34,26 +34,27 @@ test("Absorption w/ different values", () => {
     expect(simplify("A&B|A&B", true)?.toString()).toBe("A & B");
     expect(simplify("A&B&A&B", true)?.toString()).toBe("A & B");
     expect(simplify("(A&B|C&D)&(A&B|C&D)", true)?.toString()).toBe("A & B | C & D");
-    expect(simplify("A>A&B", true)?.toString()).toBe("¬A | B");
+    expect(simplify("A->A&B", true)?.toString()).toBe("¬A | B");
     expect(simplify("A&B|¬A", true)?.toString()).toBe("¬A | B");
     expect(simplify("A|B&¬A", true)?.toString()).toBe("A | B");
     expect(simplify("A&B&A", true)?.toString()).toBe("A & B");
     expect(simplify("A|B|A&B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|A|B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|C|A", true)?.toString()).toBe("A | B | C");
+    expect(simplify("¬A&B|(A->B)", true)?.toString()).toBe("¬A | B"); // TODO
 });
 
 test("Distributivity", () => {
     expect(simplify("A&B|B&C", true)?.toString()).toBe("B & (A | C)");
     expect(simplify("(A|B)&(B|C)", true)?.toString()).toBe("B | A & C");
     expect(simplify("(A|B)&(B|C)&D|(A|B)&(B|C)&E", true)?.toString()).toBe("(B | A & C) & (D | E)");
-    expect(simplify("A&B|¬C>D", true)?.toString()).toBe("¬(A & B) & C | D");
+    expect(simplify("A&B|¬C->D", true)?.toString()).toBe("¬(A & B) & C | D");
 });
 
 test("Elimination of implication", () => {
-    expect(simplify("A>B", true)?.toString()).toBe("¬A | B");
-    expect(simplify("A&C>B", true)?.toString()).toBe("¬(A & C) | B");
-    expect(simplify("¬(A|B)>C", true)?.toString()).toBe("(A | B) | C");
+    expect(simplify("A->B", true)?.toString()).toBe("¬A | B");
+    expect(simplify("A&C->B", true)?.toString()).toBe("¬(A & C) | B");
+    expect(simplify("¬(A|B)->C", true)?.toString()).toBe("(A | B) | C");
 });
 
 test("De Morgan's law", () => {
@@ -61,29 +62,29 @@ test("De Morgan's law", () => {
     expect(simplify("¬A|¬B", true)?.toString()).toBe("¬(A & B)");
     expect(simplify("¬(A|B)&¬(C|D)", true)?.toString()).toBe("¬((A | B) | (C | D))");
     expect(simplify("¬(¬A&B)", true)?.toString()).toBe("A | ¬B");
-    expect(simplify("A&B>C>D", true)?.toString()).toBe("A & B & ¬C | D");
+    expect(simplify("A&B->C->D", true)?.toString()).toBe("A & B & ¬C | D");
 });
 
 test("Parenthesis", () => {
     expect(simplify("A&(B|C)&D", true)?.toString()).toBe("A & (B | C) & D");
-    expect(simplify("(¬(A&B)|(C>D))&E", true)?.toString()).toBe("(¬(A & B) | (¬C | D)) & E");
+    expect(simplify("(¬(A&B)|(C->D))&E", true)?.toString()).toBe("(¬(A & B) | (¬C | D)) & E");
 });
 
 test("Commutative", () => {
     expect(simplify("B&A", true)?.toString()).toBe("A & B");
     expect(simplify("B|A", true)?.toString()).toBe("A | B");
-    expect(simplify("G&(H|B)>A&(J|C)", true)?.toString()).toBe("¬(G & (B | H)) | A & (C | J)");
+    expect(simplify("G&(H|B)->A&(J|C)", true)?.toString()).toBe("¬(G & (B | H)) | A & (C | J)");
 });
 
 test("Operator weight", () => {
     expect(simplify("A&B&C|D", true)?.operator).toBe(Operator.or);
     expect(simplify("A|B&C&D", true)?.operator).toBe(Operator.or);
-    expect(simplify("A>B&C|D", true)?.left?.toString()).toBe("¬A");
-    expect(simplify("A>B|C&D|E>F&G", true)?.right?.toString()).toBe("F & G");
+    expect(simplify("A->B&C|D", true)?.left?.toString()).toBe("¬A");
+    expect(simplify("A->B|C&D|E->F&G", true)?.right?.toString()).toBe("F & G");
 });
 
 test("Several", () => {
-    expect(simplify("A&B|C>C&A", true)?.toString()).toBe("¬(A & B | C) | A & C");
+    expect(simplify("A&B|C->C&A", true)?.toString()).toBe("¬(A & B | C) | A & C");
 });
 
 test("Always true / false", () => {
@@ -98,7 +99,7 @@ test("Always true / false", () => {
     expect(simplify("A&B&¬A", true)?.toString()).toBe("A & ¬A");
     expect(simplify("¬A&B&A", true)?.toString()).toBe("A & ¬A");
     expect(simplify("¬A|B|¬B", true)?.toString()).toBe("B | ¬B");
-    expect(simplify("A>A|B", true)?.toString()).toBe("A | ¬A");
+    expect(simplify("A->A|B", true)?.toString()).toBe("A | ¬A");
     expect(simplify("A&¬(A|B)", true)?.toString()).toBe("A & ¬A");
     expect(simplify("A&¬A&!B", true)?.toString()).toBe("A & ¬A");
     expect(simplify("A&B&¬(A&B)", true)?.toString()).toBe("A & B & ¬(A & B)");

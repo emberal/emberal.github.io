@@ -10,7 +10,6 @@ export function simplify(stringExp: string, simplify: boolean): Expression {
     return exp;
 }
 
-// TODO allow expressions written like: A & [TEST], where [string] can be used as an atomic value
 function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     let exp = new Expression(null, null, null, {});
@@ -47,7 +46,11 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     exp.left = simplifyRec(stringExp.substring(0, center.index), simplify); // Left
     exp.operator = center.operator;
-    exp.right = simplifyRec(stringExp.substring(center.index + 1, stringExp.length), simplify); // Right
+    let rightIndex = 1;
+    if (exp.operator === Operator.implication) {
+        rightIndex = 2;
+    }
+    exp.right = simplifyRec(stringExp.substring(center.index + rightIndex, stringExp.length), simplify); // Right
 
     if (simplify) {
         exp.laws();
@@ -128,8 +131,13 @@ function getCenterOperatorIndex(stringExp: string): any {
             console.error(error);
         }
 
+        let following = "";
+        if (stringExp.charAt(i) === "-") {
+            following = stringExp.charAt(i + 1);
+        }
+
         // Finds the matching Operator
-        const operator = Operator.getOperator(stringExp.charAt(i));
+        const operator = Operator.getOperator(stringExp.charAt(i) + following);
         if (operator && operator !== Operator.not) {
             operatorArray[index++] = { operator: operator, index: i };
         }
@@ -190,7 +198,7 @@ export function isLegalExpression(stringExp: string, {
         return char === "(" || char === ")";
     };
 
-    const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()&|¬>\[\]]|]\[|\)\[|\)\(|\(\)/);
+    const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()&|¬\->\[\]]|^->|]\[|\)\[|\)\(|\(\)/);
     const match = stringExp.match(regex);
     if (match) {
         return illegalCharError(match[0], stringExp.indexOf(match[0]));
@@ -203,7 +211,10 @@ export function isLegalExpression(stringExp: string, {
     for (let i = 0; i < stringExp.length; i++) {
         const char = stringExp.charAt(i);
 
-        if (char === "(" || char === "[") {
+        if (char === "-" && stringExp.charAt(i + 1) !== ">") {
+            return illegalCharError(char, i);
+        }
+        else if (char === "(" || char === "[") {
             stack.push(char)
             if (char === "[") {
                 insideSquare = true;
@@ -231,14 +242,18 @@ export function isLegalExpression(stringExp: string, {
                 }
                 continue;
             }
+            let following = "";
+            if (char === "-") {
+                following = stringExp.charAt(i + 1);
+            }
             // Return false if two operators are following eachother, but not ¬
-            if (Operator.isOperator(char)) {
+            if (Operator.isOperator(char + following)) {
                 if (Operator.isOperator(prevChar) || prevChar === "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
             }
-            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(prevChar) || prevChar !== ")") ||
-                isParentheses(char) && (prevChar === ")" || prevChar === "]")) {
+            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(prevChar) ||
+                isParentheses(char) || isParentheses(prevChar))) {
                 return illegalCharError(char, i);
             }
         }
