@@ -29,6 +29,7 @@ test("Absorption w/ same values", () => {
 
 test("Absorption w/ different values", () => {
     expect(simplify("A&B|A", true)?.toString()).toBe("A");
+    expect(simplify("(A|B)&A", true)?.toString()).toBe("A");
     expect(simplify("A&(B|B)&C", true)?.toString()).toBe("A & B & C");
     expect(simplify("A&B|A&B", true)?.toString()).toBe("A & B");
     expect(simplify("A&B&A&B", true)?.toString()).toBe("A & B");

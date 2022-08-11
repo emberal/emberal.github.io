@@ -237,7 +237,7 @@ export function isLegalExpression(stringExp: string, {
                     return illegalCharError(char, i);
                 }
             }
-            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(prevChar)) ||
+            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(prevChar) || prevChar !== ")") ||
                 isParentheses(char) && (prevChar === ")" || prevChar === "]")) {
                 return illegalCharError(char, i);
             }

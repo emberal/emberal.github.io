@@ -363,7 +363,8 @@ export class Expression {
                             removeRight(this);
                         }
                         // Removed the entire right side
-                        else if (this.operator === Operator.or && (leftEqualsLeft || leftEqualsRight)) {
+                        else if ((this.operator === Operator.or && right.operator === Operator.and || this.operator === Operator.and &&
+                            right.operator === Operator.or) && !right.isNot(right) && (leftEqualsLeft || leftEqualsRight)) {
                             if (removeLeft) {
                                 this.left = this.right;
                             }
