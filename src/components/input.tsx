@@ -36,7 +36,7 @@ const Input = ({ className, id, name, type, title, placeholder, required, onChan
             }
         }
 
-        if (id) {
+        if (id && title) {
             const el = document.getElementById(id);
             if (el) {
                 el.addEventListener("pointerenter", () => hover(true));
@@ -107,7 +107,7 @@ export const TextArea = ({ className, id, name, title, placeholder, required = f
             }
         }
 
-        if (id) {
+        if (id && title) {
             const el = document.getElementById(id);
             if (el) {
                 el.addEventListener("pointerenter", () => hover(true));

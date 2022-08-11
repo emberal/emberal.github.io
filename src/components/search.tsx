@@ -86,13 +86,13 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false }: Sear
     const iconClasses = "sm:w-4 sm:h-4 h-5 w-5";
 
     return (
-        <div className={ `absolute right-0 sm:-top-9 -top-24 sm:h-7 h-10 flex flex-row items-center` }>
+        <div className={ `absolute right-0 sm:-top-9 -top-24 flex flex-row items-center` }>
             <Input id={ "search" }
                    type={ "text" }
                    name={ "search" }
                    placeholder={ t("search") }
                    className={ `sm:pl-6 pl-7 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
-                    rounded-xl shadow-sm shadow-primaryPurple transition-all duration-200 ease-in-out h-full` }
+                    rounded-xl shadow-sm shadow-primaryPurple transition-all duration-200 ease-in-out h-10 sm:h-7` }
                    onChange={ onChange ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }
                    leading={
                        <button className={ `absolute mx-[0.40rem]` }

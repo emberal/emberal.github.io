@@ -6,14 +6,6 @@ import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 
-export function getHeaderHeight(): number {
-    const el = document.getElementById("main-container") as HTMLDivElement | null;
-    if (el) {
-        return el.children[0].clientHeight + el.children[1].clientHeight;
-    }
-    return 0;
-}
-
 export const Links = {
     home: "/",
     projects: "/projects",
@@ -100,7 +92,7 @@ const Layout = (
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function toggleDarkMode(theme: string) { //TODO create themeType instead
+    function toggleDarkMode(theme: string) { //TODO create themeType instead?
         switch (theme) {
             case 'dark':
                 localStorage.theme = themeEnum.dark;
@@ -122,8 +114,8 @@ const Layout = (
      * Scrolls the window to the top
      */
     function backUp() {
-        document.body.scrollTop = 0; //Safari
-        document.documentElement.scrollTop = 0; //Firefox, chromium, opera and the others
+        document.body.scrollTop = 0; // Safari
+        document.documentElement.scrollTop = 0; // Firefox, chromium, opera and the others
     }
 
     const [isTop, setIsTop] = React.useState(true);
@@ -189,10 +181,11 @@ const Layout = (
                 <meta name={ "description" } content={ description }/>
                 <title>{ title } | { query.site.siteMetadata.title }</title>
             </Helmet>
-            <div id={ "main-container" } className={ `max-w-2xl mx-auto px-2 ${ containerClass }` /*Container*/ }>
+            <div id={ "main-container" }
+                 className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
                 <div className={ ` ${ titleAndNavClass }` }>
                     <h1
-                        className={ `bg-clip-text text-transparent bg-gradient-to-r from-primaryPink to-primaryPurple
+                        className={ `bg-clip-text text-transparent bg-gradient-to-r from-primaryPurple to-primaryPink
                          font-bold text-4xl mb-6 pt-6` }>
                         { (headline) ? headline : title }
                     </h1>
@@ -244,8 +237,7 @@ const Layout = (
                         </ul>
                     </nav>
                 </div>
-
-                <main className={ "relative min-h-[90.85vh]" }>
+                <main>
                     <div className={ "pb-24" } id={ "main-content" }>{ children }</div>
                     <Footer/>
                 </main>

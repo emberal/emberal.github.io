@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Disclosure } from "@headlessui/react";
+import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUp } from "react-feather";
 
 interface InfoBox {
@@ -38,10 +38,17 @@ export const MyDisclosure = ({ title, content, defaultOpen = false, className, i
                             <p className={ `py-1` }>{ title }</p>
                             <ChevronUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
                         </Disclosure.Button>
-                        { /*TODO try to make Transition work, creates problems for table margin!*/ }
-                        <Disclosure.Panel>
-                            <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
-                        </Disclosure.Panel>
+                        <Transition
+                            enter="transition duration-100 ease-out"
+                            enterFrom="transform scale-95 opacity-0"
+                            enterTo="transform scale-100 opacity-100"
+                            leave="transition duration-75 ease-out"
+                            leaveFrom="transform scale-100 opacity-100"
+                            leaveTo="transform scale-95 opacity-0">
+                            <Disclosure.Panel>
+                                <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
+                            </Disclosure.Panel>
+                        </Transition>
                     </>
                 ) }
             </Disclosure>
