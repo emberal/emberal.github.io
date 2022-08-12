@@ -53,7 +53,9 @@
   "not": "Not: \"¬\", \"!\", \"~\", or \"not\"",
   "and": "And: \"&\", \"/\\\", or \"and\"",
   "or": "Or: \"|\", \"\\/\", or \"or\"",
-  "implication": "Implication: \">\", \"->\", \"=>\", \"imp\" or \"implication\"",
+  "implication": "Implication: \"->\", \"=>\", \"imp\" or \"implication\"",
   "howTo": "Information",
-  "keywords": "Keywords"
+  "keywords": "Keywords",
+  "expressionTooBig": "Expression is too big, it cannot be larger than 10 atomic values."
+
 }

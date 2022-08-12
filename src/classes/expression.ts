@@ -101,9 +101,9 @@ export class Expression {
         return null;
     }
 
-    public laws(): void {
-        this.absorption();
+    public laws(): void { // TODO check order
         this.eliminationOfImplication();
+        this.absorption();
         this.mergeNot();
         this.deMorgansLaw();
         this.assosiativeLaw();

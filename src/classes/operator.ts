@@ -20,8 +20,8 @@ export class Operator {
     regex?: RegExp;
 
     static implication = new Operator("->", 0, {
-        values: ["implication", "imp", "impliserer", ">", "=>"],
-        regex: />|=>|implication|impliserer|imp+/ig
+        values: ["implication", "imp", "impliserer", "=>"],
+        regex: /=>|implication|impliserer|imp+/ig
     });
     static or = new Operator("|", 1, {
         values: ["or", "eller", "\\/"],

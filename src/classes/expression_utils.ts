@@ -161,7 +161,8 @@ function getCenterOperatorIndex(stringExp: string): any {
 interface isLegalExpressionTranslations {
     illegalChar?: string,
     missingChar?: string,
-    atIndex?: string
+    atIndex?: string,
+    expressionTooBig?: string
 }
 
 /**
@@ -175,11 +176,13 @@ interface isLegalExpressionTranslations {
  * @param illegalChar A string message for illegal characters
  * @param missingChar A string message for missing characters
  * @param atIndex A string message for displaying index
+ * @param expressionTooBig A string message when the expression is too big
  */
 export function isLegalExpression(stringExp: string, {
     illegalChar = "Illegal character",
     missingChar = "Missing character",
-    atIndex = "at index:"
+    atIndex = "at index:",
+    expressionTooBig = "Expression too big",
 }: isLegalExpressionTranslations): string {
 
     const illegalCharError = (char: string, index: number): string => {
@@ -203,19 +206,38 @@ export function isLegalExpression(stringExp: string, {
     if (match) {
         return illegalCharError(match[0], stringExp.indexOf(match[0]));
     }
+
     let error = "";
     const stack: string[] = [];
     let isTruthValue = false;
     let insideSquare = false;
+    let numberOfOperators = 0;
 
     for (let i = 0; i < stringExp.length; i++) {
         const char = stringExp.charAt(i);
+
+        if (char === ">") {
+            continue;
+        }
+
+        let trailing = "";
+        let leading = "";
+        if (char === "-") {
+            trailing = stringExp.charAt(i + 1);
+        }
+
+        if (!insideSquare && Operator.isOperator(char + trailing)) {
+            numberOfOperators++;
+            if (numberOfOperators > 9) {
+                return expressionTooBig;
+            }
+        }
 
         if (char === "-" && stringExp.charAt(i + 1) !== ">") {
             return illegalCharError(char, i);
         }
         else if (char === "(" || char === "[") {
-            stack.push(char)
+            stack.push(char);
             if (char === "[") {
                 insideSquare = true;
             }
@@ -236,23 +258,24 @@ export function isLegalExpression(stringExp: string, {
         if (i > 0 && !insideSquare) {
             const prevChar = stringExp.charAt(i - 1);
 
+            if (prevChar === ">") {
+                leading = stringExp.charAt(i - 2);
+            }
+
             if (Operator.not.operator === char) {
-                if (!Operator.isOperator(stringExp.charAt(i - 1)) && prevChar !== "(" || i === stringExp.length - 1) {
+                if (!Operator.isOperator(prevChar) && prevChar !== "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
                 continue;
             }
-            let following = "";
-            if (char === "-") {
-                following = stringExp.charAt(i + 1);
-            }
+
             // Return false if two operators are following eachother, but not ¬
-            if (Operator.isOperator(char + following)) {
-                if (Operator.isOperator(prevChar) || prevChar === "(" || i === stringExp.length - 1) {
+            if (Operator.isOperator(char + trailing)) {
+                if (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i);
                 }
             }
-            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(prevChar) ||
+            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(leading + prevChar) ||
                 isParentheses(char) || isParentheses(prevChar))) {
                 return illegalCharError(char, i);
             }

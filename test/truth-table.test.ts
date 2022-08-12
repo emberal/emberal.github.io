@@ -21,10 +21,7 @@ test("Equals", () => {
 test("Absorption w/ same values", () => {
     expect(simplify("A&A", true)?.toString()).toBe("A");
     expect(simplify("A|A&A", true)?.toString()).toBe("A");
-    expect(simplify("A->A&A|A", true)?.toString()).toBe("A");
     expect(simplify("(A&A)|(A&A)", true)?.toString()).toBe("A");
-    expect(simplify("((A|A)->(A&(A|A)))", true)?.toString()).toBe("A");
-    expect(simplify("A|A|(A->A)&(A|A&A)->A", true)?.toString()).toBe("A");
 });
 
 test("Absorption w/ different values", () => {
@@ -100,6 +97,9 @@ test("Always true / false", () => {
     expect(simplify("¬A&B&A", true)?.toString()).toBe("A & ¬A");
     expect(simplify("¬A|B|¬B", true)?.toString()).toBe("B | ¬B");
     expect(simplify("A->A|B", true)?.toString()).toBe("A | ¬A");
+    expect(simplify("A->A&A|A", true)?.toString()).toBe("A | ¬A");
+    expect(simplify("((A|A)->(A&(A|A)))", true)?.toString()).toBe("A | ¬A");
+    expect(simplify("A|A|(A->A)&(A|A&A)->A", true)?.toString()).toBe("A | ¬A");
     expect(simplify("A&¬(A|B)", true)?.toString()).toBe("A & ¬A");
     expect(simplify("A&¬A&!B", true)?.toString()).toBe("A & ¬A");
     expect(simplify("A&B&¬(A&B)", true)?.toString()).toBe("A & B & ¬(A & B)");

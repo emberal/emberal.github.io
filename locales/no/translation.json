@@ -52,7 +52,8 @@
   "not": "Ikke: \"¬\", \"!\", \"~\", eller \"ikke\"",
   "and": "Og: \"&\", \"/\\\", eller \"og\"",
   "or": "Eller: \"|\", \"\\/\", eller \"eller\"",
-  "implication": "Implisering: \">\", \"->\", \"=>\", \"imp\" eller \"impliserer\"",
+  "implication": "Implisering: \"->\", \"=>\", \"imp\" eller \"impliserer\"",
   "howTo": "Informasjon",
-  "keywords": "Nøkkelord"
+  "keywords": "Nøkkelord",
+  "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier."
 }

@@ -51,7 +51,8 @@ const TruthTablePage = ({}: TruthTablePage) => {
             const errorMsg = isLegalExpression(exp, {
                 atIndex: t("atIndex"),
                 missingChar: t("missingChar"),
-                illegalChar: t("illegalChar")
+                illegalChar: t("illegalChar"),
+                expressionTooBig: t("expressionTooBig"),
             });
             setErrorMessage(errorMsg);
 
@@ -122,7 +123,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
     return (
         <Layout title={ t("truthTables") }
                 description={ t("truthTablesDesc") }
-                containerClass={ "!max-w-full" }
+                containerClass={ "!max-w-full overflow-x-hidden" }
                 titleAndNavClass={ "max-w-2xl mx-auto" }>
             <div className={ "pt-2" } id={ "truth-content" }>
                 <div className={ "max-w-2xl mx-auto" }>
