@@ -38,7 +38,7 @@ test("Absorption w/ different values", () => {
     expect(simplify("A|B|A&B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|A|B", true)?.toString()).toBe("A | B");
     expect(simplify("A|B|C|A", true)?.toString()).toBe("A | B | C");
-    expect(simplify("¬A&B|(A->B)", true)?.toString()).toBe("¬A | B"); // TODO
+    expect(simplify("¬A&B|(A->B)", true)?.toString()).toBe("¬A | B");
 });
 
 test("Distributivity", () => {
@@ -51,20 +51,20 @@ test("Distributivity", () => {
 test("Elimination of implication", () => {
     expect(simplify("A->B", true)?.toString()).toBe("¬A | B");
     expect(simplify("A&C->B", true)?.toString()).toBe("¬(A & C) | B");
-    expect(simplify("¬(A|B)->C", true)?.toString()).toBe("(A | B) | C");
+    expect(simplify("¬(A|B)->C", true)?.toString()).toBe("A | B | C");
 });
 
 test("De Morgan's law", () => {
     expect(simplify("¬A&¬B", true)?.toString()).toBe("¬(A | B)");
     expect(simplify("¬A|¬B", true)?.toString()).toBe("¬(A & B)");
-    expect(simplify("¬(A|B)&¬(C|D)", true)?.toString()).toBe("¬((A | B) | (C | D))");
+    expect(simplify("¬(A|B)&¬(C|D)", true)?.toString()).toBe("¬(A | B | C | D)");
     expect(simplify("¬(¬A&B)", true)?.toString()).toBe("A | ¬B");
     expect(simplify("A&B->C->D", true)?.toString()).toBe("A & B & ¬C | D");
 });
 
 test("Parenthesis", () => {
     expect(simplify("A&(B|C)&D", true)?.toString()).toBe("A & (B | C) & D");
-    expect(simplify("(¬(A&B)|(C->D))&E", true)?.toString()).toBe("(¬(A & B) | (¬C | D)) & E");
+    expect(simplify("(¬(A&B)|(C->D))&E", true)?.toString()).toBe("(¬(A & B) | ¬C | D) & E");
 });
 
 test("Commutative", () => {

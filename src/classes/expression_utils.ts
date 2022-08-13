@@ -67,6 +67,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     }
 
     exp.commutativeLaw(); // Sorts the expression
+    exp.removeParenthesis();
     return exp;
 }
 
