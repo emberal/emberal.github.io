@@ -20,8 +20,8 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
             stringExp = stringExp.replace("¬", "");
             exp.leading += "¬";
         }
-        exp.left = stringExp;
-        exp.isAtomic = true;
+        // exp.left = stringExp;
+        exp.atomic = stringExp;
         if (simplify) {
             exp.mergeNot();
         }
@@ -59,10 +59,10 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     if (exp.right === null) {
         exp = exp.left;
     }
-    else if (exp.left.isAtomic && typeof exp.left.left === "object") {
+    else if (exp.left.left && exp.left.right === null) {
         exp.left = exp.left.left;
     }
-    else if (exp.right.isAtomic && typeof exp.right.left === "object") {
+    else if (exp.right.left && exp.right.right === null) {
         exp.right = exp.right.left;
     }
 
@@ -114,22 +114,18 @@ function getCenterOperatorIndex(stringExp: string): any {
     for (let i = 0; i < stringExp.length; i++) {
 
         let parentheses = 0;
-        try {
-            // Skips all lines within parenthesis
-            let c = stringExp.charAt(i);
-            while ( c === "(" || c === "[" || parentheses > 0 ) {
-                c = stringExp.charAt(i);
-                if (c === "(" || c === "[") {
-                    parentheses++;
-                }
-                else if (c === ")" || c === "]") {
-                    parentheses--;
-                }
-                i++;
+
+        // Skips all lines within parenthesis
+        let char = stringExp.charAt(i);
+        while ( char === "(" || char === "[" || parentheses > 0 ) {
+            char = stringExp.charAt(i);
+            if (char === "(" || char === "[") {
+                parentheses++;
             }
-        }
-        catch (error) {
-            console.error(error);
+            else if (char === ")" || char === "]") {
+                parentheses--;
+            }
+            i++;
         }
 
         let following = "";
@@ -238,10 +234,13 @@ export function isLegalExpression(stringExp: string, {
             return illegalCharError(char, i);
         }
         else if (char === "(" || char === "[") {
-            stack.push(char);
             if (char === "[") {
+                if (stack[stack.length - 1] === "[") {
+                    return illegalCharError(char, i);
+                }
                 insideSquare = true;
             }
+            stack.push(char);
         }
         else if (char === ")" || char === "]") {
             const pop = stack.pop();

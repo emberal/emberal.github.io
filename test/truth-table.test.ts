@@ -3,9 +3,9 @@ import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
 test("Equals", () => {
-    const innerLeft = new Expression({ left: "A", isAtomic: true });
-    const notInnerLeft = new Expression({ left: "A", isAtomic: true, leading: "¬" });
-    const innerRight = new Expression({ left: "B", isAtomic: true });
+    const innerLeft = new Expression({ atomic: "A" });
+    const notInnerLeft = new Expression({ leading: "¬", atomic: "A" });
+    const innerRight = new Expression({ atomic: "B" });
 
     const exp1 = new Expression({ left: innerLeft, operator: Operator.and, right: innerRight });
     const exp2 = new Expression({ left: innerLeft, operator: Operator.and, right: innerRight });
@@ -91,8 +91,8 @@ test("Several", () => {
 });
 
 test("Always true / false", () => {
-    const innerA = new Expression({ left: "A", isAtomic: true });
-    const innerB = new Expression({ left: "B", isAtomic: true });
+    const innerA = new Expression({ atomic: "A" });
+    const innerB = new Expression({ atomic: "B" });
     const aAndB = new Expression({ left: innerA, operator: Operator.and, right: innerB });
     const notAAndB = new Expression({
         left: innerB,

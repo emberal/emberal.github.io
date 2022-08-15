@@ -17,9 +17,9 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
      * Takes an expression and pushes all parts of it to a one dimentional array
      * @param exp An Expression
      */
-    function expToArray(exp: Expression | string | null) {
+    function expToArray(exp: Expression | null) {
 
-        if (exp && typeof exp !== "string") {
+        if (exp) {
             expToArray(exp.left);
             expToArray(exp.right);
 
@@ -34,12 +34,12 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     oppositeExists = true;
                 }
             }
-            if (!oppositeExists && exp.numberOfChar(exp.leading, "¬") % 2 === 1) {
+            if (!oppositeExists && exp.numberOfChar(exp.leading, "¬") % 2 === 1) { // Pushes the not expression
                 expressions.push(new Expression({
                     left: exp.left,
                     operator: exp.operator,
                     right: exp.right,
-                    isAtomic: exp.isAtomic
+                    atomic: exp.atomic,
                 }));
             }
             expressions.push(exp);
@@ -49,15 +49,18 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
     let numberOfAtomics = 0;
 
     for (let i = 0; i < expressions.length; i++) {
-        if (expressions[i].isAtomic) {
-            for (let j = i - 1; j >= 0; j--) {
+        if (expressions[i].isAtomic()) {
+            let exists = false;
+            for (let j = i - 1; !exists && j >= 0; j--) {
 
-                if (expressions[j].isAtomic && expressions[i].equalsAndOpposite(expressions[j])) {
-                    numberOfAtomics--;
-                    break;
+                // If the opposite expression already exists
+                if (expressions[j].isAtomic() && expressions[i].equalsAndOpposite(expressions[j])) {
+                    exists = true;
                 }
             }
-            numberOfAtomics++;
+            if (!exists) {
+                numberOfAtomics++;
+            }
         }
     }
 
@@ -92,13 +95,11 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         tBodyMatrix[row] = [];
 
         // Finds the location of an expression, then checks the value
-        const findExp = (exp: Expression | string | null): boolean => {
-            if (typeof exp === "object") {
-                for (let i = 0; i < expressions.length; i++) {
+        const findExp = (exp: Expression | null): boolean => {
+            for (let i = 0; i < expressions.length; i++) {
 
-                    if (exp?.equals(expressions[i])) {
-                        return tBodyMatrix[row][i] === "T";
-                    }
+                if (exp?.equals(expressions[i])) {
+                    return tBodyMatrix[row][i] === "T";
                 }
             }
             return false;
@@ -107,7 +108,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
         for (let column = 0; column < expressions.length; column++) {
             const exp = expressions[column];
 
-            if (exp.isAtomic && exp.numberOfChar(exp.leading, "¬") % 2 === 0) { // If not using 'not' operator
+            if (exp.isAtomic() && exp.numberOfChar(exp.leading, "¬") % 2 === 0) { // If not using 'not' operator
 
                 tBodyMatrix[row][column] = truthMatrix[truthMatrixRowIndex][truthMatrixColIndex] ? "T" : "F";
 
@@ -118,13 +119,13 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
                     truthMatrixColIndex = (truthMatrixColIndex + 1) % truthMatrix[truthMatrixRowIndex].length;
                 }
             }
-            else if (exp.isAtomic) { // If using 'not' operator
+            else if (exp.isAtomic()) { // If using 'not' operator
                 tBodyMatrix[row][column] = findExp(
                     new Expression({
                         left: exp.left,
                         operator: exp.operator,
                         right: exp.right,
-                        isAtomic: exp.isAtomic
+                        atomic: exp.atomic,
                     })
                 ) ? "F" : "T";
             }
@@ -135,7 +136,7 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
 
                 let boolExp = exp.solve(left, right);
 
-                if (exp.leading.includes("¬")) {
+                if (exp.isNot()) {
                     boolExp = !boolExp;
                 }
 
