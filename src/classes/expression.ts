@@ -1,12 +1,26 @@
 import { Operator } from "./operator";
 
+interface ExpressionInterface {
+    leading?: string,
+    left?: Expression | string | null,
+    operator?: Operator | null,
+    right?: Expression | string | null,
+    trailing?: string,
+    isAtomic?: boolean,
+}
+
 export class Expression {
 
-    public constructor(left: Expression | string | null, operator: Operator | null, right: Expression | string | null, {
-        leading = "",
-        trailing = "",
-        isAtomic = false,
-    }) {
+    public constructor(
+        {
+            left = null,
+            operator = null,
+            right = null,
+            leading = "",
+            trailing = "",
+            isAtomic = false,
+        }: ExpressionInterface) {
+
         this.leading = leading;
         this.left = left;
         this.operator = operator;
@@ -15,12 +29,13 @@ export class Expression {
         this.isAtomic = isAtomic;
     }
 
-    leading: string;
-    left: Expression | string | null;
-    operator: Operator | null;
-    right: Expression | string | null;
-    trailing: string;
-    isAtomic: boolean;
+    leading;
+    left;
+    operator;
+    right;
+    trailing;
+    isAtomic;
+    // TODO add a atomic: string and remove string type from left and right
 
     // TODO add weight to each Expression used to compare and sort, using the "value" of child Expressions, atomic uses string value
 
@@ -73,10 +88,20 @@ export class Expression {
      */
     public equalsAndOpposite(other: Expression | string): boolean {
         if (this.numberOfChar(this.leading, "¬") % 2 === 1) {
-            return new Expression(this.left, this.operator, this.right, { isAtomic: this.isAtomic }).equals(other);
+            return new Expression({
+                left: this.left,
+                operator: this.operator,
+                right: this.right,
+                isAtomic: this.isAtomic
+            }).equals(other);
         }
         else if (typeof other === "object" && this.numberOfChar(other.leading, "¬") % 2 === 1) {
-            return new Expression(other.left, other.operator, other.right, { isAtomic: other.isAtomic }).equals(this);
+            return new Expression({
+                left: other.left,
+                operator: other.operator,
+                right: other.right,
+                isAtomic: other.isAtomic
+            }).equals(this);
         }
         return false;
     }
@@ -158,8 +183,8 @@ export class Expression {
             !this.left.isAtomic && !this.right.isAtomic) {
 
             const setObjects = (left: Expression | string, right: Expression | string, common: Expression | string | null): void => {
-                this.right = new Expression(left, this.operator, right, {});
-                this.left = new Expression(common, null, null, { isAtomic: true });
+                this.right = new Expression({ left: left, operator: this.operator, right: right });
+                this.left = new Expression({ left: common, isAtomic: true });
                 this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
 
                 if (this.operator !== Operator.and) {
@@ -227,7 +252,10 @@ export class Expression {
                 if (newOperator !== null) {
                     this.left._removeNot();
                     this.right._removeNot();
-                    this.left = new Expression(this.left, newOperator, this.right, {
+                    this.left = new Expression({
+                        left: this.left,
+                        operator: newOperator,
+                        right: this.right,
                         leading: "¬(",
                         trailing: ")"
                     });

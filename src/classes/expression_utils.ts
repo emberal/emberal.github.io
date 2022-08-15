@@ -12,7 +12,7 @@ export function simplify(stringExp: string, simplify: boolean): Expression {
 
 function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
-    let exp = new Expression(null, null, null, {});
+    let exp = new Expression({});
 
     // Basis
     if (isAtomic(stringExp)) {

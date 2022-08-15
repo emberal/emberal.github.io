@@ -3,13 +3,19 @@ import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
 test("Equals", () => {
-    const innerLeft = new Expression("A", null, null, { isAtomic: true });
-    const notInnerLeft = new Expression("A", null, null, { isAtomic: true, leading: "¬" });
-    const innerRight = new Expression("B", null, null, { isAtomic: true });
+    const innerLeft = new Expression({ left: "A", isAtomic: true });
+    const notInnerLeft = new Expression({ left: "A", isAtomic: true, leading: "¬" });
+    const innerRight = new Expression({ left: "B", isAtomic: true });
 
-    const exp1 = new Expression(innerLeft, Operator.and, innerRight, {});
-    const exp2 = new Expression(innerLeft, Operator.and, innerRight, {});
-    const notExp1 = new Expression(innerLeft, Operator.and, innerRight, { leading: "¬(", trailing: ")" });
+    const exp1 = new Expression({ left: innerLeft, operator: Operator.and, right: innerRight });
+    const exp2 = new Expression({ left: innerLeft, operator: Operator.and, right: innerRight });
+    const notExp1 = new Expression({
+        left: innerLeft,
+        operator: Operator.and,
+        right: innerRight,
+        leading: "¬(",
+        trailing: ")"
+    });
 
     expect(exp1.equals(exp2)).toBeTruthy();
     expect(exp2.equals(exp1)).toBeTruthy();
@@ -85,11 +91,17 @@ test("Several", () => {
 });
 
 test("Always true / false", () => {
-    const innerA = new Expression("A", null, null, { isAtomic: true });
-    const innerB = new Expression("B", null, null, { isAtomic: true });
-    const aAndB = new Expression(innerA, Operator.and, innerB, {});
-    const notAAndB = new Expression(innerB, Operator.and, innerB, { leading: "¬(", trailing: ")" });
-    const alwaysFalse = new Expression(aAndB, Operator.and, notAAndB, {});
+    const innerA = new Expression({ left: "A", isAtomic: true });
+    const innerB = new Expression({ left: "B", isAtomic: true });
+    const aAndB = new Expression({ left: innerA, operator: Operator.and, right: innerB });
+    const notAAndB = new Expression({
+        left: innerB,
+        operator: Operator.and,
+        right: innerB,
+        leading: "¬(",
+        trailing: ")"
+    });
+    const alwaysFalse = new Expression({ left: aAndB, operator: Operator.and, right: notAAndB });
 
     expect(simplify("A&¬A", true)?.toString()).toBe("A & ¬A");
     expect(simplify("A|¬A", true)?.toString()).toBe("A | ¬A");

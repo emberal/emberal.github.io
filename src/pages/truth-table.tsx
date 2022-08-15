@@ -24,7 +24,7 @@ const TruthTablePage = ({}: TruthTablePage) => {
      * The state element used to store the simplified string, "empty string" by default
      */
     const [search, setSearch] = React.useState("");
-    const expression = React.useRef(new Expression(null, null, null, {}));
+    const expression = React.useRef(new Expression({}));
 
     /**
      * If there's an error, it will be stored in this state, otherwise it will be "empty string"
@@ -129,17 +129,15 @@ const TruthTablePage = ({}: TruthTablePage) => {
                 <div className={ "max-w-2xl mx-auto" }>
                     <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
                                 flex flex-col gap-1` }>
-                        <MyDisclosure title={ t("howTo") }
-                                      content={ t("truthTableHowTo") }
-                        />
+                        <MyDisclosure title={ t("howTo") } content={ <p>{ t("truthTableHowTo") }</p> }/>
                         <MyDisclosure title={ t("keywords") }
                                       content={
-                                          <div>
+                                          <>
                                               <p>{ t("not") }</p>
                                               <p>{ t("and") }</p>
                                               <p>{ t("or") }</p>
                                               <p>{ t("implication") }</p>
-                                          </div>
+                                          </>
                                       }
                         />
                     </div>
