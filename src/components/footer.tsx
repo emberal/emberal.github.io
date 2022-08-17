@@ -10,7 +10,7 @@ interface Footer {
     className?: string,
 }
 
-const Footer = ({ className }: Footer) => {
+const Footer = ({ className }: Footer) => { // FIXME websites switches to en, when no is selected
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();

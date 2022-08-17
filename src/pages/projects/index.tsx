@@ -20,7 +20,7 @@ export const splitCSV = (csv: string) => csv.split(";");
  * @returns {JSX.Element} A page
  * @constructor
  */
-const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => { // TODO search
+const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => {
 
     const { t } = useTranslation();
 
@@ -144,7 +144,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param title The title of the post
      * @param tags The tags of the post, as a string, could be in csv format
      */
-    function searchTitleAndTags(title: string | undefined, tags: string | null | undefined): boolean {
+    function searchTitleAndTags(title: string | null | undefined, tags: string | null | undefined): boolean {
         return title?.toLowerCase().includes(searchState) || tags?.toLowerCase().includes(searchState) || false;
     }
 
@@ -154,7 +154,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param title The title of the post
      * @param tags The tags of the post, as a string, could be in csv format
      */
-    function containsSearchString(title: string | undefined, tags: string | null | undefined): boolean { // TODO search description
+    function containsSearchString(title: string | null | undefined, tags: string | null | undefined): boolean { // TODO search description
         return searchTitleAndTags(title, tags) && (selectedTag === ALL_TAG || contains(tags, selectedTag));
     }
 
@@ -173,8 +173,11 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             headline={ t("myProjects") }
             description={ t("projectsByMe") }
             current={ Links.projects }>
-            <div>
-                <Search onChange={ onSearch } collapse={ true } searchWithoutFocus={ true }/>
+            <div className={"relative"}>
+                <div className={ `absolute right-0 sm:-top-9 -top-24 flex flex-row items-center` /*FIXME search at wrong location on big screens*/ }>
+                    <Search onChange={ onSearch } collapse={ true }
+                            searchWithoutFocus={ true }/>
+                </div>
 
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
@@ -187,10 +190,10 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
 
                                         <ProjectCard
                                             title={ node.frontmatter.title }
-                                            slug={ node.slug }
+                                            slug={ node.fields.slug }
                                             description={ node.frontmatter.description }
                                             tags={ node.frontmatter.tags }
-                                            timeToRead={ node.timeToRead }
+                                            timeToRead={ node.fields.timeToRead.text }
                                             source={ node.frontmatter.source }
                                             image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
                                             imageAlt={ node.frontmatter.hero_image_alt }/>
@@ -237,8 +240,12 @@ export const query = graphql`
                     uploaded
                 }
                 id
-                slug
-                timeToRead
+                fields {
+                    slug
+                    timeToRead {
+                        text
+                    }
+                }
             }
         }
     }
