@@ -185,8 +185,7 @@ const Layout = (
                  className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
                 <div className={ ` ${ titleAndNavClass }` }>
                     <h1
-                        className={ `bg-clip-text text-transparent bg-gradient-to-r from-primaryPurple to-primaryPink
-                         font-bold text-4xl mb-6 pt-6` }>
+                        className={ `text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6` }>
                         { (headline) ? headline : title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens*/ }
@@ -197,7 +196,7 @@ const Layout = (
                                     <li key={ link.to } className={ "w-fit text-lg" }>
                                         <Link
                                             className={ `text-primaryPurple dark:text-primaryPink hover:underline 
-                                        ${ current === link.to ? "after:content-['<']" : "" }` }
+                                        ${ current === link.to && "after:content-['<']" }` }
                                             to={ link.to }> { link.name }
                                         </Link>
                                     </li>
