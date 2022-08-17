@@ -240,7 +240,7 @@ export const query = graphql`
                 fields {
                     slug
                     timeToRead {
-                        text
+                        time
                     }
                 }
             }

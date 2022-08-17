@@ -4382,7 +4382,7 @@ type ProjectPageQueryVariables = Exact<{
 }>;
 
 
-type ProjectPageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly frontmatter: { readonly title: string | null, readonly description: string | null, readonly tags: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly uploaded: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null, readonly fields: { readonly slug: string | null, readonly timeToRead: { readonly text: string | null } | null } | null }> } };
+type ProjectPageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly frontmatter: { readonly title: string | null, readonly description: string | null, readonly tags: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly uploaded: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null, readonly fields: { readonly slug: string | null, readonly timeToRead: { readonly time: number | null } | null } | null }> } };
 
 
 }
