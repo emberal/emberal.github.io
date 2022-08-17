@@ -92,7 +92,7 @@ module.exports = {
                 languages: [`en`, `no`],
                 defaultLanguage: `en`,
                 fallbackLanguage: 'no',
-                redirect: false,
+                redirect: true,
                 siteUrl: `https://h600878.github.io/`,
                 i18nextOptions: {
                     interpolation: {
