@@ -80,7 +80,6 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
     const [isOverflowing, setIsOverflowing] = React.useState(false);
 
     const [isScrollLeft, setIsScrollLeft] = React.useState(true);
-
     const [isScrollRight, setIsScrollRight] = React.useState(false);
 
 
@@ -176,11 +175,9 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
         }
     }
 
-    function onScroll(): void { // TODO throttle
+    function onScroll(): void {
         checkScrollLeft();
         checkScrollRight();
-        // throttle(checkScrollLeft, 100);
-        // throttle(checkScrollRight, 100);
     }
 
     React.useEffect(() => {
@@ -189,7 +186,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
         }
     }, []);
 
-    const chevronClasses = `text-primaryPink animate-pulse bg-black-see-through-50 border-rounded border-transparent overflow-auto
+    const chevronClasses = `text-primaryPink animate-pulse bg-black-transparent-1/2 border-rounded border-transparent overflow-auto
     cursor-pointer`;
 
     return (
@@ -197,7 +194,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
             <ScrollContainer
                 innerRef={ scrollContainer }
                 vertical={ false }
-                onScroll={ onScroll }
+                onScroll={ throttle(onScroll, 100) }
                 hideScrollbars={ false }
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none]
                  cursor-grab` : "flex-wrap" } ${ className }` }>

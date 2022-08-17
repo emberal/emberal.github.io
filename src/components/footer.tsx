@@ -10,7 +10,7 @@ interface Footer {
     className?: string,
 }
 
-const Footer = ({ className }: Footer) => {
+const Footer = ({ className }: Footer) => { // FIXME Norwegian changes to english, even though it says no in localStorage
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();

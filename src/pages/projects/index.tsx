@@ -164,7 +164,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @returns {string[]} An array of strings without any 'null' or 'undefined' values
      */
     function removeNullValues(arr: any[]): any[] {
-        return arr.filter((element: string | null | undefined) => element !== null && element) as string[];
+        return arr.filter((element: string | null | undefined) => element && element) as string[];
     }
 
     return (
@@ -174,10 +174,8 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             description={ t("projectsByMe") }
             current={ Links.projects }>
             <div className={ "relative" }>
-                <div className={ `absolute right-0 sm:-top-9 -top-24 flex flex-row items-center` }>
-                    <Search onChange={ onSearch } collapse={ true } searchWithoutFocus={ true }/>
-                </div>
-
+                <Search onChange={ onSearch } collapse={ true }
+                        searchWithoutFocus={ true }/>
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
