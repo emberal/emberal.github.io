@@ -26,7 +26,7 @@
   "showMoreTags": "Show more tags",
   "showLessTags": "Show less tags",
   "all": "All",
-  "dragToScroll": "Drag to scroll",
+  "clickToScroll": "Click or drag to scroll (shift + scroll)",
   "noResults": "No results",
   "search": "Search",
   "clear": "Clear search",

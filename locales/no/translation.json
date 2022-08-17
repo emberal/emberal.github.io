@@ -25,7 +25,7 @@
   "showMoreTags": "Vis flere tagger",
   "showLessTags": "vis færre tagger",
   "all": "Alle",
-  "dragToScroll": "Dra for å scrolle",
+  "clickToScroll": "Trykk eller dra for å scrolle (shift + scroll)",
   "noResults": "Ingen resultater",
   "search": "Søk",
   "clear": "Tøm søk",

@@ -1,7 +1,8 @@
 import * as React from "react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import ScrollContainer from "react-indiana-drag-scroll";
-import { Move } from "react-feather";
+import { ChevronLeft, ChevronRight } from "react-feather";
+import { throttle } from "lodash";
 
 interface Tag {
     name?: string,
@@ -76,15 +77,22 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
 
     const [hideTagsText, setHideTagsText] = React.useState(t("showMore"));
 
+    const [isOverflowing, setIsOverflowing] = React.useState(false);
+
+    const [isScrollLeft, setIsScrollLeft] = React.useState(true);
+
+    const [isScrollRight, setIsScrollRight] = React.useState(false);
+
+
     /**
      * Update the tags and tagsText states, to the opposite one
      */
     function toggleTags() {
         setHideTags(!hideTags);
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
+
     }
 
-    const [isOverflowing, setIsOverflowing] = React.useState(false);
     React.useEffect(() => {
         if (id) {
             setIsOverflowing(isOverflowingHorizontally(document.getElementById(id)));
@@ -107,7 +115,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                     }
                 }
                 for (let i = 1; i < children.length - 1; i++) {
-                    if (children[i] !== null) {
+                    if (children[i]) {
                         sum += children[i].clientWidth + 9; // The extra width is for the margin in between and borders
                     }
 
@@ -122,17 +130,74 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
 
     const scrollContainer = React.useRef<HTMLElement>(null);
 
+    function scrollLeft(): void {
+        if (scrollContainer.current) {
+            scrollContainer.current.scrollLeft -= 400;
+            checkScrollLeft();
+        }
+    }
+
+    function scrollRight(): void {
+        if (scrollContainer.current) {
+            scrollContainer.current.scrollLeft += 400;
+            checkScrollRight();
+        }
+    }
+
+    function isLeft(): boolean {
+        return scrollContainer.current !== null && scrollContainer.current.scrollLeft <= 3;
+    }
+
+    function isRight(): boolean {
+        return scrollContainer.current !== null && scrollContainer.current.scrollLeft >= scrollContainer.current.scrollWidth - 660;
+    }
+
+    function checkScrollLeft(): void {
+        if (scrollContainer.current) {
+            const left = isLeft();
+            if (isScrollLeft !== left) {
+                setIsScrollLeft(left);
+            }
+            if (!isRight()) {
+                setIsScrollRight(false);
+            }
+        }
+    }
+
+    function checkScrollRight(): void {
+        if (scrollContainer.current) {
+            const right = isRight();
+            if (isScrollRight !== right) {
+                setIsScrollRight(right);
+            }
+            if (!isLeft()) {
+                setIsScrollLeft(false);
+            }
+        }
+    }
+
+    function onScroll(): void { // TODO throttle
+        checkScrollLeft();
+        checkScrollRight();
+        // throttle(checkScrollLeft, 100);
+        // throttle(checkScrollRight, 100);
+    }
+
     React.useEffect(() => {
         if (scrollContainer.current) {
             scrollContainer.current.scrollTo(0, 0);
         }
     }, []);
 
+    const chevronClasses = `text-primaryPink animate-pulse bg-black-see-through-50 border-rounded border-transparent overflow-auto
+    cursor-pointer`;
+
     return (
         <div id={ id }>
             <ScrollContainer
                 innerRef={ scrollContainer }
                 vertical={ false }
+                onScroll={ onScroll }
                 hideScrollbars={ false }
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none]
                  cursor-grab` : "flex-wrap" } ${ className }` }>
@@ -162,16 +227,13 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                      className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
                                     { hideTags ? t("showMore") : null }
                                 </div>
-                                <div className={ `${ hideTags && "absolute right-0 flex flex-row gap-5" }` }>
+                                <div
+                                    className={ `${ hideTags && "absolute right-0 flex flex-row gap-3 items-center" }` }>
                                     {
-                                        hideTags && !("ontouchstart" in document.documentElement) ?
-                                            <div className={ "rotate-90 pointer-events-none" }
-                                                 title={ t("dragToScroll") }
-                                                 role={ "tooltip" }>
-                                                <Move
-                                                    className={ "animate-bounce w-6 h-6 dark:text-[rgba(255,255,255,0.5)] " +
-                                                        "text-[rgba(0,0,0,0.5)]" }/>
-                                            </div>
+                                        hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight ?
+                                            <button title={ t("clickToScroll") }>
+                                                <ChevronRight className={ chevronClasses } onClick={ scrollRight }/>
+                                            </button>
                                             : null
                                     }
                                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
@@ -179,14 +241,21 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                          className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
                                          "bg-white dark:bg-gray-900" } shadow-sm shadow-primaryPurple` }/>
                                 </div>
+                                {
+                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft ?
+                                        <button className={ "absolute left-0" } title={ t("clickToScroll") }>
+                                            <ChevronLeft className={ chevronClasses + " mt-[1px]" }
+                                                         onClick={ scrollLeft }/>
+                                        </button> : null
+                                }
                             </>
                             : null
                     }
                 </>
             </ScrollContainer>
         </div>
-    )
-};
+    );
+}
 
 interface TagsRow {
     tags?: string[],

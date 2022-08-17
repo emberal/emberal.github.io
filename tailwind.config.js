@@ -6,6 +6,7 @@ module.exports = {
             colors: {
                 primaryPink: "#c17aff",
                 primaryPurple: "#9e24ff",
+                "black-see-through-50": "rgba(0,0,0,0.5)",
             },
         },
     },
