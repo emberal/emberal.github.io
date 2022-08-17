@@ -173,8 +173,10 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
             headline={ t("myProjects") }
             description={ t("projectsByMe") }
             current={ Links.projects }>
-            <div>
-                <Search onChange={ onSearch } collapse={ true } searchWithoutFocus={ true }/>
+            <div className={ "relative" }>
+                <div className={ `absolute right-0 sm:-top-9 -top-24 flex flex-row items-center` }>
+                    <Search onChange={ onSearch } collapse={ true } searchWithoutFocus={ true }/>
+                </div>
 
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
