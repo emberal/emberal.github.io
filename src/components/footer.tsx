@@ -28,7 +28,7 @@ const Footer = ({ className }: Footer) => { // FIXME Norwegian changes to englis
         const item = localStorage.getItem("lang-follow-browser");
         let langAuto = false;
 
-        if (item !== null) {
+        if (item) {
             langAuto = item === "true";
         }
         if (langAuto) {
@@ -81,21 +81,20 @@ const Footer = ({ className }: Footer) => { // FIXME Norwegian changes to englis
                                     { (active) => (
                                         <div className={ "w-max flex items-center" }>
                                             <span>{ lang.icon }</span>
-                                            { lang.lang === 'auto' ?
-                                                // @ts-ignore // TODO error for some reason
-                                                <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                         to={ originalPath } onClick={ setAuto }
-                                                         language={
-                                                             navigator.language === "nb" || navigator.language === "nn" ||
-                                                             navigator.language === "no" ? langs.nor : langs.eng }>
-                                                    { lang.text }
-                                                </I18Link> :
-                                                // @ts-ignore // TODO error for some reason
-                                                <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                         to={ originalPath } language={ lang.lang }
-                                                         onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
-                                                    { lang.text }
-                                                </I18Link>
+                                            {
+                                                lang.lang === 'auto' ?
+                                                    <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                             to={ originalPath } onClick={ setAuto }
+                                                             language={
+                                                                 navigator.language === "nb" || navigator.language === "nn" ||
+                                                                 navigator.language === "no" ? langs.nor : langs.eng }>
+                                                        { lang.text }
+                                                    </I18Link> :
+                                                    <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                             to={ originalPath } language={ lang.lang }
+                                                             onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                                        { lang.text }
+                                                    </I18Link>
                                             }
                                         </div>
                                     ) }
