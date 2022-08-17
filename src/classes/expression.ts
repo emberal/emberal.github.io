@@ -137,10 +137,7 @@ export class Expression {
                 exp.trailing = "";
             };
 
-            if (this.operator === Operator.and && !this.isNot()) {
-                removeBothSides(this);
-            }
-            else if (this.isAtomic()) { // This expression is atomic
+            if (this.operator === Operator.and && !this.isNot() || this.isAtomic()) {
                 removeBothSides(this);
             }
             else if (this.left.isAtomic() || this.right.isAtomic()) { // One is atomic, and the other is not

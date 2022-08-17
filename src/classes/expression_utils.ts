@@ -20,7 +20,6 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
             stringExp = stringExp.replace("¬", "");
             exp.leading += "¬";
         }
-        // exp.left = stringExp;
         exp.atomic = stringExp;
         if (simplify) {
             exp.mergeNot();
