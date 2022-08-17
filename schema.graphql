@@ -446,7 +446,7 @@ type ImageSharp implements Node {
         Ignored if layout = FLUID.
         """
         width: Int
-    ): JSON!
+    ): GatsbyImageData!
     id: ID!
     internal: Internal!
     original: ImageSharpOriginal
@@ -532,6 +532,7 @@ type ImageSharpResize {
 type Internal {
     content: String
     contentDigest: String!
+    contentFilePath: String
     description: String
     fieldOwners: [String]
     ignoreType: Boolean
@@ -584,23 +585,16 @@ type LocaleGroupConnection {
 }
 
 type Mdx implements Node {
-    body: String!
+    body: String
     children: [Node!]!
-    excerpt(pruneLength: Int = 140, truncate: Boolean = false): String!
-    fileAbsolutePath: String!
+    excerpt(pruneLength: Int = 140): String
+    fields: MdxFields
     frontmatter: MdxFrontmatter
     gatsbyPath(filePath: String): String
-    headings(depth: HeadingsMdx): [MdxHeadingMdx]
-    html: String
     id: ID!
     internal: Internal!
-    mdxAST: JSON
     parent: Node
-    rawBody: String!
-    slug: String
     tableOfContents(maxDepth: Int): JSON
-    timeToRead: Int
-    wordCount: MdxWordCount
 }
 
 type MdxConnection {
@@ -621,13 +615,35 @@ type MdxEdge {
     previous: Mdx
 }
 
+type MdxFields {
+    slug: String
+    timeToRead: MdxFieldsTimeToRead
+}
+
+type MdxFieldsTimeToRead {
+    minutes: Float
+    text: String
+    time: Int
+    words: Int
+}
+
 type MdxFrontmatter {
     description: String
     hero_image: File
     hero_image_alt: String
     source: String
-    title: String!
-    type: String
+    tags: String
+    title: String
+    uploaded(
+        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
+        difference: String,
+        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
+        formatString: String,
+        "Returns a string generated with Moment.js' `fromNow` function"
+        fromNow: Boolean,
+        "Configures the locale Moment.js will use to format the date."
+        locale: String
+    ): Date
 }
 
 type MdxGroupConnection {
@@ -642,17 +658,6 @@ type MdxGroupConnection {
     pageInfo: PageInfo!
     sum(field: MdxFieldsEnum!): Float
     totalCount: Int!
-}
-
-type MdxHeadingMdx {
-    depth: Int
-    value: String
-}
-
-type MdxWordCount {
-    paragraphs: Int
-    sentences: Int
-    words: Int
 }
 
 type PageInfo {
@@ -676,18 +681,16 @@ type Query {
     allSiteFunction(filter: SiteFunctionFilterInput, limit: Int, skip: Int, sort: SiteFunctionSortInput): SiteFunctionConnection!
     allSitePage(filter: SitePageFilterInput, limit: Int, skip: Int, sort: SitePageSortInput): SitePageConnection!
     allSitePlugin(filter: SitePluginFilterInput, limit: Int, skip: Int, sort: SitePluginSortInput): SitePluginConnection!
-    allStaticImage(filter: StaticImageFilterInput, limit: Int, skip: Int, sort: StaticImageSortInput): StaticImageConnection!
     directory(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): Directory
     file(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, childImageSharp: ImageSharpFilterInput, childLocale: LocaleFilterInput, childMdx: MdxFilterInput, children: NodeFilterListInput, childrenImageSharp: ImageSharpFilterListInput, childrenLocale: LocaleFilterListInput, childrenMdx: MdxFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, gid: IntQueryOperatorInput, id: StringQueryOperatorInput, ino: FloatQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, publicURL: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): File
-    imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, gatsbyImageData: JSONQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput): ImageSharp
+    imageSharp(children: NodeFilterListInput, fixed: ImageSharpFixedFilterInput, fluid: ImageSharpFluidFilterInput, gatsbyImageData: GatsbyImageDataQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, original: ImageSharpOriginalFilterInput, parent: NodeFilterInput, resize: ImageSharpResizeFilterInput): ImageSharp
     locale(children: NodeFilterListInput, data: StringQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, language: StringQueryOperatorInput, ns: StringQueryOperatorInput, parent: NodeFilterInput): Locale
-    mdx(body: StringQueryOperatorInput, children: NodeFilterListInput, excerpt: StringQueryOperatorInput, fileAbsolutePath: StringQueryOperatorInput, frontmatter: MdxFrontmatterFilterInput, gatsbyPath: StringQueryOperatorInput, headings: MdxHeadingMdxFilterListInput, html: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, mdxAST: JSONQueryOperatorInput, parent: NodeFilterInput, rawBody: StringQueryOperatorInput, slug: StringQueryOperatorInput, tableOfContents: JSONQueryOperatorInput, timeToRead: IntQueryOperatorInput, wordCount: MdxWordCountFilterInput): Mdx
-    site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, jsxRuntime: StringQueryOperatorInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput, trailingSlash: StringQueryOperatorInput): Site
+    mdx(body: StringQueryOperatorInput, children: NodeFilterListInput, excerpt: StringQueryOperatorInput, fields: MdxFieldsFilterInput, frontmatter: MdxFrontmatterFilterInput, gatsbyPath: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput, tableOfContents: JSONQueryOperatorInput): Mdx
+    site(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, graphqlTypegen: SiteGraphqlTypegenFilterInput, host: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, jsxRuntime: StringQueryOperatorInput, parent: NodeFilterInput, pathPrefix: StringQueryOperatorInput, polyfill: BooleanQueryOperatorInput, port: IntQueryOperatorInput, siteMetadata: SiteSiteMetadataFilterInput, trailingSlash: StringQueryOperatorInput): Site
     siteBuildMetadata(buildTime: DateQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, parent: NodeFilterInput): SiteBuildMetadata
     siteFunction(absoluteCompiledFilePath: StringQueryOperatorInput, children: NodeFilterListInput, functionRoute: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, matchPath: StringQueryOperatorInput, originalAbsoluteFilePath: StringQueryOperatorInput, originalRelativeFilePath: StringQueryOperatorInput, parent: NodeFilterInput, pluginName: StringQueryOperatorInput, relativeCompiledFilePath: StringQueryOperatorInput): SiteFunction
     sitePage(children: NodeFilterListInput, component: StringQueryOperatorInput, componentChunkName: StringQueryOperatorInput, id: StringQueryOperatorInput, internal: InternalFilterInput, internalComponentName: StringQueryOperatorInput, matchPath: StringQueryOperatorInput, pageContext: JSONQueryOperatorInput, parent: NodeFilterInput, path: StringQueryOperatorInput, pluginCreator: SitePluginFilterInput): SitePage
     sitePlugin(browserAPIs: StringQueryOperatorInput, children: NodeFilterListInput, id: StringQueryOperatorInput, internal: InternalFilterInput, name: StringQueryOperatorInput, nodeAPIs: StringQueryOperatorInput, packageJson: JSONQueryOperatorInput, parent: NodeFilterInput, pluginFilepath: StringQueryOperatorInput, pluginOptions: JSONQueryOperatorInput, resolve: StringQueryOperatorInput, ssrAPIs: StringQueryOperatorInput, version: StringQueryOperatorInput): SitePlugin
-    staticImage(absolutePath: StringQueryOperatorInput, accessTime: DateQueryOperatorInput, atime: DateQueryOperatorInput, atimeMs: FloatQueryOperatorInput, base: StringQueryOperatorInput, birthTime: DateQueryOperatorInput, birthtime: DateQueryOperatorInput, birthtimeMs: FloatQueryOperatorInput, blksize: IntQueryOperatorInput, blocks: IntQueryOperatorInput, changeTime: DateQueryOperatorInput, children: NodeFilterListInput, ctime: DateQueryOperatorInput, ctimeMs: FloatQueryOperatorInput, dev: IntQueryOperatorInput, dir: StringQueryOperatorInput, ext: StringQueryOperatorInput, extension: StringQueryOperatorInput, id: StringQueryOperatorInput, ino: IntQueryOperatorInput, internal: InternalFilterInput, mode: IntQueryOperatorInput, modifiedTime: DateQueryOperatorInput, mtime: DateQueryOperatorInput, mtimeMs: FloatQueryOperatorInput, name: StringQueryOperatorInput, nlink: IntQueryOperatorInput, parent: NodeFilterInput, prettySize: StringQueryOperatorInput, rdev: IntQueryOperatorInput, relativeDirectory: StringQueryOperatorInput, relativePath: StringQueryOperatorInput, root: StringQueryOperatorInput, size: IntQueryOperatorInput, sourceInstanceName: StringQueryOperatorInput, uid: IntQueryOperatorInput): StaticImage
 }
 
 type Site implements Node {
@@ -702,6 +705,7 @@ type Site implements Node {
         locale: String
     ): Date
     children: [Node!]!
+    graphqlTypegen: SiteGraphqlTypegen
     host: String
     id: ID!
     internal: Internal!
@@ -827,6 +831,10 @@ type SiteFunctionGroupConnection {
     totalCount: Int!
 }
 
+type SiteGraphqlTypegen {
+    typesOutputPath: String
+}
+
 type SiteGroupConnection {
     distinct(field: SiteFieldsEnum!): [String!]!
     edges: [SiteEdge!]!
@@ -942,149 +950,6 @@ type SiteSiteMetadata {
     title: String
 }
 
-type StaticImage implements Node {
-    absolutePath: String
-    accessTime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    atime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    atimeMs: Float
-    base: String
-    birthTime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    birthtime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    birthtimeMs: Float
-    blksize: Int
-    blocks: Int
-    changeTime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    children: [Node!]!
-    ctime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    ctimeMs: Float
-    dev: Int
-    dir: String
-    ext: String
-    extension: String
-    id: ID!
-    ino: Int
-    internal: Internal!
-    mode: Int
-    modifiedTime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    mtime(
-        "Returns the difference between this date and the current time. Defaults to \"milliseconds\" but you can also pass in as the measurement \"years\", \"months\", \"weeks\", \"days\", \"hours\", \"minutes\", and \"seconds\"."
-        difference: String,
-        "Format the date using Moment.js' date tokens, e.g. `date(formatString: \"YYYY MMMM DD\")`. See https://momentjs.com/docs/#/displaying/format/ for documentation for different tokens."
-        formatString: String,
-        "Returns a string generated with Moment.js' `fromNow` function"
-        fromNow: Boolean,
-        "Configures the locale Moment.js will use to format the date."
-        locale: String
-    ): Date
-    mtimeMs: Float
-    name: String
-    nlink: Int
-    parent: Node
-    prettySize: String
-    rdev: Int
-    relativeDirectory: String
-    relativePath: String
-    root: String
-    size: Int
-    sourceInstanceName: String
-    uid: Int
-}
-
-type StaticImageConnection {
-    distinct(field: StaticImageFieldsEnum!): [String!]!
-    edges: [StaticImageEdge!]!
-    group(field: StaticImageFieldsEnum!, limit: Int, skip: Int): [StaticImageGroupConnection!]!
-    max(field: StaticImageFieldsEnum!): Float
-    min(field: StaticImageFieldsEnum!): Float
-    nodes: [StaticImage!]!
-    pageInfo: PageInfo!
-    sum(field: StaticImageFieldsEnum!): Float
-    totalCount: Int!
-}
-
-type StaticImageEdge {
-    next: StaticImage
-    node: StaticImage!
-    previous: StaticImage
-}
-
-type StaticImageGroupConnection {
-    distinct(field: StaticImageFieldsEnum!): [String!]!
-    edges: [StaticImageEdge!]!
-    field: String!
-    fieldValue: String
-    group(field: StaticImageFieldsEnum!, limit: Int, skip: Int): [StaticImageGroupConnection!]!
-    max(field: StaticImageFieldsEnum!): Float
-    min(field: StaticImageFieldsEnum!): Float
-    nodes: [StaticImage!]!
-    pageInfo: PageInfo!
-    sum(field: StaticImageFieldsEnum!): Float
-    totalCount: Int!
-}
-
 enum DirectoryFieldsEnum {
     absolutePath
     accessTime
@@ -1103,6 +968,7 @@ enum DirectoryFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -1114,6 +980,7 @@ enum DirectoryFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -1126,6 +993,7 @@ enum DirectoryFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -1145,6 +1013,7 @@ enum DirectoryFieldsEnum {
     ino
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -1164,6 +1033,7 @@ enum DirectoryFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -1175,6 +1045,7 @@ enum DirectoryFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -1187,6 +1058,7 @@ enum DirectoryFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -1224,6 +1096,7 @@ enum FileFieldsEnum {
     childImageSharp___children___id
     childImageSharp___children___internal___content
     childImageSharp___children___internal___contentDigest
+    childImageSharp___children___internal___contentFilePath
     childImageSharp___children___internal___description
     childImageSharp___children___internal___fieldOwners
     childImageSharp___children___internal___ignoreType
@@ -1258,6 +1131,7 @@ enum FileFieldsEnum {
     childImageSharp___id
     childImageSharp___internal___content
     childImageSharp___internal___contentDigest
+    childImageSharp___internal___contentFilePath
     childImageSharp___internal___description
     childImageSharp___internal___fieldOwners
     childImageSharp___internal___ignoreType
@@ -1273,6 +1147,7 @@ enum FileFieldsEnum {
     childImageSharp___parent___id
     childImageSharp___parent___internal___content
     childImageSharp___parent___internal___contentDigest
+    childImageSharp___parent___internal___contentFilePath
     childImageSharp___parent___internal___description
     childImageSharp___parent___internal___fieldOwners
     childImageSharp___parent___internal___ignoreType
@@ -1294,6 +1169,7 @@ enum FileFieldsEnum {
     childLocale___children___id
     childLocale___children___internal___content
     childLocale___children___internal___contentDigest
+    childLocale___children___internal___contentFilePath
     childLocale___children___internal___description
     childLocale___children___internal___fieldOwners
     childLocale___children___internal___ignoreType
@@ -1307,6 +1183,7 @@ enum FileFieldsEnum {
     childLocale___id
     childLocale___internal___content
     childLocale___internal___contentDigest
+    childLocale___internal___contentFilePath
     childLocale___internal___description
     childLocale___internal___fieldOwners
     childLocale___internal___ignoreType
@@ -1321,6 +1198,7 @@ enum FileFieldsEnum {
     childLocale___parent___id
     childLocale___parent___internal___content
     childLocale___parent___internal___contentDigest
+    childLocale___parent___internal___contentFilePath
     childLocale___parent___internal___description
     childLocale___parent___internal___fieldOwners
     childLocale___parent___internal___ignoreType
@@ -1337,6 +1215,7 @@ enum FileFieldsEnum {
     childMdx___children___id
     childMdx___children___internal___content
     childMdx___children___internal___contentDigest
+    childMdx___children___internal___contentFilePath
     childMdx___children___internal___description
     childMdx___children___internal___fieldOwners
     childMdx___children___internal___ignoreType
@@ -1346,7 +1225,11 @@ enum FileFieldsEnum {
     childMdx___children___parent___children
     childMdx___children___parent___id
     childMdx___excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___fileAbsolutePath
+    childMdx___fields___slug
+    childMdx___fields___timeToRead___minutes
+    childMdx___fields___timeToRead___text
+    childMdx___fields___timeToRead___time
+    childMdx___fields___timeToRead___words
     childMdx___frontmatter___description
     childMdx___frontmatter___hero_image___absolutePath
     childMdx___frontmatter___hero_image___accessTime
@@ -1389,29 +1272,27 @@ enum FileFieldsEnum {
     childMdx___frontmatter___hero_image___uid
     childMdx___frontmatter___hero_image_alt
     childMdx___frontmatter___source
+    childMdx___frontmatter___tags
     childMdx___frontmatter___title
-    childMdx___frontmatter___type
+    childMdx___frontmatter___uploaded
     childMdx___gatsbyPath @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___headings @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___headings___depth @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___headings___value @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___html
     childMdx___id
     childMdx___internal___content
     childMdx___internal___contentDigest
+    childMdx___internal___contentFilePath
     childMdx___internal___description
     childMdx___internal___fieldOwners
     childMdx___internal___ignoreType
     childMdx___internal___mediaType
     childMdx___internal___owner
     childMdx___internal___type
-    childMdx___mdxAST
     childMdx___parent___children
     childMdx___parent___children___children
     childMdx___parent___children___id
     childMdx___parent___id
     childMdx___parent___internal___content
     childMdx___parent___internal___contentDigest
+    childMdx___parent___internal___contentFilePath
     childMdx___parent___internal___description
     childMdx___parent___internal___fieldOwners
     childMdx___parent___internal___ignoreType
@@ -1420,13 +1301,7 @@ enum FileFieldsEnum {
     childMdx___parent___internal___type
     childMdx___parent___parent___children
     childMdx___parent___parent___id
-    childMdx___rawBody
-    childMdx___slug
     childMdx___tableOfContents @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childMdx___timeToRead
-    childMdx___wordCount___paragraphs
-    childMdx___wordCount___sentences
-    childMdx___wordCount___words
     children
     childrenImageSharp
     childrenImageSharp___children
@@ -1436,6 +1311,7 @@ enum FileFieldsEnum {
     childrenImageSharp___children___id
     childrenImageSharp___children___internal___content
     childrenImageSharp___children___internal___contentDigest
+    childrenImageSharp___children___internal___contentFilePath
     childrenImageSharp___children___internal___description
     childrenImageSharp___children___internal___fieldOwners
     childrenImageSharp___children___internal___ignoreType
@@ -1470,6 +1346,7 @@ enum FileFieldsEnum {
     childrenImageSharp___id
     childrenImageSharp___internal___content
     childrenImageSharp___internal___contentDigest
+    childrenImageSharp___internal___contentFilePath
     childrenImageSharp___internal___description
     childrenImageSharp___internal___fieldOwners
     childrenImageSharp___internal___ignoreType
@@ -1485,6 +1362,7 @@ enum FileFieldsEnum {
     childrenImageSharp___parent___id
     childrenImageSharp___parent___internal___content
     childrenImageSharp___parent___internal___contentDigest
+    childrenImageSharp___parent___internal___contentFilePath
     childrenImageSharp___parent___internal___description
     childrenImageSharp___parent___internal___fieldOwners
     childrenImageSharp___parent___internal___ignoreType
@@ -1507,6 +1385,7 @@ enum FileFieldsEnum {
     childrenLocale___children___id
     childrenLocale___children___internal___content
     childrenLocale___children___internal___contentDigest
+    childrenLocale___children___internal___contentFilePath
     childrenLocale___children___internal___description
     childrenLocale___children___internal___fieldOwners
     childrenLocale___children___internal___ignoreType
@@ -1520,6 +1399,7 @@ enum FileFieldsEnum {
     childrenLocale___id
     childrenLocale___internal___content
     childrenLocale___internal___contentDigest
+    childrenLocale___internal___contentFilePath
     childrenLocale___internal___description
     childrenLocale___internal___fieldOwners
     childrenLocale___internal___ignoreType
@@ -1534,6 +1414,7 @@ enum FileFieldsEnum {
     childrenLocale___parent___id
     childrenLocale___parent___internal___content
     childrenLocale___parent___internal___contentDigest
+    childrenLocale___parent___internal___contentFilePath
     childrenLocale___parent___internal___description
     childrenLocale___parent___internal___fieldOwners
     childrenLocale___parent___internal___ignoreType
@@ -1551,6 +1432,7 @@ enum FileFieldsEnum {
     childrenMdx___children___id
     childrenMdx___children___internal___content
     childrenMdx___children___internal___contentDigest
+    childrenMdx___children___internal___contentFilePath
     childrenMdx___children___internal___description
     childrenMdx___children___internal___fieldOwners
     childrenMdx___children___internal___ignoreType
@@ -1560,7 +1442,11 @@ enum FileFieldsEnum {
     childrenMdx___children___parent___children
     childrenMdx___children___parent___id
     childrenMdx___excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___fileAbsolutePath
+    childrenMdx___fields___slug
+    childrenMdx___fields___timeToRead___minutes
+    childrenMdx___fields___timeToRead___text
+    childrenMdx___fields___timeToRead___time
+    childrenMdx___fields___timeToRead___words
     childrenMdx___frontmatter___description
     childrenMdx___frontmatter___hero_image___absolutePath
     childrenMdx___frontmatter___hero_image___accessTime
@@ -1603,29 +1489,27 @@ enum FileFieldsEnum {
     childrenMdx___frontmatter___hero_image___uid
     childrenMdx___frontmatter___hero_image_alt
     childrenMdx___frontmatter___source
+    childrenMdx___frontmatter___tags
     childrenMdx___frontmatter___title
-    childrenMdx___frontmatter___type
+    childrenMdx___frontmatter___uploaded
     childrenMdx___gatsbyPath @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___headings @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___headings___depth @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___headings___value @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___html
     childrenMdx___id
     childrenMdx___internal___content
     childrenMdx___internal___contentDigest
+    childrenMdx___internal___contentFilePath
     childrenMdx___internal___description
     childrenMdx___internal___fieldOwners
     childrenMdx___internal___ignoreType
     childrenMdx___internal___mediaType
     childrenMdx___internal___owner
     childrenMdx___internal___type
-    childrenMdx___mdxAST
     childrenMdx___parent___children
     childrenMdx___parent___children___children
     childrenMdx___parent___children___id
     childrenMdx___parent___id
     childrenMdx___parent___internal___content
     childrenMdx___parent___internal___contentDigest
+    childrenMdx___parent___internal___contentFilePath
     childrenMdx___parent___internal___description
     childrenMdx___parent___internal___fieldOwners
     childrenMdx___parent___internal___ignoreType
@@ -1634,13 +1518,7 @@ enum FileFieldsEnum {
     childrenMdx___parent___internal___type
     childrenMdx___parent___parent___children
     childrenMdx___parent___parent___id
-    childrenMdx___rawBody
-    childrenMdx___slug
     childrenMdx___tableOfContents @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    childrenMdx___timeToRead
-    childrenMdx___wordCount___paragraphs
-    childrenMdx___wordCount___sentences
-    childrenMdx___wordCount___words
     children___children
     children___children___children
     children___children___children___children
@@ -1648,6 +1526,7 @@ enum FileFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -1659,6 +1538,7 @@ enum FileFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -1671,6 +1551,7 @@ enum FileFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -1690,6 +1571,7 @@ enum FileFieldsEnum {
     ino
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -1709,6 +1591,7 @@ enum FileFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -1720,6 +1603,7 @@ enum FileFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -1732,6 +1616,7 @@ enum FileFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -1771,15 +1656,6 @@ enum GatsbyImagePlaceholder {
     DOMINANT_COLOR
     NONE
     TRACED_SVG
-}
-
-enum HeadingsMdx {
-    h1
-    h2
-    h3
-    h4
-    h5
-    h6
 }
 
 enum ImageCropFocus {
@@ -1835,6 +1711,7 @@ enum ImageSharpFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -1846,6 +1723,7 @@ enum ImageSharpFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -1858,6 +1736,7 @@ enum ImageSharpFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -1892,6 +1771,7 @@ enum ImageSharpFieldsEnum {
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -1908,6 +1788,7 @@ enum ImageSharpFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -1919,6 +1800,7 @@ enum ImageSharpFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -1931,6 +1813,7 @@ enum ImageSharpFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -1956,6 +1839,7 @@ enum LocaleFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -1967,6 +1851,7 @@ enum LocaleFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -1979,6 +1864,7 @@ enum LocaleFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -1992,6 +1878,7 @@ enum LocaleFieldsEnum {
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2007,6 +1894,7 @@ enum LocaleFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2018,6 +1906,7 @@ enum LocaleFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2030,6 +1919,7 @@ enum LocaleFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2050,6 +1940,7 @@ enum MdxFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2061,6 +1952,7 @@ enum MdxFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2073,6 +1965,7 @@ enum MdxFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2082,7 +1975,11 @@ enum MdxFieldsEnum {
     children___parent___parent___children
     children___parent___parent___id
     excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    fileAbsolutePath
+    fields___slug
+    fields___timeToRead___minutes
+    fields___timeToRead___text
+    fields___timeToRead___time
+    fields___timeToRead___words
     frontmatter___description
     frontmatter___hero_image___absolutePath
     frontmatter___hero_image___accessTime
@@ -2107,16 +2004,9 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___childMdx___body
     frontmatter___hero_image___childMdx___children
     frontmatter___hero_image___childMdx___excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childMdx___fileAbsolutePath
     frontmatter___hero_image___childMdx___gatsbyPath @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childMdx___headings @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childMdx___html
     frontmatter___hero_image___childMdx___id
-    frontmatter___hero_image___childMdx___mdxAST
-    frontmatter___hero_image___childMdx___rawBody
-    frontmatter___hero_image___childMdx___slug
     frontmatter___hero_image___childMdx___tableOfContents @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childMdx___timeToRead
     frontmatter___hero_image___children
     frontmatter___hero_image___childrenImageSharp
     frontmatter___hero_image___childrenImageSharp___children
@@ -2133,16 +2023,9 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___childrenMdx___body
     frontmatter___hero_image___childrenMdx___children
     frontmatter___hero_image___childrenMdx___excerpt @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childrenMdx___fileAbsolutePath
     frontmatter___hero_image___childrenMdx___gatsbyPath @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childrenMdx___headings @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childrenMdx___html
     frontmatter___hero_image___childrenMdx___id
-    frontmatter___hero_image___childrenMdx___mdxAST
-    frontmatter___hero_image___childrenMdx___rawBody
-    frontmatter___hero_image___childrenMdx___slug
     frontmatter___hero_image___childrenMdx___tableOfContents @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    frontmatter___hero_image___childrenMdx___timeToRead
     frontmatter___hero_image___children___children
     frontmatter___hero_image___children___id
     frontmatter___hero_image___ctime
@@ -2156,6 +2039,7 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___ino
     frontmatter___hero_image___internal___content
     frontmatter___hero_image___internal___contentDigest
+    frontmatter___hero_image___internal___contentFilePath
     frontmatter___hero_image___internal___description
     frontmatter___hero_image___internal___fieldOwners
     frontmatter___hero_image___internal___ignoreType
@@ -2181,23 +2065,20 @@ enum MdxFieldsEnum {
     frontmatter___hero_image___uid
     frontmatter___hero_image_alt
     frontmatter___source
+    frontmatter___tags
     frontmatter___title
-    frontmatter___type
+    frontmatter___uploaded
     gatsbyPath @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    headings @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    headings___depth @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    headings___value @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    html
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
     internal___mediaType
     internal___owner
     internal___type
-    mdxAST
     parent___children
     parent___children___children
     parent___children___children___children
@@ -2205,6 +2086,7 @@ enum MdxFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2216,6 +2098,7 @@ enum MdxFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2228,6 +2111,7 @@ enum MdxFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2236,13 +2120,7 @@ enum MdxFieldsEnum {
     parent___parent___internal___type
     parent___parent___parent___children
     parent___parent___parent___id
-    rawBody
-    slug
     tableOfContents @deprecated(reason: "Sorting on fields that need arguments to resolve is deprecated.")
-    timeToRead
-    wordCount___paragraphs
-    wordCount___sentences
-    wordCount___words
 }
 
 enum PotraceTurnPolicy {
@@ -2264,6 +2142,7 @@ enum SiteBuildMetadataFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2275,6 +2154,7 @@ enum SiteBuildMetadataFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2287,6 +2167,7 @@ enum SiteBuildMetadataFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2298,6 +2179,7 @@ enum SiteBuildMetadataFieldsEnum {
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2311,6 +2193,7 @@ enum SiteBuildMetadataFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2322,6 +2205,7 @@ enum SiteBuildMetadataFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2334,6 +2218,7 @@ enum SiteBuildMetadataFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2354,6 +2239,7 @@ enum SiteFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2365,6 +2251,7 @@ enum SiteFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2377,6 +2264,7 @@ enum SiteFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2385,10 +2273,12 @@ enum SiteFieldsEnum {
     children___parent___internal___type
     children___parent___parent___children
     children___parent___parent___id
+    graphqlTypegen___typesOutputPath
     host
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2403,6 +2293,7 @@ enum SiteFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2414,6 +2305,7 @@ enum SiteFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2426,6 +2318,7 @@ enum SiteFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2454,6 +2347,7 @@ enum SiteFunctionFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2465,6 +2359,7 @@ enum SiteFunctionFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2477,6 +2372,7 @@ enum SiteFunctionFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2489,6 +2385,7 @@ enum SiteFunctionFieldsEnum {
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2505,6 +2402,7 @@ enum SiteFunctionFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2516,6 +2414,7 @@ enum SiteFunctionFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2528,6 +2427,7 @@ enum SiteFunctionFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2549,6 +2449,7 @@ enum SitePageFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2560,6 +2461,7 @@ enum SitePageFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2572,6 +2474,7 @@ enum SitePageFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2586,6 +2489,7 @@ enum SitePageFieldsEnum {
     internalComponentName
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2601,6 +2505,7 @@ enum SitePageFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2612,6 +2517,7 @@ enum SitePageFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2624,6 +2530,7 @@ enum SitePageFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2641,6 +2548,7 @@ enum SitePageFieldsEnum {
     pluginCreator___children___id
     pluginCreator___children___internal___content
     pluginCreator___children___internal___contentDigest
+    pluginCreator___children___internal___contentFilePath
     pluginCreator___children___internal___description
     pluginCreator___children___internal___fieldOwners
     pluginCreator___children___internal___ignoreType
@@ -2652,6 +2560,7 @@ enum SitePageFieldsEnum {
     pluginCreator___id
     pluginCreator___internal___content
     pluginCreator___internal___contentDigest
+    pluginCreator___internal___contentFilePath
     pluginCreator___internal___description
     pluginCreator___internal___fieldOwners
     pluginCreator___internal___ignoreType
@@ -2667,6 +2576,7 @@ enum SitePageFieldsEnum {
     pluginCreator___parent___id
     pluginCreator___parent___internal___content
     pluginCreator___parent___internal___contentDigest
+    pluginCreator___parent___internal___contentFilePath
     pluginCreator___parent___internal___description
     pluginCreator___parent___internal___fieldOwners
     pluginCreator___parent___internal___ignoreType
@@ -2692,6 +2602,7 @@ enum SitePluginFieldsEnum {
     children___children___id
     children___children___internal___content
     children___children___internal___contentDigest
+    children___children___internal___contentFilePath
     children___children___internal___description
     children___children___internal___fieldOwners
     children___children___internal___ignoreType
@@ -2703,6 +2614,7 @@ enum SitePluginFieldsEnum {
     children___id
     children___internal___content
     children___internal___contentDigest
+    children___internal___contentFilePath
     children___internal___description
     children___internal___fieldOwners
     children___internal___ignoreType
@@ -2715,6 +2627,7 @@ enum SitePluginFieldsEnum {
     children___parent___id
     children___parent___internal___content
     children___parent___internal___contentDigest
+    children___parent___internal___contentFilePath
     children___parent___internal___description
     children___parent___internal___fieldOwners
     children___parent___internal___ignoreType
@@ -2726,6 +2639,7 @@ enum SitePluginFieldsEnum {
     id
     internal___content
     internal___contentDigest
+    internal___contentFilePath
     internal___description
     internal___fieldOwners
     internal___ignoreType
@@ -2742,6 +2656,7 @@ enum SitePluginFieldsEnum {
     parent___children___id
     parent___children___internal___content
     parent___children___internal___contentDigest
+    parent___children___internal___contentFilePath
     parent___children___internal___description
     parent___children___internal___fieldOwners
     parent___children___internal___ignoreType
@@ -2753,6 +2668,7 @@ enum SitePluginFieldsEnum {
     parent___id
     parent___internal___content
     parent___internal___contentDigest
+    parent___internal___contentFilePath
     parent___internal___description
     parent___internal___fieldOwners
     parent___internal___ignoreType
@@ -2765,6 +2681,7 @@ enum SitePluginFieldsEnum {
     parent___parent___id
     parent___parent___internal___content
     parent___parent___internal___contentDigest
+    parent___parent___internal___contentFilePath
     parent___parent___internal___description
     parent___parent___internal___fieldOwners
     parent___parent___internal___ignoreType
@@ -2785,129 +2702,10 @@ enum SortOrderEnum {
     DESC
 }
 
-enum StaticImageFieldsEnum {
-    absolutePath
-    accessTime
-    atime
-    atimeMs
-    base
-    birthTime
-    birthtime
-    birthtimeMs
-    blksize
-    blocks
-    changeTime
-    children
-    children___children
-    children___children___children
-    children___children___children___children
-    children___children___children___id
-    children___children___id
-    children___children___internal___content
-    children___children___internal___contentDigest
-    children___children___internal___description
-    children___children___internal___fieldOwners
-    children___children___internal___ignoreType
-    children___children___internal___mediaType
-    children___children___internal___owner
-    children___children___internal___type
-    children___children___parent___children
-    children___children___parent___id
-    children___id
-    children___internal___content
-    children___internal___contentDigest
-    children___internal___description
-    children___internal___fieldOwners
-    children___internal___ignoreType
-    children___internal___mediaType
-    children___internal___owner
-    children___internal___type
-    children___parent___children
-    children___parent___children___children
-    children___parent___children___id
-    children___parent___id
-    children___parent___internal___content
-    children___parent___internal___contentDigest
-    children___parent___internal___description
-    children___parent___internal___fieldOwners
-    children___parent___internal___ignoreType
-    children___parent___internal___mediaType
-    children___parent___internal___owner
-    children___parent___internal___type
-    children___parent___parent___children
-    children___parent___parent___id
-    ctime
-    ctimeMs
-    dev
-    dir
-    ext
-    extension
-    id
-    ino
-    internal___content
-    internal___contentDigest
-    internal___description
-    internal___fieldOwners
-    internal___ignoreType
-    internal___mediaType
-    internal___owner
-    internal___type
-    mode
-    modifiedTime
-    mtime
-    mtimeMs
-    name
-    nlink
-    parent___children
-    parent___children___children
-    parent___children___children___children
-    parent___children___children___id
-    parent___children___id
-    parent___children___internal___content
-    parent___children___internal___contentDigest
-    parent___children___internal___description
-    parent___children___internal___fieldOwners
-    parent___children___internal___ignoreType
-    parent___children___internal___mediaType
-    parent___children___internal___owner
-    parent___children___internal___type
-    parent___children___parent___children
-    parent___children___parent___id
-    parent___id
-    parent___internal___content
-    parent___internal___contentDigest
-    parent___internal___description
-    parent___internal___fieldOwners
-    parent___internal___ignoreType
-    parent___internal___mediaType
-    parent___internal___owner
-    parent___internal___type
-    parent___parent___children
-    parent___parent___children___children
-    parent___parent___children___id
-    parent___parent___id
-    parent___parent___internal___content
-    parent___parent___internal___contentDigest
-    parent___parent___internal___description
-    parent___parent___internal___fieldOwners
-    parent___parent___internal___ignoreType
-    parent___parent___internal___mediaType
-    parent___parent___internal___owner
-    parent___parent___internal___type
-    parent___parent___parent___children
-    parent___parent___parent___id
-    prettySize
-    rdev
-    relativeDirectory
-    relativePath
-    root
-    size
-    sourceInstanceName
-    uid
-}
-
 "A date string, such as 2007-12-03, compliant with the ISO 8601 standard for representation of dates and times using the Gregorian calendar."
 scalar Date
+
+scalar GatsbyImageData
 
 "The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)."
 scalar JSON
@@ -3055,11 +2853,18 @@ input FloatQueryOperatorInput {
     nin: [Float]
 }
 
+input GatsbyImageDataQueryOperatorInput {
+    eq: GatsbyImageData
+    in: [GatsbyImageData]
+    ne: GatsbyImageData
+    nin: [GatsbyImageData]
+}
+
 input ImageSharpFilterInput {
     children: NodeFilterListInput
     fixed: ImageSharpFixedFilterInput
     fluid: ImageSharpFluidFilterInput
-    gatsbyImageData: JSONQueryOperatorInput
+    gatsbyImageData: GatsbyImageDataQueryOperatorInput
     id: StringQueryOperatorInput
     internal: InternalFilterInput
     original: ImageSharpOriginalFilterInput
@@ -3133,6 +2938,7 @@ input IntQueryOperatorInput {
 input InternalFilterInput {
     content: StringQueryOperatorInput
     contentDigest: StringQueryOperatorInput
+    contentFilePath: StringQueryOperatorInput
     description: StringQueryOperatorInput
     fieldOwners: StringQueryOperatorInput
     ignoreType: BooleanQueryOperatorInput
@@ -3175,24 +2981,29 @@ input LocaleSortInput {
     order: [SortOrderEnum] = [ASC]
 }
 
+input MdxFieldsFilterInput {
+    slug: StringQueryOperatorInput
+    timeToRead: MdxFieldsTimeToReadFilterInput
+}
+
+input MdxFieldsTimeToReadFilterInput {
+    minutes: FloatQueryOperatorInput
+    text: StringQueryOperatorInput
+    time: IntQueryOperatorInput
+    words: IntQueryOperatorInput
+}
+
 input MdxFilterInput {
     body: StringQueryOperatorInput
     children: NodeFilterListInput
     excerpt: StringQueryOperatorInput
-    fileAbsolutePath: StringQueryOperatorInput
+    fields: MdxFieldsFilterInput
     frontmatter: MdxFrontmatterFilterInput
     gatsbyPath: StringQueryOperatorInput
-    headings: MdxHeadingMdxFilterListInput
-    html: StringQueryOperatorInput
     id: StringQueryOperatorInput
     internal: InternalFilterInput
-    mdxAST: JSONQueryOperatorInput
     parent: NodeFilterInput
-    rawBody: StringQueryOperatorInput
-    slug: StringQueryOperatorInput
     tableOfContents: JSONQueryOperatorInput
-    timeToRead: IntQueryOperatorInput
-    wordCount: MdxWordCountFilterInput
 }
 
 input MdxFilterListInput {
@@ -3204,28 +3015,14 @@ input MdxFrontmatterFilterInput {
     hero_image: FileFilterInput
     hero_image_alt: StringQueryOperatorInput
     source: StringQueryOperatorInput
+    tags: StringQueryOperatorInput
     title: StringQueryOperatorInput
-    type: StringQueryOperatorInput
-}
-
-input MdxHeadingMdxFilterInput {
-    depth: IntQueryOperatorInput
-    value: StringQueryOperatorInput
-}
-
-input MdxHeadingMdxFilterListInput {
-    elemMatch: MdxHeadingMdxFilterInput
+    uploaded: DateQueryOperatorInput
 }
 
 input MdxSortInput {
     fields: [MdxFieldsEnum]
     order: [SortOrderEnum] = [ASC]
-}
-
-input MdxWordCountFilterInput {
-    paragraphs: IntQueryOperatorInput
-    sentences: IntQueryOperatorInput
-    words: IntQueryOperatorInput
 }
 
 input NodeFilterInput {
@@ -3272,6 +3069,7 @@ input SiteBuildMetadataSortInput {
 input SiteFilterInput {
     buildTime: DateQueryOperatorInput
     children: NodeFilterListInput
+    graphqlTypegen: SiteGraphqlTypegenFilterInput
     host: StringQueryOperatorInput
     id: StringQueryOperatorInput
     internal: InternalFilterInput
@@ -3301,6 +3099,10 @@ input SiteFunctionFilterInput {
 input SiteFunctionSortInput {
     fields: [SiteFunctionFieldsEnum]
     order: [SortOrderEnum] = [ASC]
+}
+
+input SiteGraphqlTypegenFilterInput {
+    typesOutputPath: StringQueryOperatorInput
 }
 
 input SitePageFilterInput {
@@ -3352,50 +3154,6 @@ input SiteSiteMetadataFilterInput {
 
 input SiteSortInput {
     fields: [SiteFieldsEnum]
-    order: [SortOrderEnum] = [ASC]
-}
-
-input StaticImageFilterInput {
-    absolutePath: StringQueryOperatorInput
-    accessTime: DateQueryOperatorInput
-    atime: DateQueryOperatorInput
-    atimeMs: FloatQueryOperatorInput
-    base: StringQueryOperatorInput
-    birthTime: DateQueryOperatorInput
-    birthtime: DateQueryOperatorInput
-    birthtimeMs: FloatQueryOperatorInput
-    blksize: IntQueryOperatorInput
-    blocks: IntQueryOperatorInput
-    changeTime: DateQueryOperatorInput
-    children: NodeFilterListInput
-    ctime: DateQueryOperatorInput
-    ctimeMs: FloatQueryOperatorInput
-    dev: IntQueryOperatorInput
-    dir: StringQueryOperatorInput
-    ext: StringQueryOperatorInput
-    extension: StringQueryOperatorInput
-    id: StringQueryOperatorInput
-    ino: IntQueryOperatorInput
-    internal: InternalFilterInput
-    mode: IntQueryOperatorInput
-    modifiedTime: DateQueryOperatorInput
-    mtime: DateQueryOperatorInput
-    mtimeMs: FloatQueryOperatorInput
-    name: StringQueryOperatorInput
-    nlink: IntQueryOperatorInput
-    parent: NodeFilterInput
-    prettySize: StringQueryOperatorInput
-    rdev: IntQueryOperatorInput
-    relativeDirectory: StringQueryOperatorInput
-    relativePath: StringQueryOperatorInput
-    root: StringQueryOperatorInput
-    size: IntQueryOperatorInput
-    sourceInstanceName: StringQueryOperatorInput
-    uid: IntQueryOperatorInput
-}
-
-input StaticImageSortInput {
-    fields: [StaticImageFieldsEnum]
     order: [SortOrderEnum] = [ASC]
 }
 

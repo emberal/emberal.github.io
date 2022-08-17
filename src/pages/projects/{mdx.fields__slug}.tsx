@@ -1,8 +1,7 @@
 import * as React from "react";
 import Layout, { Links } from "../../components/layout";
 import { graphql, PageProps } from "gatsby";
-import { MDXRenderer } from "gatsby-plugin-mdx";
-import { GatsbyImage, getImage, IGatsbyImageData, ImageDataLike } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 
@@ -12,33 +11,29 @@ import { splitCSV } from "./index";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => {
+const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.ProjectPostQuery>*/) => { // FIXME
 
     if (mdx) {
 
-        let heroImage: IGatsbyImageData | undefined, heroImageAlt: string | null | undefined,
-            description: string | null | undefined, title: string | undefined, source: string | null | undefined,
-            heroImageData: ImageDataLike | undefined, tags: string | null | undefined;
-
-        heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
-        heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData as ImageDataLike) : undefined;
-        heroImageAlt = mdx.frontmatter?.hero_image_alt;
-        title = mdx.frontmatter?.title;
-        description = mdx.frontmatter?.description;
-        source = mdx.frontmatter?.source;
-        tags = mdx.frontmatter?.tags;
+        const heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
+        const heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData as ImageDataLike) : undefined;
+        const heroImageAlt = mdx.frontmatter?.hero_image_alt;
+        const title = mdx.frontmatter?.title;
+        const description = mdx.frontmatter?.description;
+        const source = mdx.frontmatter?.source;
+        const tags = mdx.frontmatter?.tags;
 
         return (
             <>
                 <Layout
                     title={ typeof title === 'string' ? title : "Blogpost" }
-                    headline={ title }
+                    headline={ title ?? undefined }
                     description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }
                     current={ Links.projects }>
                     <article>
                         <div className={ `max-h-[40rem] flex justify-center` }>
                             {
-                                heroImage && typeof heroImageAlt === 'string' ?
+                                heroImage && heroImageAlt ?
                                     <GatsbyImage className={ `${ heroImage.height > heroImage.width * 2 && "w-72" }` }
                                                  alt={ heroImageAlt } image={ heroImage }/> : null
                             }
@@ -55,7 +50,7 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
                                target={ "_blank" } rel={ "noreferrer" }>GitHub</a>
                         </p>
                         <div className={ "mt-2" }>
-                            <MDXRenderer>{ mdx.body }</MDXRenderer>
+                            { children }
                         </div>
                     </article>
                 </Layout>
@@ -68,7 +63,7 @@ const ProjectPost = ({ data: { mdx } }: PageProps<Queries.ProjectPostQuery>) => 
 }
 
 export const query = graphql`
-    query ProjectPost($id: String, $language: String!) {
+    query ($id: String, $language: String!) { # query ProjectPost($id: String, $language: String!) { # FIXME can't use name?
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {
@@ -92,8 +87,11 @@ export const query = graphql`
                 uploaded
                 tags
             }
-            timeToRead
-            body
+            fields {
+                timeToRead {
+                    minutes
+                }
+            }
         }
     }
 `;

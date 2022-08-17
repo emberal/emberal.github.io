@@ -11,7 +11,7 @@ interface ProjectCard {
     description?: string,
     slug?: string,
     source?: string,
-    timeToRead?: number,
+    timeToRead?: string,
     tags?: string,
     image?: ImageDataLike,
     imageAlt?: string,
@@ -26,7 +26,7 @@ const ProjectCard = (
         description = "",
         slug = "/",
         source,
-        timeToRead = 1,
+        timeToRead = "1 min read",
         tags,
         image,
         imageAlt = "",
@@ -55,15 +55,14 @@ const ProjectCard = (
                             </a>
                         </div>
                         <div className={ "grid grid-flow-col justify-between mb-2" }>
-                            <p>
-                                { t("timeToRead") } { timeToRead } { (timeToRead === 1) ? t("minute") : t("minutes") }
-                            </p>
+                            <p>{ timeToRead /*TODO translate, use localstorage*/ }</p>
                         </div>
                         <TagsRow tags={ splitCSV(tags ?? "") }/>
                     </div>
                     <div className={ `max-h-[40rem] flex justify-center` }>
                         {
-                            image ? <GatsbyImage className={ `${ image.height > image.width * 2 && "w-72" }` } alt={ imageAlt }
+                            image ? <GatsbyImage className={ `${ image.height > image.width * 2 && "w-72" }` }
+                                                 alt={ imageAlt }
                                                  image={ image }/> : null
                         }
                     </div>

@@ -29,7 +29,7 @@ module.exports = {
                         short_name: `Martin Berg Alstad`,
                         description: `Martin Berg Alstad sin personlige hjemmeside.`,
                     },
-                ]
+                ],
             },
         },
         `gatsby-plugin-sharp`,
@@ -45,10 +45,10 @@ module.exports = {
                             // the content container as this plugin uses this as the
                             // base for generating different widths of each image.
                             maxWidth: 590,
-                        }
-                    }
-                ]
-            }
+                        },
+                    },
+                ],
+            },
         },
         `gatsby-plugin-image`,
         `gatsby-transformer-sharp`, // Needed for dynamic images

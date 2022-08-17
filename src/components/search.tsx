@@ -110,7 +110,8 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
                            </button>
                            : undefined
                    }
-            /></div>
+            />
+        </div>
     );
 };
 
