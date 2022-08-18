@@ -202,6 +202,13 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
         }
     }, []);
 
+    React.useEffect(() => {
+        if (hideTags) {
+            setIsScrollLeft(true);
+            setIsScrollRight(false);
+        }
+    }, [hideTags]);
+
     const chevronClasses = `text-primaryPink animate-pulse bg-black-transparent-1/2 border-rounded border-transparent overflow-auto
     cursor-pointer`;
 
