@@ -69,7 +69,7 @@ interface TagsSelector {
  * @param className Styling of the root element
  * @constructor
  */
-export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id, className }: TagsSelector) => {
+export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onClick, id, className }: TagsSelector) => {
 
     const { t } = useTranslation();
 
@@ -129,28 +129,30 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
 
     const scrollContainer = React.useRef<HTMLElement>(null);
 
-    function scrollLeft(): void {
+    const defScrollLen = (scrollContainer?.current?.clientWidth ?? 700) / 2;
+
+    /**
+     * Scrolls the scrollContainer to either side, positive numbers are to the right, negative to the left
+     * @param scrollLeft The amount of pixels the container should scroll, positive is to the right, negative is to the left
+     */
+    function scroll(scrollLeft: number): void {
         if (scrollContainer.current) {
-            scrollContainer.current.scrollLeft -= 400;
-            checkScrollLeft();
+            scrollContainer.current.scrollLeft += scrollLeft;
+            onScroll();
         }
     }
 
-    function scrollRight(): void {
-        if (scrollContainer.current) {
-            scrollContainer.current.scrollLeft += 400;
-            checkScrollRight();
-        }
+    /**
+     * Checks the position of the scrollContainer and updates the states
+     */
+    function onScroll(): void {
+        checkScrollLeft();
+        checkScrollRight();
     }
 
-    function isLeft(): boolean {
-        return scrollContainer.current !== null && scrollContainer.current.scrollLeft <= 3;
-    }
-
-    function isRight(): boolean {
-        return scrollContainer.current !== null && scrollContainer.current.scrollLeft >= scrollContainer.current.scrollWidth - 660;
-    }
-
+    /**
+     * Checks if the scrollContainer is all the way to the left and updates the states
+     */
     function checkScrollLeft(): void {
         if (scrollContainer.current) {
             const left = isLeft();
@@ -163,6 +165,9 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
         }
     }
 
+    /**
+     * Checks if the scrollContainer is all the way to the right and updates the states
+     */
     function checkScrollRight(): void {
         if (scrollContainer.current) {
             const right = isRight();
@@ -175,14 +180,25 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
         }
     }
 
-    function onScroll(): void {
-        checkScrollLeft();
-        checkScrollRight();
+    /**
+     * Checks if the scrollContatiner is all the way to the left
+     * @returns {boolean} Returns 'true' if all the way to the left, otherwise 'false'
+     */
+    function isLeft(): boolean {
+        return scrollContainer.current !== null && scrollContainer.current.scrollLeft <= 3;
+    }
+
+    /**
+     * Checks if the scrollContatiner is all the way to the right
+     * @returns {boolean} Returns 'true' if all the way to the right, otherwise 'false'
+     */
+    function isRight(): boolean {
+        return scrollContainer.current !== null && scrollContainer.current.scrollLeft >= scrollContainer.current.scrollWidth - 660;
     }
 
     React.useEffect(() => {
         if (scrollContainer.current) {
-            scrollContainer.current.scrollTo(0, 0);
+            scrollContainer.current.scrollTo(0, 0); // Default scroll location
         }
     }, []);
 
@@ -229,7 +245,8 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                     {
                                         hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight ?
                                             <button title={ t("clickToScroll") }>
-                                                <ChevronRight className={ chevronClasses } onClick={ scrollRight }/>
+                                                <ChevronRight className={ chevronClasses }
+                                                              onClick={ () => scroll(defScrollLen) }/>
                                             </button>
                                             : null
                                     }
@@ -242,7 +259,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag, tagMap, onClick, id,
                                     hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft ?
                                         <button className={ "absolute left-0" } title={ t("clickToScroll") }>
                                             <ChevronLeft className={ chevronClasses + " mt-[1px]" }
-                                                         onClick={ scrollLeft }/>
+                                                         onClick={ () => scroll(-defScrollLen) }/>
                                         </button> : null
                                 }
                             </>

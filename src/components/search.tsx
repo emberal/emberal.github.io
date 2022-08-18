@@ -98,7 +98,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
                    leading={
                        <button className={ `absolute mx-[0.40rem]` }
                                onClick={ focusSearch }
-                               title={ t("search") }>
+                               title={ t("search") + " (Enter)" }>
                            <p className={ "hidden" }>{ t("search") }</p>
                            <SearchIcon className={ iconClasses }/>
                        </button> }
