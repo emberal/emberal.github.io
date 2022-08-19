@@ -1,8 +1,8 @@
 import * as React from "react";
 import Layout from "../components/layout";
-import { graphql, Link } from "gatsby";
-import { Helmet } from "react-helmet";
+import { graphql, HeadProps, Link } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import SEO from "../components/seo";
 
 /**
  * The page that is shown when a page does not exist
@@ -15,23 +15,27 @@ const NotFoundPage = () => {
 
     return (
         <Layout title={ t("pageNotFound") } description={ "Error 404. Page not found!" }>
-            <>
-                <Helmet>
-                    <meta name="robots" content="noindex"/>
-                </Helmet>
-                <p> { t("sorry") + " " } <span role="img" aria-label="Pensive emoji">😔</span>
-                    { " " + t("pageWasNotFound") }
-                    <br/><br/>
-                    <Link className={ "dark:text-primaryPink text-primaryPurple hover:underline" }
-                          to="/">{ t("home") }</Link>.
-                </p>
-            </>
+            <p> { t("sorry") + " " } <span role="img" aria-label="Pensive emoji">😔</span>
+                { " " + t("pageWasNotFound") }
+                <br/><br/>
+                <Link className={ "dark:text-primaryPink text-primaryPurple hover:underline" }
+                      to="/">{ t("home") }</Link>.
+            </p>
         </Layout>
     );
 }
 
+export const Head = ({ data }: HeadProps<Queries.PageNotFoundQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.pageNotFound } blockCrawlers={ true } description={ obj?.aboutMeDesc }/>; // TODO description, and turn off crawlers
+};
+
 export const query = graphql`
-    query($language: String!) {
+    query PageNotFound($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

@@ -1,8 +1,9 @@
 import * as React from "react";
 import Layout, { Links } from "../components/layout";
-import { graphql } from "gatsby";
+import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
+import SEO from "../components/seo";
 
 const linkContent = [
     {
@@ -89,8 +90,17 @@ const MyLink = ({ icon, text, url, className }: Props) => {
     );
 }
 
+export const Head = ({ data }: HeadProps<Queries.MyLinksQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.myLinks }/>; // TODO description
+};
+
 export const query = graphql`
-    query($language: String!) {
+    query MyLinks($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

@@ -4,7 +4,7 @@ module.exports = {
     graphqlTypegen: true,
     siteMetadata: {
         title: `Martin Berg Alstad's website`,
-        description: `Martin Berg Alstad's personal website`,
+        description: `Martin Berg Alstad's personal website and portfolio`,
         lang: `en`,
         siteUrl: `https://h600878.github.io/`,
     },
@@ -52,7 +52,6 @@ module.exports = {
         },
         `gatsby-plugin-image`,
         `gatsby-transformer-sharp`, // Needed for dynamic images
-        `gatsby-plugin-react-helmet`,
         `gatsby-plugin-sitemap`,
         {
             resolve: `gatsby-plugin-offline`,
@@ -101,9 +100,9 @@ module.exports = {
                     keySeparator: false,
                     nsSeparator: false
                 },
-                pages: []
+                pages: [],
             }
         },
         'gatsby-plugin-postcss',
-    ]
+    ],
 };

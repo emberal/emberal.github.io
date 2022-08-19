@@ -1,9 +1,10 @@
 import * as React from "react";
 import Layout, { Links } from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
-import { graphql } from "gatsby";
+import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
+import SEO from "../components/seo";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
@@ -114,8 +115,17 @@ const ContactMe = () => {
     );
 }
 
+export const Head = ({ data }: HeadProps<Queries.ContactMeQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.contactMe }/>; // TODO description
+};
+
 export const query = graphql`
-    query($language: String!) {
+    query ContactMe($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

@@ -4,10 +4,11 @@ import { graphql, useStaticQuery } from "gatsby";
 interface SEO {
     title?: string,
     description?: string,
+    blockCrawlers?: boolean,
     children?: React.ReactNode,
 }
 
-const SEO = ({ title, description, children }: SEO) => { // TODO use new Head in gatsby 4.19
+const SEO = ({ title, description, blockCrawlers = false, children }: SEO) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -15,6 +16,7 @@ const SEO = ({ title, description, children }: SEO) => { // TODO use new Head in
                 siteMetadata {
                     lang
                     title
+                    description
                 }
             }
         }
@@ -23,7 +25,8 @@ const SEO = ({ title, description, children }: SEO) => { // TODO use new Head in
     return (
         <>
             <meta lang={ query.site.siteMetadata.lang }/>
-            <meta name={ "description" } content={ description }/>
+            <meta name={ "description" } content={ description ?? query.site.siteMetadata.description}/>
+            { blockCrawlers ? <meta name={ "robots" } content={ "noindex" }/> : null }
             <title>{ title && title + " | " } { query.site.siteMetadata.title }</title>
             { children }
         </>

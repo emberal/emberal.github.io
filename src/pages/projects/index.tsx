@@ -1,11 +1,12 @@
 import * as React from "react";
 import { ChangeEvent } from "react";
 import Layout, { Links } from "../../components/layout";
-import { graphql, PageProps } from "gatsby";
+import { graphql, HeadProps, PageProps, Script } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TagsSelector } from "../../components/tags";
 import Search from "../../components/search";
 import ProjectCard from "../../components/project";
+import SEO from "../../components/seo";
 
 /**
  * Takes a String in a csv format, separated by ";" and returns an array of strings
@@ -210,8 +211,17 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     );
 }
 
+export const Head = ({ data }: HeadProps<Queries.ProjectPageQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.myProjects } description={ obj?.projectsByMe }/>;
+};
+
 export const query = graphql`
-    query ProjectPage ($language: String!) {
+    query ProjectPage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

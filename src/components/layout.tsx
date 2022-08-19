@@ -1,7 +1,6 @@
 import * as React from "react";
 import Footer from "./footer";
 import { graphql, Link, useStaticQuery } from "gatsby";
-import { Helmet } from "react-helmet";
 import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -176,11 +175,6 @@ const Layout = (
 
     return (
         <div className={ `dark:bg-gray-900 dark:text-white ${ className }` }>
-            <Helmet> { /*TODO Use new Head, instead of Helmet*/ }
-                <html lang={ query.site.siteMetadata.lang }/>
-                <meta name={ "description" } content={ description }/>
-                <title>{ title } | { query.site.siteMetadata.title }</title>
-            </Helmet>
             <div id={ "main-container" }
                  className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
                 <div className={ ` ${ titleAndNavClass }` }>

@@ -1,8 +1,9 @@
 import * as React from "react"
 import Layout, { Links } from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
-import { graphql } from "gatsby";
+import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import SEO from "../components/seo";
 
 /**
  * The front page containing information about yours truly
@@ -32,8 +33,17 @@ const IndexPage = () => {
     )
 }
 
+export const Head = ({ data }: HeadProps<Queries.HomePageQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.home } description={ obj?.aboutMeDesc }/>;
+};
+
 export const query = graphql`
-    query($language: String!) {
+    query HomePage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

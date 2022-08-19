@@ -1,7 +1,7 @@
 import * as React from "react";
 import Layout from "../components/layout";
 import Input from "../components/input";
-import { graphql } from "gatsby";
+import { graphql, HeadProps } from "gatsby";
 import { Expression } from "../classes/expression";
 import { Search, X } from "react-feather";
 import TruthTable from "../components/truth-table";
@@ -9,6 +9,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure } from "../components/output";
 import MySwitch from "../components/switch";
 import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
+import SEO from "../components/seo";
 
 interface TruthTablePage {
 
@@ -203,8 +204,17 @@ const TruthTablePage = ({}: TruthTablePage) => {
     );
 }
 
+export const Head = ({ data }: HeadProps<Queries.TruthTableQuery>) => {
+    const locales = data.locales.edges[0].node.data;
+    let obj: any = undefined;
+    if (locales) {
+        obj = JSON.parse(locales);
+    }
+    return <SEO title={ obj?.truthTables } description={ obj?.truthTablesDesc }/>;
+};
+
 export const query = graphql`
-    query($language: String!) {
+    query TruthTable($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

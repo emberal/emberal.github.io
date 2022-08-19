@@ -1,9 +1,10 @@
 import * as React from "react";
 import Layout, { Links } from "../../components/layout";
-import { graphql, PageProps } from "gatsby";
+import { graphql, HeadProps, PageProps } from "gatsby";
 import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
+import SEO from "../../components/seo";
 
 /**
  * A single post containing all the data from an mdx file
@@ -61,6 +62,10 @@ const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.Project
         return null;
     }
 }
+
+export const Head = (props: any /*HeadProps<Queries.ProjectPostQuery>*/) => {
+    return <SEO title={ props.data.mdx?.frontmatter?.title } description={ props.data.mdx?.frontmatter?.description }/>;
+};
 
 export const query = graphql`
     query ($id: String, $language: String!) { # query ProjectPost($id: String, $language: String!) { # FIXME can't use name?
