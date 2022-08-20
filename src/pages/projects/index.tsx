@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ChangeEvent } from "react";
 import Layout, { Links } from "../../components/layout";
-import { graphql, HeadProps, PageProps, Script } from "gatsby";
+import { graphql, HeadProps, PageProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TagsSelector } from "../../components/tags";
 import Search from "../../components/search";
@@ -211,9 +211,9 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.ProjectPageQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }

@@ -5,12 +5,16 @@ import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import SEO from "../components/seo";
 
+interface Homepage {
+
+}
+
 /**
  * The front page containing information about yours truly
  * @returns {JSX.Element}
  * @constructor
  */
-const IndexPage = () => {
+const Homepage = ({}: Homepage): JSX.Element => {
 
     const { t } = useTranslation();
 
@@ -20,7 +24,7 @@ const IndexPage = () => {
             headline={ t("welcome") }
             description={ t("aboutMeDesc") }
             current={ Links.home }>
-            <div>
+            <>
                 <div className={ "w-full flex justify-center my-5" }>
                     <StaticImage className={ "max-w-sm border border-gray-500 rounded-3xl" } src={ "../images/me.jpg" }
                                  alt={ t("aboutMePicAlt") }/>
@@ -28,14 +32,14 @@ const IndexPage = () => {
                 <p>
                     { t("aboutMeDesc") }
                 </p>
-            </div>
+            </>
         </Layout>
     )
 }
 
-export const Head = ({ data }: HeadProps<Queries.HomePageQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
@@ -43,7 +47,7 @@ export const Head = ({ data }: HeadProps<Queries.HomePageQuery>) => {
 };
 
 export const query = graphql`
-    query HomePage($language: String!) {
+    query Homepage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {
@@ -56,4 +60,4 @@ export const query = graphql`
     }
 `;
 
-export default IndexPage;
+export default Homepage;

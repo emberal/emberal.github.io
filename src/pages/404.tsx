@@ -9,7 +9,7 @@ import SEO from "../components/seo";
  * @returns {JSX.Element}
  * @constructor
  */
-const NotFoundPage = () => {
+const NotFoundPage = (): JSX.Element => {
 
     const { t } = useTranslation();
 
@@ -25,17 +25,17 @@ const NotFoundPage = () => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.PageNotFoundQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.NotFoundPageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.pageNotFound } blockCrawlers={ true } description={ obj?.aboutMeDesc }/>; // TODO description, and turn off crawlers
+    return <SEO title={ obj?.pageNotFound } blockCrawlers={ true }/>;
 };
 
 export const query = graphql`
-    query PageNotFound($language: String!) {
+    query NotFoundPage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

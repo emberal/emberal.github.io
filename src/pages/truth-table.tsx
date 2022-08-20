@@ -15,7 +15,7 @@ interface TruthTablePage {
 
 }
 
-const TruthTablePage = ({}: TruthTablePage) => {
+const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
 
     /**
      * Stores the boolean value of the simplify toggle
@@ -204,9 +204,9 @@ const TruthTablePage = ({}: TruthTablePage) => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.TruthTableQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.TruthTablePageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
@@ -214,7 +214,7 @@ export const Head = ({ data }: HeadProps<Queries.TruthTableQuery>) => {
 };
 
 export const query = graphql`
-    query TruthTable($language: String!) {
+    query TruthTablePage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

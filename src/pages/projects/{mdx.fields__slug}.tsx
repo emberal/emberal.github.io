@@ -12,7 +12,7 @@ import SEO from "../../components/seo";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.ProjectPostQuery>*/) => { // FIXME
+const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.ProjectPostQuery>*/): JSX.Element | null => { // FIXME
 
     if (mdx) {
 
@@ -27,15 +27,15 @@ const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.Project
         return (
             <>
                 <Layout
-                    title={ typeof title === 'string' ? title : "Blogpost" }
+                    title={ typeof title === "string" ? title : "Blogpost" }
                     headline={ title ?? undefined }
-                    description={ typeof description === 'string' ? description : "A blogpost by Martin Berg Alstad" }
+                    description={ typeof description === "string" ? description : "A blogpost by Martin Berg Alstad" }
                     current={ Links.projects }>
                     <article>
                         <div className={ `max-h-[40rem] flex justify-center` }>
                             {
                                 heroImage && heroImageAlt ?
-                                    <GatsbyImage className={ `${ heroImage.height > heroImage.width * 2 && "w-72" }` }
+                                    <GatsbyImage className={ heroImage.height > heroImage.width * 2 ? "w-72" : "" }
                                                  alt={ heroImageAlt } image={ heroImage }/> : null
                             }
                         </div>
@@ -63,7 +63,7 @@ const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.Project
     }
 }
 
-export const Head = (props: any /*HeadProps<Queries.ProjectPostQuery>*/) => {
+export const Head = (props: any /*HeadProps<Queries.ProjectPostQuery>*/): JSX.Element => {
     return <SEO title={ props.data.mdx?.frontmatter?.title } description={ props.data.mdx?.frontmatter?.description }/>;
 };
 

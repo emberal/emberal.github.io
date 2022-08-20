@@ -5,6 +5,10 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import SEO from "../components/seo";
 
+interface LinksPage {
+
+}
+
 const linkContent = [
     {
         key: 0,
@@ -47,7 +51,7 @@ const linkContent = [
  * @returns {JSX.Element}
  * @constructor
  */
-const LinksPage = () => {
+const LinksPage = ({}: LinksPage): JSX.Element => {
 
     const { t } = useTranslation();
 
@@ -90,9 +94,9 @@ const MyLink = ({ icon, text, url, className }: Props) => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.MyLinksQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
@@ -100,7 +104,7 @@ export const Head = ({ data }: HeadProps<Queries.MyLinksQuery>) => {
 };
 
 export const query = graphql`
-    query MyLinks($language: String!) {
+    query LinksPage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

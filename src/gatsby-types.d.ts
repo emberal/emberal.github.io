@@ -3941,12 +3941,12 @@ type WebPOptions = {
   readonly quality: InputMaybe<Scalars['Int']>;
 };
 
-type ContactMeQueryVariables = Exact<{
+type ContactMePageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type ContactMeQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
+type ContactMePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
 
 type GatsbyImageSharpFixedFragment = { readonly base64: string | null, readonly width: number, readonly height: number, readonly src: string, readonly srcSet: string };
 
@@ -3974,26 +3974,26 @@ type GatsbyImageSharpFluid_withWebp_tracedSVGFragment = { readonly tracedSVG: st
 
 type GatsbyImageSharpFluidLimitPresentationSizeFragment = { readonly maxHeight: number, readonly maxWidth: number };
 
-type HomePageQueryVariables = Exact<{
+type HomepageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type HomePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
+type HomepageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
 
-type MyLinksQueryVariables = Exact<{
+type LinksPageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type MyLinksQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
+type LinksPageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
 
-type PageNotFoundQueryVariables = Exact<{
+type NotFoundPageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type PageNotFoundQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
+type NotFoundPageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
 
 type ProjectPageQueryVariables = Exact<{
   language: Scalars['String'];
@@ -4002,12 +4002,12 @@ type ProjectPageQueryVariables = Exact<{
 
 type ProjectPageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> }, readonly allMdx: { readonly nodes: ReadonlyArray<{ readonly id: string, readonly frontmatter: { readonly title: string | null, readonly description: string | null, readonly tags: string | null, readonly source: string | null, readonly hero_image_alt: string | null, readonly uploaded: string | null, readonly hero_image: { readonly childImageSharp: { readonly gatsbyImageData: import('gatsby-plugin-image').IGatsbyImageData } | null } | null } | null, readonly fields: { readonly slug: string | null, readonly timeToRead: { readonly time: number | null } | null } | null }> } };
 
-type TruthTableQueryVariables = Exact<{
+type TruthTablePageQueryVariables = Exact<{
   language: Scalars['String'];
 }>;
 
 
-type TruthTableQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
+type TruthTablePageQuery = { readonly locales: { readonly edges: ReadonlyArray<{ readonly node: { readonly ns: string | null, readonly data: string | null, readonly language: string | null } }> } };
 
 
 }

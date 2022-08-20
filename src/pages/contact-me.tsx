@@ -6,6 +6,10 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import SEO from "../components/seo";
 
+interface ContactMePage {
+
+}
+
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
 const links = [
@@ -28,7 +32,7 @@ const links = [
  * @returns {JSX.Element}
  * @constructor
  */
-const ContactMe = () => {
+const ContactMePage = ({}: ContactMePage): JSX.Element => {
 
     function handleSubmit() { // TODO
         Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
@@ -115,9 +119,9 @@ const ContactMe = () => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.ContactMeQuery>) => {
+export const Head = ({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element => {
     const locales = data.locales.edges[0].node.data;
-    let obj: any = undefined;
+    let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
@@ -125,7 +129,7 @@ export const Head = ({ data }: HeadProps<Queries.ContactMeQuery>) => {
 };
 
 export const query = graphql`
-    query ContactMe($language: String!) {
+    query ContactMePage($language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {
@@ -138,7 +142,7 @@ export const query = graphql`
     }
 `;
 
-export default ContactMe;
+export default ContactMePage;
 
 interface FormInput {
     name?: string,
