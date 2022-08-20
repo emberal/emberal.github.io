@@ -1,5 +1,30 @@
 import * as React from "react";
 
+function setupEventListener(id: string, setIsHover: Function): () => void {
+    let isMounted = true;
+
+    function hover(hover: boolean) {
+        if (isMounted) {
+            setIsHover(hover);
+        }
+    }
+
+    if (id) {
+        const el = document.getElementById(id);
+        if (el) {
+            el.addEventListener("pointerenter", () => hover(true));
+            el.addEventListener("pointerleave", () => hover(false));
+        }
+    }
+    return () => {
+        if (id) {
+            document.getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
+            document.getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
+            isMounted = false;
+        }
+    }
+}
+
 interface Input {
     className?: string,
     id?: string,
@@ -22,33 +47,15 @@ const Input = ({ className, id, name, type, title, placeholder, required, onChan
     function setSetIsText() {
         if (id) {
             const el = document.getElementById(id) as HTMLInputElement;
-            setIsText(el.value !== "");
+            if (el.value !== "" !== isText) {
+                setIsText(el.value !== "");
+            }
         }
     }
 
     React.useEffect(() => {
-
-        let isMounted = true;
-
-        function hover(hover: boolean) {
-            if (isMounted) {
-                setIsHover(hover);
-            }
-        }
-
         if (id && title) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener("pointerenter", () => hover(true));
-                el.addEventListener("pointerleave", () => hover(false));
-            }
-        }
-        return () => {
-            if (id) {
-                document.getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
-                document.getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
-            }
-            isMounted = false;
+            setupEventListener(id, setIsHover);
         }
     }, []);
 
@@ -93,33 +100,15 @@ export const TextArea = ({ className, id, name, title, placeholder, required = f
     function setSetIsText() {
         if (id) {
             const el = document.getElementById(id) as HTMLTextAreaElement;
-            setIsText(el.value !== "");
+            if (el.value !== "" !== isText) {
+                setIsText(el.value !== "");
+            }
         }
     }
 
     React.useEffect(() => {
-
-        let isMounted = true;
-
-        function hover(hover: boolean) {
-            if (isMounted) {
-                setIsHover(hover);
-            }
-        }
-
         if (id && title) {
-            const el = document.getElementById(id);
-            if (el) {
-                el.addEventListener("pointerenter", () => hover(true));
-                el.addEventListener("pointerleave", () => hover(false));
-            }
-        }
-        return () => {
-            if (id) {
-                document.getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
-                document.getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
-                isMounted = false;
-            }
+            setupEventListener(id, setIsHover);
         }
     }, []);
 
