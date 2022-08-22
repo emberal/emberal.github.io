@@ -119,7 +119,8 @@ export class Expression {
         return this.left?.getAtomicValue() ?? null;
     }
 
-    public laws(): void {
+    public laws(): void { // TODO return something if exp is changed?
+        let exp = this.toString(); // TODO Check agains this value if the expression has changed after each law!
         this.eliminationOfImplication();
         this.absorption();
         this.mergeNot();
