@@ -2,6 +2,7 @@ import path from "path";
 
 module.exports = {
     graphqlTypegen: true,
+    trailingSlash: "never",
     siteMetadata: {
         title: `Martin Berg Alstad's website`,
         description: `Martin Berg Alstad's personal website and portfolio`,
