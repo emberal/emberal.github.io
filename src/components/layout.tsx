@@ -1,6 +1,6 @@
 import * as React from "react";
 import Footer from "./footer";
-import { graphql, Link, useStaticQuery } from "gatsby";
+import { Link } from "gatsby";
 import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -33,8 +33,8 @@ interface Layout {
  * @param children The contents of the page
  * @param current Defines the current page using the layout
  * @param className Styling of the root element
- * @param titleAndNavClass
- * @param containerClass
+ * @param titleAndNavClass Styling of the title and nav container
+ * @param containerClass Styling of the main container
  * @returns {JSX.Element}
  * @constructor
  */
@@ -42,24 +42,12 @@ const Layout = (
     {
         title,
         headline,
-        description,
         children,
         current,
         className,
         titleAndNavClass,
         containerClass
     }: Layout) => {
-
-    const query = useStaticQuery(graphql`
-        query {
-            site {
-                siteMetadata {
-                    lang
-                    title
-                }
-            }
-        }
-    `);
 
     const themeEnum = {
         auto: 'auto',
@@ -71,7 +59,7 @@ const Layout = (
 
     React.useEffect(() => {
         if (!('theme' in localStorage) || localStorage.theme === themeEnum.auto) {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) { //TODO auto change theme on browser change
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
                 document.documentElement.classList.add('dark');
             }
             else {
@@ -91,7 +79,7 @@ const Layout = (
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function toggleDarkMode(theme: string) { //TODO create themeType instead?
+    function toggleDarkMode(theme: string) {
         switch (theme) {
             case 'dark':
                 localStorage.theme = themeEnum.dark;
@@ -174,7 +162,7 @@ const Layout = (
     ];
 
     return (
-        <div className={ `dark:bg-gray-900 dark:text-white ${ className }` }>
+        <div className={ `dark:bg-gray-900 dark:text-white overflow-clip ${ className }` }>
             <div id={ "main-container" }
                  className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
                 <div className={ ` ${ titleAndNavClass }` }>
@@ -182,7 +170,7 @@ const Layout = (
                         className={ `text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6` }>
                         { (headline) ? headline : title }
                     </h1>
-                    { /*TODO Popover or Menu (headlessUI) menu on small screens*/ }
+                    { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
                     <nav>
                         <ul className={ "list-none flex gap-3 mb-2" }>
                             {

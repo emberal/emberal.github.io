@@ -64,7 +64,8 @@ const Input = ({ className, id, name, type, title, placeholder, required, onChan
             { leading }
             <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
             <input
-                className={ `dark:bg-gray-900 focus:border-primaryPurple outline-none border-2 border-gray-500 pl-2 ${ className }` }
+                className={ `dark:bg-gray-900 focus:border-primaryPurple outline-none border-2 border-gray-500 
+                hover:border-t-primary-purple pl-2 ${ className }` }
                 id={ id }
                 onFocus={ () => setIsFocused(true) }
                 onBlur={ () => setIsFocused(false) }
@@ -117,7 +118,7 @@ export const TextArea = ({ className, id, name, title, placeholder, required = f
             <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
             <textarea id={ id }
                       className={ `pl-2 min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
-                                   border-2 border-gray-500 ${ className }` }
+                                   border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
                       name={ name }
                       placeholder={ placeholder }
                       required={ required }
