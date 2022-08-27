@@ -1,4 +1,5 @@
 import { Operator } from "./operator";
+import { after } from "lodash";
 
 /**
  * @param leading Leading content before the expression, like opening parentheses or 'not' operator
@@ -44,6 +45,12 @@ export class Expression {
     trailing;
     atomic;
 
+    /**
+     * Stores the before and after of each law
+     * @example [index] => ¬(A & B);¬A | ¬B;DeMorgans Law
+     */
+    static orderOfOperations: any[] = [];
+
     // TODO add weight to each Expression used to compare and sort, using the "value" of child Expressions, atomic uses string value
 
     /**
@@ -59,7 +66,7 @@ export class Expression {
             }
 
             // If both are atomic
-            if (this.isAtomic() && other.isAtomic() && this.atomic === other.atomic && this.leading === other.leading) {
+            if (this.isAtomic() && other.isAtomic() && this.atomic === other.atomic && this.isNot() === other.isNot()) {
                 return true;
             }
             // If neither is atomic
@@ -119,20 +126,40 @@ export class Expression {
         return this.left?.getAtomicValue() ?? null;
     }
 
-    public laws(): void { // TODO return something if exp is changed?
-        let exp = this.toString(); // TODO Check agains this value if the expression has changed after each law!
+    private isChangedThenPush(exp: string, law: string): string {
+        if (exp !== this.toString()) {
+            const op = {
+                before: exp,
+                after: this.toString(),
+                law: law,
+            }
+            Expression.orderOfOperations.push(op);
+            exp = this.toString();
+        }
+        return exp;
+    }
+
+    public laws(): void {
+
+        let exp = this.toString();
         this.eliminationOfImplication();
-        this.absorption();
+        exp = this.isChangedThenPush(exp, "Elimination of implication");
         this.mergeNot();
+        exp = this.isChangedThenPush(exp, "Merge not operators");
         this.deMorgansLaw();
+        exp = this.isChangedThenPush(exp, "De Morgan's Law");
+        this.absorption();
+        exp = this.isChangedThenPush(exp, "Absorption");
         this.assosiativeLaw();
+        exp = this.isChangedThenPush(exp, "Assosiative");
         this.distributivity();
+        this.isChangedThenPush(exp, "Distributivity");
     }
 
     public removeParenthesis(): void {
 
         if (this.left && this.right) {
-
+            const exp = this.toString();
             const removeBothSides = (exp: Expression) => {
                 exp.leading = "";
                 exp.trailing = "";
@@ -161,6 +188,7 @@ export class Expression {
                     removeBothSides(this.right);
                 }
             }
+            this.isChangedThenPush(exp, "Removal of parentheses");
         }
     }
 
@@ -234,7 +262,7 @@ export class Expression {
                     newOperator = Operator.and;
             }
 
-            if (newOperator !== null) {
+            if (newOperator) {
                 this.left.removeNot();
                 this.right.removeNot();
                 this.left = new Expression({
@@ -317,8 +345,10 @@ export class Expression {
         };
 
         if (this.left?.isAtomic() && this.right?.isAtomic() && this.left.atomic! >= this.right.atomic!) {
+            let exp = this.toString();
             if (this.left.atomic! !== this.right.atomic! || this.left.equalsAndOpposite(this.right) && !this.right.leading.includes("¬")) {
                 swap();
+                this.isChangedThenPush(exp, "Commutative");
             }
         }
     }
@@ -360,7 +390,7 @@ export class Expression {
 
             // If both are atomic values
             if (this.left.isAtomic() && this.right.isAtomic()) {
-                if (this.left.getAtomicValue() === this.right.getAtomicValue()) {
+                if (this.left.equals(this.right)) {
                     removeRight(this);
                 }
             }
@@ -528,9 +558,15 @@ export class Expression {
             return this.leading + this.atomic!;
         }
         let s = this.leading;
-        s += this.left?.toString();
-        s += " " + this.operator?.toString() + " ";
-        s += this.right?.toString();
+        if (this.left) {
+            s += this.left?.toString();
+        }
+        if (this.operator) {
+            s += " " + this.operator?.toString() + " ";
+        }
+        if (this.right) {
+            s += this.right?.toString();
+        }
         s += this.trailing;
         return s;
     }

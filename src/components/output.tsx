@@ -55,3 +55,17 @@ export const MyDisclosure = ({ title, content, defaultOpen = false, className, i
         </div>
     )
 };
+
+interface MyDisclosureContainer {
+    children: React.ReactNode,
+    className?: string,
+}
+
+export const MyDisclosureContainer = ({ children, className }: MyDisclosureContainer): JSX.Element => {
+    return (
+        <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
+                                flex flex-col gap-1 ${ className }` }>
+            { children }
+        </div>
+    )
+};

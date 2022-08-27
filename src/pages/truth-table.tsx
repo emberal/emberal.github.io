@@ -6,7 +6,7 @@ import { Expression } from "../classes/expression";
 import { Search, X } from "react-feather";
 import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { InfoBox, MyDisclosure } from "../components/output";
+import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
 import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
@@ -58,7 +58,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
             setErrorMessage(errorMsg);
 
             if (errorMsg === "") {
-                const sExp = simplify(exp, simplifyEnabled);
+                const sExp = simplify(exp, simplifyEnabled); // Magic happens
 
                 if (sExp) {
                     expression.current = sExp;
@@ -128,8 +128,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                 titleAndNavClass={ "max-w-2xl mx-auto" }>
             <div className={ "pt-2" } id={ "truth-content" }>
                 <div className={ "max-w-2xl mx-auto" }>
-                    <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
-                                flex flex-col gap-1` }>
+                    <MyDisclosureContainer>
                         <MyDisclosure title={ t("howTo") } content={ <p>{ t("truthTableHowTo") }</p> }/>
                         <MyDisclosure title={ t("keywords") }
                                       content={
@@ -141,7 +140,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                           </>
                                       }
                         />
-                    </div>
+                    </MyDisclosureContainer>
                     <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
                            id={ "truth-input" }
                            placeholder={ "¬A&B>C" }
@@ -150,12 +149,12 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                            trailing={
                                <>
                                    {
-                                       typing ?
-                                           <button className={ "absolute left-44 sm:left-[22rem]" }
-                                                   title={ t("clear") }
-                                                   onClick={ clearSearch }>
-                                               <X/>
-                                           </button> : null
+                                       typing &&
+                                       <button className={ "absolute left-44 sm:left-[22rem]" }
+                                               title={ t("clear") }
+                                               onClick={ clearSearch }>
+                                           <X/>
+                                       </button>
                                    }
                                    <button id={ "truth-input-button" }
                                            title={ t("generate") + " (Enter)" }
@@ -170,34 +169,53 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                     <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
                               name={ t("toggleSimplify") }/>
                     {
-                        errorMessage !== "" ?
-                            <InfoBox className={ "w-fit" }
-                                     title={ t("inputError") }
-                                     content={ errorMessage }
-                                     error={ true }
-                            /> : null
+                        errorMessage !== "" &&
+                        <InfoBox className={ "w-fit" }
+                                 title={ t("inputError") }
+                                 content={ errorMessage }
+                                 error={ true }
+                        />
+                    }
+                    {
+                        simplifyEnabled && Expression.orderOfOperations.length > 0 && // TODO improve and show differences, mark removed with red bg, and added with green bg
+                        <MyDisclosureContainer>
+                            <MyDisclosure title={ "Show me how it's done!" } content={ // TODO translate
+                                <>
+                                    {
+                                        Expression.orderOfOperations.map((operation: any, index: number) => (
+                                            <div key={ index }>
+                                                <p>{ index + 1 + ": " +
+                                                    operation.before + " <=> " +
+                                                    operation.after + ". Using: " +
+                                                    operation.law }</p>
+                                            </div>
+                                        ))
+                                    }
+                                </>
+                            }/>
+                        </MyDisclosureContainer>
                     }
                 </div>
                 {
-                    search !== "" ?
-                        <>
-                            {
-                                simplifyEnabled ?
-                                    <InfoBox className={ "w-fit mx-auto" }
-                                             title={ t("output") + ":" }
-                                             content={ search }
-                                    /> : null
-                            }
-                            <div className={ "flex justify-center m-2" }>
-                                <div id={ "table" }
-                                     className={ "h-[45rem] overflow-scroll" }>
-                                    <TruthTable
-                                        expression={ expression.current }
-                                        className={ `relative w-max text-black dark:text-white` }
-                                    />
-                                </div>
+                    search !== "" &&
+                    <>
+                        {
+                            simplifyEnabled &&
+                            <InfoBox className={ "w-fit mx-auto" }
+                                     title={ t("output") + ":" }
+                                     content={ search }
+                            />
+                        }
+                        <div className={ "flex justify-center m-2" }>
+                            <div id={ "table" }
+                                 className={ "h-[45rem] overflow-scroll" }>
+                                <TruthTable
+                                    expression={ expression.current }
+                                    className={ `relative w-max text-black dark:text-white` }
+                                />
                             </div>
-                        </> : null
+                        </div>
+                    </>
                 }
             </div>
         </Layout>

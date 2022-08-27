@@ -2,6 +2,7 @@ import { Expression } from "./expression";
 import { Operator } from "./operator";
 
 export function simplify(stringExp: string, simplify: boolean): Expression {
+    Expression.orderOfOperations = []; // Resets the orderOfOperations
     let exp = simplifyRec(stringExp, simplify);
     if (!exp.leading.includes("¬")) {
         exp.leading = "";
@@ -19,6 +20,9 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
         while ( stringExp.includes("¬") ) {
             stringExp = stringExp.replace("¬", "");
             exp.leading += "¬";
+        }
+        if ( stringExp.includes("(") || stringExp.includes(")") ) {
+            stringExp = stringExp.replace(/[()]/g, "");
         }
         exp.atomic = stringExp;
         if (simplify) {
@@ -174,22 +178,22 @@ interface isLegalExpressionTranslations {
  * @param atIndex A string message for displaying index
  * @param expressionTooBig A string message when the expression is too big
  */
-export function isLegalExpression(stringExp: string, {
+export function isLegalExpression(stringExp: string, { // TODO Gonna need some cleaning
     illegalChar = "Illegal character",
     missingChar = "Missing character",
     atIndex = "at index:",
     expressionTooBig = "Expression too big",
 }: isLegalExpressionTranslations): string {
 
-    const illegalCharError = (char: string, index: number): string => {
+    const illegalCharError = (char: string, index: number, errorCode: number): string => {
         error = `${ illegalChar } "${ char }" ${ atIndex } ${ index }`;
-        console.error(error);
+        console.error(error, "Error: " + errorCode);
         return error;
     };
 
-    const missingCharError = (char: string, index: number): string => {
+    const missingCharError = (char: string, index: number, errorCode: number): string => {
         error = `${ missingChar } "${ char }" ${ atIndex } ${ index }`;
-        console.error(error);
+        console.error(error, "Error: " + errorCode);
         return error;
     };
 
@@ -197,13 +201,14 @@ export function isLegalExpression(stringExp: string, {
         return char === "(" || char === ")";
     };
 
+    let error = "";
+
     const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()&|¬\->\[\]]|^->|]\[|\)\[|\)\(|\(\)/);
     const match = stringExp.match(regex);
     if (match) {
-        return illegalCharError(match[0], stringExp.indexOf(match[0]));
+        return illegalCharError(match[0], stringExp.indexOf(match[0]), 0);
     }
 
-    let error = "";
     const stack: string[] = [];
     let isTruthValue = false;
     let insideSquare = false;
@@ -211,10 +216,6 @@ export function isLegalExpression(stringExp: string, {
 
     for (let i = 0; i < stringExp.length; i++) {
         const char = stringExp.charAt(i);
-
-        if (char === ">") {
-            continue;
-        }
 
         let trailing = "";
         let leading = "";
@@ -230,12 +231,18 @@ export function isLegalExpression(stringExp: string, {
         }
 
         if (char === "-" && stringExp.charAt(i + 1) !== ">") {
-            return illegalCharError(char, i);
+            return illegalCharError(char, i, 10);
+        }
+        else if (char === ">" && stringExp.charAt(i - 1) !== "-") { // TODO needed?
+            return illegalCharError(char, i, 11);
         }
         else if (char === "(" || char === "[") {
+            if (i > 0 && !Operator.isOperator(stringExp.charAt(i - 1))) {
+                return illegalCharError(char, i, 20);
+            }
             if (char === "[") {
                 if (stack[stack.length - 1] === "[") {
-                    return illegalCharError(char, i);
+                    return illegalCharError(char, i, 21);
                 }
                 insideSquare = true;
             }
@@ -247,7 +254,7 @@ export function isLegalExpression(stringExp: string, {
                 insideSquare = false;
             }
             if (char === ")" && pop !== "(" || char === "]" && pop !== "[") {
-                return illegalCharError(char, i);
+                return illegalCharError(char, i, 22);
             }
         }
         else if (!Operator.isOperator(char) && !isParentheses(char)) {
@@ -262,29 +269,31 @@ export function isLegalExpression(stringExp: string, {
             }
 
             if (Operator.not.operator === char) {
-                if (!Operator.isOperator(prevChar) && prevChar !== "(" || i === stringExp.length - 1) {
-                    return illegalCharError(char, i);
+                if (!Operator.isOperator(leading + prevChar) && prevChar !== "(" || i === stringExp.length - 1) {
+                    return illegalCharError(char, i, 30);
                 }
                 continue;
             }
 
-            // Return false if two operators are following eachother, but not ¬
+            // Return if two operators are following eachother, but not ¬
             if (Operator.isOperator(char + trailing)) {
-                if (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1) {
-                    return illegalCharError(char, i);
+                if (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1 ||
+                    trailing === ">" && i === stringExp.length - 2) {
+                    return illegalCharError(char, i, 40);
                 }
             }
-            else if (!(char === "]" || Operator.isOperator(char) || Operator.isOperator(leading + prevChar) ||
-                isParentheses(char) || isParentheses(prevChar))) {
-                return illegalCharError(char, i);
+            // Return if two atomic values are following eachother
+            else if (!(char === "]" || char === ">" || Operator.isOperator(char) ||
+                Operator.isOperator(leading + prevChar) || isParentheses(char) || isParentheses(prevChar))) {
+                return illegalCharError(char, i, 50);
             }
         }
     }
     if (!isTruthValue) {
-        return missingCharError("A", stringExp.length);
+        return missingCharError("A", stringExp.length, 23);
     }
     if (stack.length > 0) {
-        return missingCharError(stack.pop() === "(" ? ")" : "]", stringExp.length);
+        return missingCharError(stack.pop() === "(" ? ")" : "]", stringExp.length, 24);
     }
 
     return ""; // Legal expression

@@ -7,7 +7,6 @@ interface TruthTable {
     id?: string,
 }
 
-// TODO show calculations, which laws are used, on what parts and in which order
 // TODO add filter, only show true / false
 // TODO add sort, sort by default, true or false
 const TruthTable = ({ expression, className, id }: TruthTable) => {
