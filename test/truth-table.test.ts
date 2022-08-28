@@ -1,4 +1,4 @@
-import { isLegalExpression, simplify } from '../src/classes/expression_utils';
+import { diffTextInsert, isLegalExpression, simplify } from '../src/classes/expression_utils';
 import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
@@ -51,7 +51,7 @@ test("Absorption w/ different values", () => {
     expect(simplify("A|B|A|B", true).toString()).toBe("A | B");
     expect(simplify("A|B|C|A", true).toString()).toBe("A | B | C");
     expect(simplify("¬A&B|(A->B)", true).toString()).toBe("¬A | B");
-    expect(simplify("¬A&A|B", true).toString()).toBe("B"); // FIXME
+    expect(simplify("¬A&A|B", true).toString()).toBe("B");
 });
 
 test("Distributivity", () => {
@@ -166,4 +166,10 @@ test("Illegal expressions", () => {
     expect(isLegalExpression("A¬B", {}) !== "").toBeTruthy();
     expect(isLegalExpression("(A&B)(B&C)", {}) !== "").toBeTruthy();
     expect(isLegalExpression("[Hello][World]", {}) !== "").toBeTruthy();
+});
+
+test("Show diff", () => {
+    expect(diffTextInsert("A", "A | ¬A")).toBe("A<ins> | ¬A</ins>");
+    expect(diffTextInsert("¬A | B & C -> A", "¬(¬A | B & C) | A")).toBe(
+        "¬<ins>(¬</ins>A | B & C<ins>)</ins> <ins>|</ins> A")
 });

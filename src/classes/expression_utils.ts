@@ -1,5 +1,6 @@
 import { Expression } from "./expression";
 import { Operator } from "./operator";
+import { DetailedHTMLProps, HTMLAttributes } from "react";
 
 export function simplify(stringExp: string, simplify: boolean): Expression {
     Expression.orderOfOperations = []; // Resets the orderOfOperations
@@ -17,11 +18,11 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     // Basis
     if (isAtomic(stringExp)) {
-        while ( stringExp.includes("¬") ) {
+        while (stringExp.includes("¬")) {
             stringExp = stringExp.replace("¬", "");
             exp.leading += "¬";
         }
-        if ( stringExp.includes("(") || stringExp.includes(")") ) {
+        if (stringExp.includes("(") || stringExp.includes(")")) {
             stringExp = stringExp.replace(/[()]/g, "");
         }
         exp.atomic = stringExp;
@@ -32,7 +33,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
     }
 
     // TODO move this above the basis?
-    while ( stringExp[0] === "¬" && isOuterParentheses(stringExp.substring(1, stringExp.length)) ) {
+    while (stringExp[0] === "¬" && isOuterParentheses(stringExp.substring(1, stringExp.length))) {
         stringExp = stringExp.replace("¬", "");
         exp.leading += "¬";
     }
@@ -120,7 +121,7 @@ function getCenterOperatorIndex(stringExp: string): any {
 
         // Skips all lines within parenthesis
         let char = stringExp.charAt(i);
-        while ( char === "(" || char === "[" || parentheses > 0 ) {
+        while (char === "(" || char === "[" || parentheses > 0) {
             char = stringExp.charAt(i);
             if (char === "(" || char === "[") {
                 parentheses++;
@@ -308,14 +309,14 @@ function isOuterParentheses(stringExp: string): boolean {
     let is = false;
     let index = 0;
 
-    while ( stringExp.charAt(index) === "¬" ) {
+    while (stringExp.charAt(index) === "¬") {
         index++;
     }
 
     if (stringExp.charAt(index) === "(") {
         is = true;
     }
-    while ( is && (stringExp.charAt(index) === "(" || operators > 0) ) {
+    while (is && (stringExp.charAt(index) === "(" || operators > 0)) {
         if (stringExp.charAt(index) === "(") {
             operators++;
         }
@@ -357,4 +358,49 @@ export function replaceOperators(exp: string): string {
     regex(startIndex, exp.length);
 
     return exp;
+}
+
+export function diffTextInsert(before: string, after: string): string {
+
+    const ins = "<ins style='background-color: rgb(21 128 61); color: white'>";
+    const closeIns = "</ins>";
+
+    const addToString = (text: string, tag: string, at: number): string => {
+        return text.substring(0, at) + tag + text.substring(at, text.length);
+    };
+
+    let indexBefore = 0;
+    let indexAfter = 0;
+
+    while (indexAfter < after.length) {
+        if (before.charAt(indexBefore) !== after.charAt(indexAfter)) {
+            after = addToString(after, ins, indexAfter);
+            indexAfter += ins.length + 1;
+
+            let found = true;
+            const oldIndex = indexAfter;
+            while (found && before.charAt(indexBefore) !== after.charAt(indexAfter)) {
+                if (indexAfter === after.length) {
+                    found = false;
+                }
+                else {
+                    indexAfter++;
+                }
+            }
+            if (!found) {
+                indexAfter = oldIndex;
+            }
+            if (Operator.isOperator(before[indexBefore] + before[indexBefore + 1])) {
+                indexBefore += 2;
+            }
+            after = addToString(after, closeIns, indexAfter);
+            indexAfter += closeIns.length + 1;
+        }
+        else {
+            indexAfter++;
+        }
+        indexBefore++;
+    }
+
+    return after;
 }

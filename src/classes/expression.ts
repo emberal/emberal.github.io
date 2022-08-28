@@ -419,6 +419,14 @@ export class Expression {
                             }
                             removeRight(this);
                         }
+                        // If right side is always false and operator is "or", remove right side (Ex: B | (A & ¬A) <=> B)
+                        else if (this.operator === Operator.or && right.left?.equalsAndOpposite(right.right) &&
+                            right.operator === Operator.and) {
+                            if (removeLeft) {
+                                this.left = this.right;
+                            }
+                            removeRight(this);
+                        }
                         // removes the left side of the right side
                         else if ((leftEqualsLeft &&
                                 (this.operator !== Operator.implication || right.operator === Operator.and) && left.leading === right.leading) ||

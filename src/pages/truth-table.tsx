@@ -8,7 +8,7 @@ import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
-import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
+import { diffTextInsert, isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
 
 interface TruthTablePage {
@@ -176,18 +176,25 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                  error={ true }
                         />
                     }
-                    {
-                        simplifyEnabled && Expression.orderOfOperations.length > 0 && // TODO improve and show differences, mark removed with red bg, and added with green bg
+                    { // TODO improve and show differences, mark removed with red bg <del>, and added with green bg <ins>
+                        simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ "Show me how it's done!" } content={ // TODO translate
                                 <>
                                     {
                                         Expression.orderOfOperations.map((operation: any, index: number) => (
                                             <div key={ index }>
-                                                <p>{ index + 1 + ": " +
-                                                    operation.before + " <=> " +
-                                                    operation.after + ". Using: " +
-                                                    operation.law }</p>
+                                                <span>{ index + 1 } : </span>
+                                                <span>{ operation.before } </span>
+                                                <span>{ " <=> " }</span>
+                                                <span
+                                                    dangerouslySetInnerHTML={
+                                                        {
+                                                            __html: diffTextInsert(operation.before, operation.after)
+                                                        }
+                                                    }
+                                                />
+                                                <span>. Using: { operation.law }</span>
                                             </div>
                                         ))
                                     }
