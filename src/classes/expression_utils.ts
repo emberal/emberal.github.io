@@ -360,14 +360,14 @@ export function replaceOperators(exp: string): string {
     return exp;
 }
 
+function addToString(text: string, tag: string, at: number): string {
+    return text.substring(0, at) + tag + text.substring(at, text.length);
+}
+
 export function diffTextInsert(before: string, after: string): string {
 
     const ins = "<ins class='text-white bg-green-700'>";
     const closeIns = "</ins>";
-
-    const addToString = (text: string, tag: string, at: number): string => {
-        return text.substring(0, at) + tag + text.substring(at, text.length);
-    };
 
     let indexBefore = 0;
     let indexAfter = 0;
@@ -403,4 +403,46 @@ export function diffTextInsert(before: string, after: string): string {
     }
 
     return after;
+}
+
+export function diffTextDelete(before: string, after: string): string {
+
+    const del = "<del class='text-white bg-red-700'>";
+    const closeDel = "</del>";
+
+    let indexBefore = 0;
+    let indexAfter = 0;
+    let startDel = -1;
+    let endDel = -1;
+
+    let done = false;
+    while (!done && indexBefore < before.length) {
+
+        if (before.charAt(indexBefore) !== after.charAt(indexAfter)) {
+
+            if (indexAfter >= after.length) {
+                startDel = indexBefore;
+                endDel = before.length - 1;
+                done = true;
+            }
+
+            else {
+                let index = indexAfter;
+                while (before.charAt(indexBefore) !== after.charAt(index)) {
+                    if (index >= after.length) {
+                        startDel = indexBefore;
+                        endDel = indexBefore + 1;
+                        break;
+                    }
+                    index++;
+                }
+            }
+            before = addToString(before, del, startDel);
+            before = addToString(before, closeDel, endDel + del.length);
+        }
+        indexBefore++;
+        indexAfter++;
+    }
+
+    return before;
 }

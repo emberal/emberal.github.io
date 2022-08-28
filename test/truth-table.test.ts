@@ -1,4 +1,4 @@
-import { diffTextInsert, isLegalExpression, simplify } from '../src/classes/expression_utils';
+import { diffTextDelete, diffTextInsert, isLegalExpression, simplify } from '../src/classes/expression_utils';
 import { Expression } from "../src/classes/expression";
 import { Operator } from "../src/classes/operator";
 
@@ -169,7 +169,13 @@ test("Illegal expressions", () => {
 });
 
 test("Show diff", () => {
-    expect(diffTextInsert("A", "A | ¬A")).toBe("A<ins> | ¬A</ins>");
-    expect(diffTextInsert("¬A | B & C -> A", "¬(¬A | B & C) | A")).toBe(
-        "¬<ins>(¬</ins>A | B & C<ins>)</ins> <ins>|</ins> A")
+
+    const ins = "<ins class='text-white bg-green-700'>";
+    const del = "<del class='text-white bg-red-700'>";
+
+    // expect(diffTextInsert("A", "A | ¬A")).toBe(`A${ ins } | ¬A</ins>`);
+    // expect(diffTextInsert("¬A | B & C -> A", "¬(¬A | B & C) | A")).toBe(
+    //     `¬${ ins }(¬</ins>A | B & C${ ins })</ins> ${ ins }|</ins> A`);
+    expect(diffTextDelete("A & A", "A")).toBe(`A${ del } & A</del>`);
+    expect(diffTextDelete("¬A & B -> A", "¬(¬A & B) | A")).toBe(`¬A & B ${ del }-></del> A`);
 });

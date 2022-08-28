@@ -8,7 +8,13 @@ import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
-import { diffTextInsert, isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
+import {
+    diffTextDelete,
+    diffTextInsert,
+    isLegalExpression,
+    replaceOperators,
+    simplify
+} from "../classes/expression_utils";
 import SEO from "../components/seo";
 
 interface TruthTablePage {
@@ -176,7 +182,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                  error={ true }
                         />
                     }
-                    { // TODO improve and show differences, mark removed with red bg <del>, use the <ins> string to find deleted
+                    { // TODO improve and show differences, mark removed with red bg <del>
                         simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ "Show me how it's done!" } content={ // TODO translate
@@ -185,7 +191,11 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                         Expression.orderOfOperations.map((operation: any, index: number) => (
                                             <div key={ index }>
                                                 <span>{ index + 1 } : </span>
-                                                <span>{ operation.before } </span>
+                                                <span dangerouslySetInnerHTML={
+                                                    {
+                                                        __html: diffTextDelete(operation.before, operation.after),
+                                                    }
+                                                }/>
                                                 <span>{ " <=> " }</span>
                                                 <span
                                                     dangerouslySetInnerHTML={
