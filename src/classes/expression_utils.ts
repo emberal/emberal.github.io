@@ -362,7 +362,7 @@ export function replaceOperators(exp: string): string {
 
 export function diffTextInsert(before: string, after: string): string {
 
-    const ins = "<ins style='background-color: rgb(21 128 61); color: white'>";
+    const ins = "<ins class='text-white bg-green-700'>";
     const closeIns = "</ins>";
 
     const addToString = (text: string, tag: string, at: number): string => {

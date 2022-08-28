@@ -176,7 +176,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                  error={ true }
                         />
                     }
-                    { // TODO improve and show differences, mark removed with red bg <del>, and added with green bg <ins>
+                    { // TODO improve and show differences, mark removed with red bg <del>, use the <ins> string to find deleted
                         simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ "Show me how it's done!" } content={ // TODO translate
