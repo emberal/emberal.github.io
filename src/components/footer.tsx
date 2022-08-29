@@ -4,8 +4,6 @@ import { Menu } from "@headlessui/react";
 import { ChevronUp, Globe } from "react-feather";
 import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 
-const linksStyle = "text-primaryPurple dark:text-primaryPink hover:underline";
-
 interface Footer {
     className?: string,
 }
@@ -106,13 +104,13 @@ const Footer = ({ className }: Footer) => {
             </div>
 
             <p>{ t("createdWith") }
-                <a className={ linksStyle } href={ "https://www.gatsbyjs.com/" } target={ "_blank" }
+                <a className={ "default-link" } href={ "https://www.gatsbyjs.com/" } target={ "_blank" }
                    rel={ "noreferrer" }>
                     Gatsby.js
                 </a>
             </p>
             <p>{ t("iconsFrom") }
-                <a className={ linksStyle } href={ "https://feathericons.com/" } target={ "_blank" }
+                <a className={ "default-link" } href={ "https://feathericons.com/" } target={ "_blank" }
                    rel={ "noreferrer" }>
                     FeatherIcons
                 </a>

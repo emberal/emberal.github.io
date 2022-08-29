@@ -24,4 +24,8 @@
     .border-rounded {
         @apply border rounded-xl;
     }
+
+    .default-link {
+        @apply text-standard hover:underline;
+    }
 }

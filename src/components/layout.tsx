@@ -177,8 +177,7 @@ const Layout = (
                                 navLinks.map(link => (
                                     <li key={ link.to } className={ "w-fit text-lg" }>
                                         <Link
-                                            className={ `text-primaryPurple dark:text-primaryPink hover:underline 
-                                        ${ current === link.to && "after:content-['<']" }` }
+                                            className={ `default-link ${ current === link.to && "after:content-['<']" }` }
                                             to={ link.to }> { link.name }
                                         </Link>
                                     </li>
@@ -186,8 +185,7 @@ const Layout = (
                             }
                             <li className={ "mr-6 w-fit relative" }>
                                 <Menu>
-                                    <Menu.Button
-                                        className={ "text-standard flex items-center text-lg" }>
+                                    <Menu.Button className={ "default-link flex items-center text-lg" }>
                                         <>
                                             { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
                                         </>
