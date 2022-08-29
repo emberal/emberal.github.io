@@ -8,13 +8,8 @@ import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
-import {
-    diffTextDelete,
-    diffTextInsert,
-    isLegalExpression,
-    replaceOperators,
-    simplify
-} from "../classes/expression_utils";
+import { diffWordsWithSpace } from "diff";
+import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
 
 interface TruthTablePage {
@@ -100,6 +95,11 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
 
     React.useEffect(() => {
 
+        // Resets the array on page load, if the page has been used before
+        if (search === "") {
+            Expression.orderOfOperations = [];
+        }
+
         let isMounted = true;
 
         function keyPress(e: KeyboardEvent) {
@@ -182,29 +182,27 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                  error={ true }
                         />
                     }
-                    { // TODO improve and show differences, mark removed with red bg <del>
+                    {
                         simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
-                            <MyDisclosure title={ "Show me how it's done!" } content={ // TODO translate
+                            <MyDisclosure title={ t("showMeHowItsDone") } content={
                                 <>
                                     {
                                         Expression.orderOfOperations.map((operation: any, index: number) => (
                                             <div key={ index }>
                                                 <span>{ index + 1 } : </span>
-                                                <span dangerouslySetInnerHTML={
-                                                    {
-                                                        __html: diffTextDelete(operation.before, operation.after),
-                                                    }
-                                                }/>
-                                                <span>{ " <=> " }</span>
-                                                <span
-                                                    dangerouslySetInnerHTML={
-                                                        {
-                                                            __html: diffTextInsert(operation.before, operation.after)
-                                                        }
-                                                    }
-                                                />
-                                                <span>. Using: { operation.law }</span>
+                                                {
+                                                    diffWordsWithSpace(operation.before, operation.after).map(
+                                                        (part, index: number) => (
+                                                            <span key={ index }
+                                                                  className={
+                                                                      `${ part.added && "bg-green-500 dark:bg-green-700 text-black dark:text-white" } 
+                                                                    ${ part.removed && "bg-red-500 dark:bg-red-700 text-black dark:text-white" }` }>
+                                                                { part.value }
+                                                            </span>
+                                                        ))
+                                                }
+                                                <span>. { t("using") }: { operation.law }</span>
                                             </div>
                                         ))
                                     }
@@ -240,7 +238,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
 }
 
 export const Head = ({ data }: HeadProps<Queries.TruthTablePageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0].node.data;
+    const locales = data.locales.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);

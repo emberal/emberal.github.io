@@ -55,5 +55,7 @@
   "implication": "Implisering: \"->\", \"=>\", \"imp\" eller \"impliserer\"",
   "howTo": "Informasjon",
   "keywords": "Nøkkelord",
-  "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier."
+  "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier.",
+  "showMeHowItsDone": "Hvis meg framgangsmåten",
+  "using": "Bruker"
 }

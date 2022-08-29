@@ -38,7 +38,7 @@ const Homepage = ({}: Homepage): JSX.Element => {
 }
 
 export const Head = ({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0].node.data;
+    const locales = data.locales.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
