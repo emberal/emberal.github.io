@@ -8,7 +8,7 @@ import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
-import { diffWordsWithSpace } from "diff";
+import { diffChars } from "diff";
 import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
 
@@ -186,27 +186,31 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                         simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ t("showMeHowItsDone") } content={
-                                <>
+                                <table className={ "table" }>
+                                    <tbody>
                                     {
                                         Expression.orderOfOperations.map((operation: any, index: number) => (
-                                            <div key={ index }>
-                                                <span>{ index + 1 } : </span>
-                                                {
-                                                    diffWordsWithSpace(operation.before, operation.after).map(
-                                                        (part, index: number) => (
-                                                            <span key={ index }
-                                                                  className={
-                                                                      `${ part.added && "bg-green-500 dark:bg-green-700 text-black dark:text-white" } 
+                                            <tr key={ index }>
+                                                <td>{ index + 1 }:</td>
+                                                <td className={ "px-2" }>
+                                                    {
+                                                        diffChars(operation.before, operation.after).map(
+                                                            (part, index: number) => (
+                                                                <span key={ index }
+                                                                      className={
+                                                                          `${ part.added && "bg-green-500 dark:bg-green-700 text-black dark:text-white" } 
                                                                     ${ part.removed && "bg-red-500 dark:bg-red-700 text-black dark:text-white" }` }>
                                                                 { part.value }
                                                             </span>
-                                                        ))
-                                                }
-                                                <span>. { t("using") }: { operation.law }</span>
-                                            </div>
+                                                            ))
+                                                    }
+                                                </td>
+                                                <td>{ t("using") }: { operation.law }</td>
+                                            </tr>
                                         ))
                                     }
-                                </>
+                                    </tbody>
+                                </table>
                             }/>
                         </MyDisclosureContainer>
                     }
