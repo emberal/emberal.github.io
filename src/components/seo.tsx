@@ -24,9 +24,9 @@ const SEO = ({ title, description, blockCrawlers = false, children }: SEO) => {
 
     return (
         <>
-            <meta lang={ query.site.siteMetadata.lang }/>
+            <meta lang={ query.site.siteMetadata.lang }/> { /*TODO move to gatsby-ssr.jsx as HTML*/ }
             <meta name={ "description" } content={ description ?? query.site.siteMetadata.description}/>
-            { blockCrawlers ? <meta name={ "robots" } content={ "noindex" }/> : null }
+            { blockCrawlers && <meta name={ "robots" } content={ "noindex" }/> }
             <title>{ title && title + " | " } { query.site.siteMetadata.title }</title>
             { children }
         </>

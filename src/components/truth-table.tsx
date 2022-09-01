@@ -5,11 +5,17 @@ interface TruthTable {
     expression: Expression,
     className?: string,
     id?: string,
+    onlyShowTrue?: boolean,
+    onlyShowFalse?: boolean,
 }
 
 // TODO add filter, only show true / false
 // TODO add sort, sort by default, true or false
-const TruthTable = ({ expression, className, id }: TruthTable) => {
+const TruthTable = ({ expression, className, id, onlyShowTrue = false, onlyShowFalse = false }: TruthTable) => {
+
+    if (onlyShowTrue && onlyShowFalse) {
+        console.error("Cannot show true and false values at the same time! Change either 'onlyShowTrue' or 'onlyShowFalse'");
+    }
 
     let expressions: Expression[] = [];
 
@@ -140,6 +146,13 @@ const TruthTable = ({ expression, className, id }: TruthTable) => {
 
                 if (exp.isNot()) {
                     boolExp = !boolExp;
+                }
+
+                if (onlyShowTrue && boolExp) {
+                    // TODO
+                }
+                else if (onlyShowFalse && !boolExp) {
+                    // TODO
                 }
 
                 tBodyMatrix[row][column] = boolExp ? "T" : "F";
