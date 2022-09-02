@@ -12,6 +12,7 @@ module.exports = {
                 "black-transparent-1/4": "rgba(0,0,0,0.25)",
                 "black-transparent-1/2": "rgba(0,0,0,0.5)",
                 "black-transparent-3/4": "rgba(0,0,0,0.75)",
+                "white-transparent-1/2": "rgba(255,255,255,0.5)",
             },
         },
     },

@@ -209,8 +209,8 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
         }
     }, [hideTags, isOverflowing]);
 
-    const chevronClasses = `text-primaryPink animate-pulse bg-black-transparent-1/2 border-rounded border-transparent overflow-auto
-    cursor-pointer`;
+    const chevronClasses = `text-primaryPink animate-pulse bg-white-transparent-1/2 dark:bg-black-transparent-1/2 border-rounded
+     border-transparent overflow-auto cursor-pointer`;
 
     return (
         <div id={ id }>
@@ -245,17 +245,16 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
                             <>
                                 <div id={ "invisible-box" }
                                      className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
-                                    { hideTags ? t("showMore") : null }
+                                    { hideTags && t("showMore") }
                                 </div>
                                 <div
                                     className={ `${ hideTags && "absolute right-0 flex flex-row gap-3 items-center" }` }>
                                     {
-                                        hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight ?
+                                        hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
                                             <button title={ t("clickToScroll") }>
                                                 <ChevronRight className={ chevronClasses }
                                                               onClick={ () => scroll(defScrollLen) }/>
                                             </button>
-                                            : null
                                     }
                                     <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
                                          hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }

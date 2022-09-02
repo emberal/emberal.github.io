@@ -1,21 +1,22 @@
 import * as React from "react";
 import { Expression } from "../classes/expression";
 
+export enum Hide {
+    none,
+    true,
+    false,
+}
+
 interface TruthTable {
     expression: Expression,
     className?: string,
     id?: string,
-    onlyShowTrue?: boolean,
-    onlyShowFalse?: boolean,
+    hide?: Hide,
 }
 
 // TODO add filter, only show true / false
 // TODO add sort, sort by default, true or false
-const TruthTable = ({ expression, className, id, onlyShowTrue = false, onlyShowFalse = false }: TruthTable) => {
-
-    if (onlyShowTrue && onlyShowFalse) {
-        console.error("Cannot show true and false values at the same time! Change either 'onlyShowTrue' or 'onlyShowFalse'");
-    }
+const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable) => {
 
     let expressions: Expression[] = [];
 
@@ -114,6 +115,11 @@ const TruthTable = ({ expression, className, id, onlyShowTrue = false, onlyShowF
         };
 
         for (let column = 0; column < expressions.length; column++) {
+
+            if (row >= tBodyMatrix.length) {
+                break;
+            }
+
             const exp = expressions[column];
 
             if (exp.isAtomic() && exp.numberOfChar(exp.leading, "¬") % 2 === 0) { // If not using 'not' operator
@@ -148,14 +154,15 @@ const TruthTable = ({ expression, className, id, onlyShowTrue = false, onlyShowF
                     boolExp = !boolExp;
                 }
 
-                if (onlyShowTrue && boolExp) {
-                    // TODO
+                if (hide === Hide.true && boolExp) {
+                    tBodyMatrix.splice(row);
                 }
-                else if (onlyShowFalse && !boolExp) {
-                    // TODO
+                else if (hide === Hide.false && !boolExp) {
+                    tBodyMatrix.splice(row);
                 }
-
-                tBodyMatrix[row][column] = boolExp ? "T" : "F";
+                else {
+                    tBodyMatrix[row][column] = boolExp ? "T" : "F";
+                }
             }
         }
     }

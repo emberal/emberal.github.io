@@ -3,14 +3,16 @@ import Layout from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
 import { Expression } from "../classes/expression";
-import { Search, X } from "react-feather";
-import TruthTable from "../components/truth-table";
+import { EyeOff, Search, X } from "react-feather";
+import TruthTable, { Hide } from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
 import { diffChars } from "diff";
 import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
+import { Listbox } from "@headlessui/react";
+import Row from "../components/row";
 
 interface TruthTablePage {
 
@@ -37,6 +39,14 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
      * If the searchbar is empty, this state is 'false', otherwise 'true'
      */
     const [typing, setTyping] = React.useState(false);
+
+    const hideOptions = [
+        { id: 0, name: "Hide: none", value: Hide.none },
+        { id: 1, name: "Hide: true results", value: Hide.true },
+        { id: 2, name: "Hide: false results", value: Hide.false },
+    ];
+
+    const [hideValues, setHideValues] = React.useState(hideOptions[0]);
 
     /**
      * Updates the state of the current expression to the new search with all whitespace removed.
@@ -171,9 +181,34 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                </>
                            }
                     />
-                    <span>{ t("simplify") }: </span>
-                    <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
-                              name={ t("toggleSimplify") }/>
+                    <Row className={ "my-1" }>
+                        <span className={ "h-min" }>{ t("simplify") }: </span>
+                        <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
+                                  name={ t("toggleSimplify") } className={"mx-1"}/>
+                        <div className={ "h-min" }>
+                            <Listbox onChange={ (value) => setHideValues(value) } value={ hideOptions[0] }>
+                                <Listbox.Button title={ "Hide results" } className={ "flex flex-row items-center" }>
+                                    <EyeOff className={ "mx-1" }/>
+                                    { hideValues.name }
+                                </Listbox.Button>
+                                <Listbox.Options
+                                    className={ `absolute default-bg border border-gray-500 rounded-b-xl mt-1 z-50` }>
+                                    {
+                                        hideOptions.map(option => (
+                                            <Listbox.Option key={ option.id }
+                                                            className={ "cursor-pointer mx-1 last:mb-1" }
+                                                            value={ option }
+                                            >
+                                                {({ active, selected }) => (
+                                                    <div className={`hover:underline`}>{ option.name }</div>
+                                                )}
+                                            </Listbox.Option>
+                                        ))
+                                    }
+                                </Listbox.Options>
+                            </Listbox>
+                        </div>
+                    </Row>
                     {
                         errorMessage !== "" &&
                         <InfoBox className={ "w-fit" }
@@ -230,6 +265,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                  className={ "h-[45rem] overflow-scroll" }>
                                 <TruthTable
                                     expression={ expression.current }
+                                    hide={ hideValues.value }
                                     className={ `relative w-max text-black dark:text-white` }
                                 />
                             </div>

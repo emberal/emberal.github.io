@@ -29,7 +29,7 @@ interface MyDisclosure {
 
 export const MyDisclosure = ({ title, content, defaultOpen = false, className, id, isOpen }: MyDisclosure) => {
     return (
-        <div id={ id } className={ `border-rounded dark:border-gray-900 bg-standard text-standard ${ className }` }>
+        <div id={ id } className={ `border-rounded dark:border-gray-900 default-bg default-text ${ className }` }>
             <Disclosure defaultOpen={ defaultOpen }>
                 { ({ open }) => (
                     <>

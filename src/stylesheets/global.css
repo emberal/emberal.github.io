@@ -13,11 +13,11 @@
         max-width: 100vw;
     }
 
-    .bg-standard {
+    .default-bg {
         @apply bg-white dark:bg-gray-900;
     }
 
-    .text-standard {
+    .default-text {
         @apply text-primaryPurple dark:text-primaryPink;
     }
 
@@ -26,6 +26,6 @@
     }
 
     .default-link {
-        @apply text-standard hover:underline;
+        @apply default-text hover:underline;
     }
 }

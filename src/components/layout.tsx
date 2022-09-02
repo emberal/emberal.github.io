@@ -197,15 +197,13 @@ const Layout = (
                                             themeMenu.map(item => (
                                                 <div key={ item.id }>
                                                     <Menu.Item>
-                                                        { ({ active }) => (
-                                                            <button onClick={ () => toggleDarkMode(item.id) }>
+                                                        <button onClick={ () => toggleDarkMode(item.id) }>
                                                             <span
-                                                                className={ `flex items-center ${ active && "underline" }` }>
+                                                                className={ `flex items-center hover:underline` }>
                                                                 { item.icon }
                                                                 <p className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
-                                                            </button>
-                                                        ) }
+                                                        </button>
                                                     </Menu.Item>
                                                 </div>
                                             ))
