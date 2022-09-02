@@ -58,5 +58,11 @@
   "keywords": "Keywords",
   "expressionTooBig": "Expression is too big, it cannot be larger than 10 atomic values.",
   "showMeHowItsDone": "Show me how it's done",
-  "using": "Using"
+  "using": "Using",
+  "filterResults": "Filter results",
+  "hide": "Hide",
+  "none": "none",
+  "true": "true",
+  "false": "false",
+  "results": "results"
 }

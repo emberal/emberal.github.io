@@ -3,7 +3,7 @@ import Layout from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
 import { Expression } from "../classes/expression";
-import { EyeOff, Search, X } from "react-feather";
+import { Eye, EyeOff, Search, X } from "react-feather";
 import TruthTable, { Hide } from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
@@ -19,6 +19,8 @@ interface TruthTablePage {
 }
 
 const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
+
+    const { t } = useTranslation();
 
     /**
      * Stores the boolean value of the simplify toggle
@@ -41,11 +43,14 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
     const [typing, setTyping] = React.useState(false);
 
     const hideOptions = [
-        { id: 0, name: "Hide: none", value: Hide.none },
-        { id: 1, name: "Hide: true results", value: Hide.true },
-        { id: 2, name: "Hide: false results", value: Hide.false },
+        { id: 0, name: t("hide") + " " + t("none"), value: Hide.none },
+        { id: 1, name: t("hide") + " " + t("true") + " " + t("results"), value: Hide.true },
+        { id: 2, name: t("hide") + " " + t("false") + " " + t("results"), value: Hide.false },
     ];
 
+    /**
+     * The currently selected hide value, either 'none', 'true' or 'false'
+     */
     const [hideValues, setHideValues] = React.useState(hideOptions[0]);
 
     /**
@@ -135,8 +140,6 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
         };
     }, []);
 
-    const { t } = useTranslation();
-
     return (
         <Layout title={ t("truthTables") }
                 description={ t("truthTablesDesc") }
@@ -184,11 +187,15 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                     <Row className={ "my-1" }>
                         <span className={ "h-min" }>{ t("simplify") }: </span>
                         <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
-                                  name={ t("toggleSimplify") } className={"mx-1"}/>
+                                  name={ t("toggleSimplify") } className={ "mx-1" }/>
                         <div className={ "h-min" }>
                             <Listbox onChange={ (value) => setHideValues(value) } value={ hideOptions[0] }>
-                                <Listbox.Button title={ "Hide results" } className={ "flex flex-row items-center" }>
-                                    <EyeOff className={ "mx-1" }/>
+                                <Listbox.Button title={ t("filterResults") } className={ "flex flex-row items-center" }>
+                                    {
+                                        hideValues.value === Hide.none ?
+                                            <Eye className={ "mx-1" }/> :
+                                            <EyeOff className={ "mx-1" }/>
+                                    }
                                     { hideValues.name }
                                 </Listbox.Button>
                                 <Listbox.Options
@@ -199,9 +206,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                                             className={ "cursor-pointer mx-1 last:mb-1" }
                                                             value={ option }
                                             >
-                                                {({ active, selected }) => (
-                                                    <div className={`hover:underline`}>{ option.name }</div>
-                                                )}
+                                                <div className={ `hover:underline` }>{ option.name }</div>
                                             </Listbox.Option>
                                         ))
                                     }
@@ -266,7 +271,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                 <TruthTable
                                     expression={ expression.current }
                                     hide={ hideValues.value }
-                                    className={ `relative w-max text-black dark:text-white` }
+                                    className={ `relative w-max default-text-black-white` }
                                 />
                             </div>
                         </div>

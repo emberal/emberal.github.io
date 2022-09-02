@@ -57,5 +57,11 @@
   "keywords": "Nøkkelord",
   "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier.",
   "showMeHowItsDone": "Hvis meg framgangsmåten",
-  "using": "Bruker"
+  "using": "Bruker",
+  "filterResults": "Filtrer resultat",
+  "hide": "Skjul",
+  "none": "ingen",
+  "true": "sanne",
+  "false": "usanne",
+  "results": "resultat"
 }

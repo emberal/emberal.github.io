@@ -14,7 +14,6 @@ interface TruthTable {
     hide?: Hide,
 }
 
-// TODO add filter, only show true / false
 // TODO add sort, sort by default, true or false
 const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable) => {
 
@@ -97,6 +96,8 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
     let truthMatrixRowIndex = 0;
     let truthMatrixColIndex = 0;
 
+    // TODO Add a new first column with a boolean value, if it's true, show the row, if it's false skip it
+    // TODO So it would be possible to filter without rebuilding entire table
     // Creates a matrix with the body of the table, using the helper matrix truthMatrix to fill in the correct values.
     // The expressions that aren't atomic, uses the atomic values to see if they're truthy
     const tBodyMatrix: string[][] = new Array(expressions.length);
@@ -114,11 +115,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
             return false;
         };
 
-        for (let column = 0; column < expressions.length; column++) {
-
-            if (row >= tBodyMatrix.length) {
-                break;
-            }
+        for (let column = 0; column < expressions.length && row < tBodyMatrix.length; column++) {
 
             const exp = expressions[column];
 
@@ -154,10 +151,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
                     boolExp = !boolExp;
                 }
 
-                if (hide === Hide.true && boolExp) {
-                    tBodyMatrix.splice(row);
-                }
-                else if (hide === Hide.false && !boolExp) {
+                if (exp === expressions[expressions.length - 1] && (hide === Hide.true && boolExp || hide === Hide.false && !boolExp)) {
                     tBodyMatrix.splice(row);
                 }
                 else {

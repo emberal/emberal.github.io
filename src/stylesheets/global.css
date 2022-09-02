@@ -21,6 +21,10 @@
         @apply text-primaryPurple dark:text-primaryPink;
     }
 
+    .default-text-black-white {
+        @apply text-black dark:text-white;
+    }
+
     .border-rounded {
         @apply border rounded-xl;
     }
