@@ -33,7 +33,7 @@ test("Absorption w/ same values", () => {
     expect(simplify("(A&A)|(A&A)", true).toString()).toBe("A");
     expect(simplify("A&A->¬A->A", true).toString()).toBe("A");
     expect(simplify("A|A|(A->A)&(A|A&A)->A", true).toString()).toBe("A");
-    expect(simplify("A->¬A", true).toString()).toBe("¬A"); // FIXME
+    expect(simplify("A->¬A", true).toString()).toBe("¬A");
 });
 
 test("Absorption w/ different values", () => {

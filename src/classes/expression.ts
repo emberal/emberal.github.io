@@ -140,7 +140,6 @@ export class Expression {
     }
 
     public laws(): void {
-
         let exp = this.toString();
         this.eliminationOfImplication();
         exp = this.isChangedThenPush(exp, "Elimination of implication");
@@ -252,7 +251,7 @@ export class Expression {
     public deMorgansLaw(): void {
 
         if (this.left?.isNot() && this.right?.isNot()) {
-            let newOperator = null;
+            let newOperator: Operator | null = null;
 
             switch (this.operator) {
                 case Operator.and:
@@ -263,18 +262,11 @@ export class Expression {
             }
 
             if (newOperator) {
+                this.leading = "¬("
                 this.left.removeNot();
+                this.operator = newOperator;
                 this.right.removeNot();
-                this.left = new Expression({
-                    leading: "¬(",
-                    left: this.left,
-                    operator: newOperator,
-                    right: this.right,
-                    trailing: ")",
-                    atomic: this.atomic
-                });
-                this.operator = null;
-                this.right = null;
+                this.trailing = ")";
             }
         }
         else if (this.isNot()) {
