@@ -7,7 +7,7 @@ interface Row {
 
 const Row = ({ children, className }: Row): JSX.Element => {
     return (
-        <div className={ `flex flex-row items-center ${ className }` }>
+        <div className={ `flex-row-center ${ className }` }>
             { children }
         </div>
     );

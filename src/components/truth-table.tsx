@@ -21,6 +21,7 @@ interface TruthTable {
     sort?: Sort,
 }
 
+// TODO export to excel or similar
 const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.default }: TruthTable) => {
 
     const expressions: Expression[] = [];

@@ -4,6 +4,7 @@ import { Menu } from "@headlessui/react";
 import { ChevronUp, Globe } from "react-feather";
 import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
+import Row from "./row";
 
 interface Footer {
     className?: string,
@@ -66,16 +67,16 @@ const Footer = ({ className }: Footer) => {
         <div className={ `absolute text-center w-full bottom-0 mb-5 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
                 <MyMenu button={
-                    <span className={ "flex items-center" }>
-                            Change language <ChevronUp className={ "w-5 h-5" }/>
-                        </span>
+                    <Row>
+                        Change language <ChevronUp className={ "w-5 h-5" }/>
+                    </Row>
                 }
                         items={
                             langMenu.map(lang => (
                                 <div key={ lang.lang }>
                                     <Menu.Item>
                                         { (active) =>
-                                            <div className={ "w-max flex items-center" }>
+                                            <div className={ "w-max flex-row-center" }>
                                                 <span>{ lang.icon }</span>
                                                 {
                                                     lang.lang === 'auto' ?

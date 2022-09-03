@@ -255,7 +255,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                     <tbody>
                                     {
                                         Expression.orderOfOperations.map((operation: any, index: number) => (
-                                            <tr key={ index }>
+                                            <tr key={ index } className={ "border-b border-dotted border-gray-500" }>
                                                 <td>{ index + 1 }:</td>
                                                 <td className={ "px-2" }>
                                                     {
@@ -269,8 +269,11 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                                             </span>
                                                             ))
                                                     }
+                                                    { typeof window !== "undefined" && window.outerWidth <= 640 &&
+                                                        <p>{ t("using") }: { operation.law }</p> }
                                                 </td>
-                                                <td>{ t("using") }: { operation.law }</td>
+                                                { typeof window !== "undefined" && window.outerWidth > 640 &&
+                                                    <td>{ t("using") }: { operation.law }</td> }
                                             </tr>
                                         ))
                                     }

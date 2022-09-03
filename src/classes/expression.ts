@@ -106,6 +106,11 @@ export class Expression {
         return false;
     }
 
+    /**
+     * Gets the number of a given character in a string
+     * @param s The string to be checked
+     * @param char The 'char' that the method will look for
+     */
     public numberOfChar(s: string, char: string): number {
         let numberOf = 0;
         for (let i = 0; i < s.length; i++) {
@@ -118,14 +123,21 @@ export class Expression {
 
     /**
      * Finds and returns the leftmost atomic value
+     * @returns {string} If it finds an atomic value, returns it.
+     * @returns {null} If it doesn't find a value, returns null
      */
     public getAtomicValue(): string | null {
         if (this.isAtomic()) {
-            return this.toString();
+            return this.atomic;
         }
         return this.left?.getAtomicValue() ?? null;
     }
 
+    /**
+     * Checks if an expression has changed, if 'true' before, after and the law will be stored in an object and pushed to an array
+     * @param exp The expression the method compares to
+     * @param law The previously used law
+     */
     private isChangedThenPush(exp: string, law: string): string {
         if (exp !== this.toString()) {
             const op = {
@@ -139,22 +151,28 @@ export class Expression {
         return exp;
     }
 
-    public laws(): void {
+    /**
+     * Calls all the laws then checks if the expression has been changed after
+     */
+    public laws(): void { // TODO translate
         let exp = this.toString();
         this.eliminationOfImplication();
         exp = this.isChangedThenPush(exp, "Elimination of implication");
-        this.mergeNot();
-        exp = this.isChangedThenPush(exp, "Merge not operators");
-        this.deMorgansLaw();
-        exp = this.isChangedThenPush(exp, "De Morgan's Law");
-        this.absorption();
-        exp = this.isChangedThenPush(exp, "Absorption");
-        this.assosiativeLaw();
-        exp = this.isChangedThenPush(exp, "Assosiative");
-        this.distributivity();
+        this.doubleNegation();
+        exp = this.isChangedThenPush(exp, "Double negation");
+        this.deMorgansLaws();
+        exp = this.isChangedThenPush(exp, "De Morgan's Laws");
+        this.absorptionLaw();
+        exp = this.isChangedThenPush(exp, "Absorption law");
+        this.associativeProperty();
+        exp = this.isChangedThenPush(exp, "Associative property");
+        this.distributiveProperty();
         this.isChangedThenPush(exp, "Distributivity");
     }
 
+    /**
+     * Removes unnecessary parentheses
+     */
     public removeParenthesis(): void {
 
         if (this.left && this.right) {
@@ -194,8 +212,9 @@ export class Expression {
     /**
      * @example A & B | B & C <=> B & (A | C)
      * @example (A | B) & (B | C) <=> B | A & C
+     * @link https://en.wikipedia.org/wiki/Distributive_property
      */
-    public distributivity(): void {
+    public distributiveProperty(): void {
 
         if (this.left && this.right && !(this.left.isAtomic() || this.right.isAtomic())) {
 
@@ -247,8 +266,9 @@ export class Expression {
 
     /**
      * @example !A & !B <=> !(A | B) or !(!A | B) <=> A & !B
+     * @link https://en.wikipedia.org/wiki/De_Morgan%27s_laws
      */
-    public deMorgansLaw(): void {
+    public deMorgansLaws(): void {
 
         if (this.left?.isNot() && this.right?.isNot()) {
             let newOperator: Operator | null = null;
@@ -304,7 +324,7 @@ export class Expression {
             }
         }
         else if (this.left?.isNot() && !this.right?.isNot()) {
-            this.left.deMorgansLaw();
+            this.left.deMorgansLaws();
         }
     }
 
@@ -313,7 +333,7 @@ export class Expression {
      * @returns {boolean} Returns 'true' if it contains 'not', otherwise 'false'
      */
     public isNot(): boolean {
-        return this.leading.includes("¬");
+        return this.numberOfChar(this.leading, "¬") % 2 === 1;
     }
 
     /**
@@ -324,11 +344,18 @@ export class Expression {
         this.leading = this.leading.replace("¬", "");
     }
 
-    public assosiativeLaw(): void {
+    /**
+     * @link https://en.wikipedia.org/wiki/Associative_property
+     */
+    public associativeProperty(): void {
         // TODO?
     }
 
-    public commutativeLaw(): void {
+    /**
+     * @example B & A <=> A & B
+     * @link https://en.wikipedia.org/wiki/Commutative_property
+     */
+    public commutativeProperty(): void {
 
         const swap = () => {
             const help = this.left;
@@ -367,8 +394,9 @@ export class Expression {
 
     /**
      * @example A & (A | B) <=> A or A | (A & B) <=> A
+     * @link https://en.wikipedia.org/wiki/Absorption_law
      */
-    public absorption(): void {
+    public absorptionLaw(): void {
 
         if (this.left && this.right) {
 
@@ -490,10 +518,11 @@ export class Expression {
      * Removes unnesessarry 'not' operators, if there's an even number, removes them completely.
      * If there's an odd number, remove all but one.
      * @example !!A <=> A or !!!A <=> !A
+     * @link https://en.wikipedia.org/wiki/Double_negation
      */
-    public mergeNot(): void {
+    public doubleNegation(): void {
         let index = 0;
-        while ( this.leading.charAt(index) === "¬" ) {
+        while (this.leading.charAt(index) === "¬") {
             index++;
         }
         if (index > 1) {
@@ -502,8 +531,8 @@ export class Expression {
                 this.leading = "¬" + this.leading;
             }
         }
-        this.left?.mergeNot();
-        this.right?.mergeNot();
+        this.left?.doubleNegation();
+        this.right?.doubleNegation();
     }
 
     /**

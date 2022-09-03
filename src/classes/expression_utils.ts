@@ -27,7 +27,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
         }
         exp.atomic = stringExp;
         if (simplify) {
-            exp.mergeNot();
+            exp.doubleNegation();
         }
         return exp;
     }
@@ -70,7 +70,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
         exp.right = exp.right.left;
     }
 
-    exp.commutativeLaw(); // Sorts the expression
+    exp.commutativeProperty(); // Sorts the expression
     exp.removeParenthesis();
     return exp;
 }
@@ -224,7 +224,7 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
             trailing = stringExp.charAt(i + 1);
         }
 
-        if (!insideSquare && Operator.isOperator(char + trailing)) {
+        if (!insideSquare && Operator.isOperator(char + trailing) && char !== "¬") {
             numberOfOperators++;
             if (numberOfOperators > 9) {
                 return expressionTooBig;

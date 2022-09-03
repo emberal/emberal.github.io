@@ -24,12 +24,12 @@ export class Operator {
         regex: /=>|implication|impliserer|imp+/ig
     });
     static or = new Operator("|", 1, {
-        values: ["or", "eller", "\\/"],
-        regex: /or|eller|\\\/+/ig
+        values: ["or", "eller", "intersection", "snitt", "\\/"],
+        regex: /or|eller|intersection|snitt|\\\/+/ig
     });
     static and = new Operator("&", 2, {
-        values: ["and", "og", "/\\"],
-        regex: /and|og|\/\\+/ig
+        values: ["and", "og", "union", "/\\"],
+        regex: /and|og|union|\/\\+/ig
     });
     static not = new Operator("¬", 3, {
         values: ["not", "ikke", "!", "~"],
