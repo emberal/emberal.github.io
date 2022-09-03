@@ -4,6 +4,7 @@ import { Link } from "gatsby";
 import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import MyMenu from "./menu";
 
 export const Links = {
     home: "/",
@@ -11,7 +12,7 @@ export const Links = {
     contactMe: "/contact-me",
     links: "/links",
     pageNotFound: "/404",
-
+    truthTable: "/truth-table",
 }
 
 interface Layout {
@@ -162,12 +163,12 @@ const Layout = (
     ];
 
     return (
-        <div className={ `dark:bg-gray-900 dark:text-white overflow-clip ${ className }` }>
+        <div className={ `default-bg default-text-black-white overflow-clip ${ className }` }>
             <div id={ "main-container" }
                  className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
                 <div className={ ` ${ titleAndNavClass }` }>
                     <h1
-                        className={ `text-primaryPurple dark:text-primaryPink font-bold text-4xl mb-6 pt-6` }>
+                        className={ `default-text font-bold text-4xl mb-6 pt-6` }>
                         { (headline) ? headline : title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
@@ -184,22 +185,18 @@ const Layout = (
                                 ))
                             }
                             <li className={ "mr-6 w-fit relative" }>
-                                <Menu>
-                                    <Menu.Button className={ "default-link flex items-center text-lg" }>
-                                        <>
-                                            { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
-                                        </>
-                                    </Menu.Button>
-                                    { /*TODO transition*/ }
-                                    <Menu.Items className={
-                                        "bg-white dark:bg-gray-900 border border-gray-500 rounded-b-2xl pt-1 p-2 absolute z-50 right-0" }>
-                                        {
+                                <MyMenu button={
+                                    <>
+                                        { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
+                                    </>
+                                } buttonClassName={ "default-link flex items-center text-lg" }
+                                        items={
                                             themeMenu.map(item => (
                                                 <div key={ item.id }>
                                                     <Menu.Item>
                                                         <button onClick={ () => toggleDarkMode(item.id) }>
                                                             <span
-                                                                className={ `flex items-center hover:underline` }>
+                                                                className={ `flex-row-center hover:underline` }>
                                                                 { item.icon }
                                                                 <p className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
@@ -207,9 +204,7 @@ const Layout = (
                                                     </Menu.Item>
                                                 </div>
                                             ))
-                                        }
-                                    </Menu.Items>
-                                </Menu>
+                                        } itemsClassName={ "right-0" }/>
                             </li>
                         </ul>
                     </nav>
@@ -219,7 +214,7 @@ const Layout = (
                     <Footer/>
                 </main>
             </div>
-            { isTop ? null :
+            { !isTop &&
                 <button
                     className={ "fixed right-10 bottom-20 border-rounded shadow-sm shadow-primaryPurple p-1 z-50" }
                     title={ t('goBackToTheTop') } onClick={ backUp }>

@@ -59,10 +59,15 @@
   "expressionTooBig": "Expression is too big, it cannot be larger than 10 atomic values.",
   "showMeHowItsDone": "Show me how it's done",
   "using": "Using",
-  "filterResults": "Filter results",
+  "filter": "Filter",
+  "sort": "Sort",
   "hide": "Hide",
   "none": "none",
   "true": "true",
   "false": "false",
-  "results": "results"
+  "results": "results",
+  "showAll": "Show all",
+  "sortBy": "Sort by",
+  "default": "default",
+  "first": "first"
 }

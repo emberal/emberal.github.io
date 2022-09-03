@@ -32,4 +32,8 @@
     .default-link {
         @apply default-text hover:underline;
     }
+
+    .flex-row-center {
+        @apply flex flex-row items-center;
+    }
 }

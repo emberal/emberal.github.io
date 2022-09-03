@@ -7,17 +7,23 @@ export enum Hide {
     false,
 }
 
+export enum Sort {
+    default,
+    trueFirst,
+    falseFirst,
+}
+
 interface TruthTable {
     expression: Expression,
     className?: string,
     id?: string,
     hide?: Hide,
+    sort?: Sort,
 }
 
-// TODO add sort, sort by default, true or false
-const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable) => {
+const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.default }: TruthTable) => {
 
-    let expressions: Expression[] = [];
+    const expressions: Expression[] = [];
 
     expToArray(expression);
 
@@ -73,14 +79,15 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
     }
 
     const truthMatrix: boolean[][] = new Array(numberOfAtomics);
-    let changeIndex = Math.pow(2, truthMatrix.length) / 2;
+    const powerToLength = Math.pow(2, truthMatrix.length);
+    let changeIndex = powerToLength / 2;
 
     // Creates a helper matrix with the correct truth values, in order to get all the different combinations
     for (let i = 0; i < truthMatrix.length; i++) {
         let boolValue = true;
         let counter = 0;
 
-        truthMatrix[i] = new Array(Math.pow(2, truthMatrix.length));
+        truthMatrix[i] = new Array(powerToLength);
 
         for (let j = 0; j < truthMatrix[i].length; j++) {
             if (counter === changeIndex) {
@@ -156,6 +163,16 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
                 }
                 else {
                     tBodyMatrix[row][column] = boolExp ? "T" : "F";
+
+                    if (exp === expressions[expressions.length - 1] && (sort === Sort.trueFirst && boolExp || sort === Sort.falseFirst && !boolExp)) {
+                        let r = row;
+                        while (r > 0 && (tBodyMatrix[r - 1] === undefined || tBodyMatrix[r - 1][expressions.length - 1] === (boolExp ? "F" : "T"))) {
+                            const help = tBodyMatrix[r];
+                            tBodyMatrix[r] = tBodyMatrix[r - 1];
+                            tBodyMatrix[r - 1] = help;
+                            r--;
+                        }
+                    }
                 }
             }
         }
@@ -167,7 +184,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
             <thead>
             <tr>
                 {
-                    expressions.map((exp: Expression, index: number) => (
+                    expressions?.map((exp: Expression, index: number) => (
                         <th key={ index } scope={ "col" }
                             className={ `bg-standard text-center sticky top-0 [position:-webkit-sticky;]
                              outline outline-2 outline-offset-[-1px] outline-gray-500` /*TODO sticky header at the top of the screen*/ }>
@@ -179,10 +196,10 @@ const TruthTable = ({ expression, className, id, hide = Hide.none }: TruthTable)
             </thead>
             <tbody>
             {
-                tBodyMatrix.map((row: string[], rowIndex: number) => (
+                tBodyMatrix?.map((row: string[], rowIndex: number) => (
                     <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
                         {
-                            tBodyMatrix[rowIndex].map((value: string, colIndex: number) => (
+                            tBodyMatrix[rowIndex]?.map((value: string, colIndex: number) => (
                                 <td key={ colIndex } className={ `text-center border border-gray-500 last:font-extrabold
                                 ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
                                     <p>{ value }</p>

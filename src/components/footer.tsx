@@ -3,6 +3,7 @@ import { useI18next, useTranslation } from "gatsby-plugin-react-i18next";
 import { Menu } from "@headlessui/react";
 import { ChevronUp, Globe } from "react-feather";
 import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
+import MyMenu from "./menu";
 
 interface Footer {
     className?: string,
@@ -64,43 +65,41 @@ const Footer = ({ className }: Footer) => {
     return (
         <div className={ `absolute text-center w-full bottom-0 mb-5 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
-                <Menu>
-                    <Menu.Button>
-                        <span className={ "flex items-center" }>
+                <MyMenu button={
+                    <span className={ "flex items-center" }>
                             Change language <ChevronUp className={ "w-5 h-5" }/>
                         </span>
-                    </Menu.Button>
-                    <Menu.Items
-                        className={ `absolute -top-24 z-50 bg-white dark:bg-gray-900 border border-gray-500
-                         rounded-t-2xl px-2 py-1` }>
-                        { langMenu.map(lang => (
-                            <div key={ lang.lang }>
-                                <Menu.Item>
-                                    { (active) => (
-                                        <div className={ "w-max flex items-center" }>
-                                            <span>{ lang.icon }</span>
-                                            {
-                                                lang.lang === 'auto' ?
-                                                    <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                             to={ originalPath } onClick={ setAuto }
-                                                             language={
-                                                                 navigator.language === "nb" || navigator.language === "nn" ||
-                                                                 navigator.language === "no" ? langs.nor : langs.eng }>
-                                                        { lang.text }
-                                                    </I18Link> :
-                                                    <I18Link className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                             to={ originalPath } language={ lang.lang }
-                                                             onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
-                                                        { lang.text }
-                                                    </I18Link>
-                                            }
-                                        </div>
-                                    ) }
-                                </Menu.Item>
-                            </div>
-                        )) }
-                    </Menu.Items>
-                </Menu>
+                }
+                        items={
+                            langMenu.map(lang => (
+                                <div key={ lang.lang }>
+                                    <Menu.Item>
+                                        { (active) =>
+                                            <div className={ "w-max flex items-center" }>
+                                                <span>{ lang.icon }</span>
+                                                {
+                                                    lang.lang === 'auto' ?
+                                                        <I18Link
+                                                            className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                            to={ originalPath } onClick={ setAuto }
+                                                            language={
+                                                                navigator.language === "nb" || navigator.language === "nn" ||
+                                                                navigator.language === "no" ? langs.nor : langs.eng }>
+                                                            { lang.text }
+                                                        </I18Link> :
+                                                        <I18Link
+                                                            className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
+                                                            to={ originalPath } language={ lang.lang }
+                                                            onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                                            { lang.text }
+                                                        </I18Link>
+                                                }
+                                            </div>
+                                        }
+                                    </Menu.Item>
+                                </div>
+                            ))
+                        } itemsClassName={ "-top-24 rounded-t-xl rounded-b-none" }/>
             </div>
 
             <p>{ t("createdWith") }

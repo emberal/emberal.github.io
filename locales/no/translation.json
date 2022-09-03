@@ -58,10 +58,16 @@
   "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier.",
   "showMeHowItsDone": "Hvis meg framgangsmåten",
   "using": "Bruker",
-  "filterResults": "Filtrer resultat",
+  "filter": "Filtrer",
+  "sort": "Sorter",
   "hide": "Skjul",
   "none": "ingen",
   "true": "sanne",
   "false": "usanne",
-  "results": "resultat"
+  "results": "resultat",
+  "showAll": "Vis alle",
+  "sortBy": "Sorter etter",
+  "default": "standard",
+  "first": "først"
+
 }
