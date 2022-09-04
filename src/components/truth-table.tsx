@@ -187,7 +187,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.d
                 {
                     expressions?.map((exp: Expression, index: number) => (
                         <th key={ index } scope={ "col" }
-                            className={ `bg-standard text-center sticky top-0 [position:-webkit-sticky;]
+                            className={ `default-bg text-center sticky top-0 [position:-webkit-sticky;]
                              outline outline-2 outline-offset-[-1px] outline-gray-500` /*TODO sticky header at the top of the screen*/ }>
                             <p className={ "px-2" }>{ exp.toString() }</p>
                         </th>

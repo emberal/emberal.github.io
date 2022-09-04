@@ -238,7 +238,7 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
             return illegalCharError(char, i, 11);
         }
         else if (char === "(" || char === "[") {
-            if (i > 0 && !Operator.isOperator(stringExp.charAt(i - 1))) {
+            if (i > 0 && !Operator.isOperator(stringExp.charAt(i - 1)) && !isParentheses(stringExp.charAt(i - 1))) {
                 return illegalCharError(char, i, 20);
             }
             if (char === "[") {
@@ -277,14 +277,12 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
             }
 
             // Return if two operators are following eachother, but not ¬
-            if (Operator.isOperator(char + trailing)) {
-                if (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1 ||
-                    trailing === ">" && i === stringExp.length - 2) {
-                    return illegalCharError(char, i, 40);
-                }
+            if (Operator.isOperator(char + trailing) && (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1 ||
+                trailing === ">" && i === stringExp.length - 2)) {
+                return illegalCharError(char, i, 40);
             }
             // Return if two atomic values are following eachother
-            else if (!(char === "]" || char === ">" || Operator.isOperator(char) ||
+            else if (!(char.match(/[\]\->]/) || Operator.isOperator(char) ||
                 Operator.isOperator(leading + prevChar) || isParentheses(char) || isParentheses(prevChar))) {
                 return illegalCharError(char, i, 50);
             }

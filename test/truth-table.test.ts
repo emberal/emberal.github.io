@@ -151,6 +151,7 @@ test("Legal expressions", () => {
     expect(isLegalExpression("¬A&¬B", {})).toBe("");
     expect(isLegalExpression("[Hello]&[World]", {})).toBe("");
     expect(isLegalExpression("A|B&C->D", {})).toBe("");
+    expect(isLegalExpression("([A])", {})).toBe("");
 });
 
 test("Illegal expressions", () => {

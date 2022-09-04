@@ -100,7 +100,7 @@ const Footer = ({ className }: Footer) => {
                                     </Menu.Item>
                                 </div>
                             ))
-                        } itemsClassName={ "-top-24 rounded-t-xl rounded-b-none" }/>
+                        } itemsClassName={ "-top-24 rounded-t-xl !rounded-b-none" }/>
             </div>
 
             <p>{ t("createdWith") }
