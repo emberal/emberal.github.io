@@ -1,6 +1,5 @@
 import { Expression } from "./expression";
 import { Operator } from "./operator";
-import { DetailedHTMLProps, HTMLAttributes } from "react";
 
 export function simplify(stringExp: string, simplify: boolean): Expression {
     Expression.orderOfOperations = []; // Resets the orderOfOperations
@@ -50,11 +49,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
     exp.left = simplifyRec(stringExp.substring(0, center.index), simplify); // Left
     exp.operator = center.operator;
-    let rightIndex = 1;
-    if (exp.operator === Operator.implication) {
-        rightIndex = 2;
-    }
-    exp.right = simplifyRec(stringExp.substring(center.index + rightIndex, stringExp.length), simplify); // Right
+    exp.right = simplifyRec(stringExp.substring(center.index + 1, stringExp.length), simplify); // Right
 
     if (simplify) {
         exp.laws();
@@ -132,13 +127,8 @@ function getCenterOperatorIndex(stringExp: string): any {
             i++;
         }
 
-        let following = "";
-        if (stringExp.charAt(i) === "-") {
-            following = stringExp.charAt(i + 1);
-        }
-
         // Finds the matching Operator
-        const operator = Operator.getOperator(stringExp.charAt(i) + following);
+        const operator = Operator.getOperator(stringExp.charAt(i));
         if (operator && operator !== Operator.not) {
             operatorArray[index++] = { operator: operator, index: i };
         }
@@ -204,7 +194,7 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
 
     let error = "";
 
-    const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()&|¬\->\[\]]|^->|]\[|\)\[|\)\(|\(\)/);
+    const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()⋁⋀➔¬\[\]]|]\[|\)\[|\)\(|\(\)/);
     const match = stringExp.match(regex);
     if (match) {
         return illegalCharError(match[0], stringExp.indexOf(match[0]), 0);
@@ -220,24 +210,15 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
 
         let trailing = "";
         let leading = "";
-        if (char === "-") {
-            trailing = stringExp.charAt(i + 1);
-        }
 
-        if (!insideSquare && Operator.isOperator(char + trailing) && char !== "¬") {
+        if (!insideSquare && Operator.isOperator(char) && char !== "¬") {
             numberOfOperators++;
             if (numberOfOperators > 9) {
                 return expressionTooBig;
             }
         }
 
-        if (char === "-" && stringExp.charAt(i + 1) !== ">") {
-            return illegalCharError(char, i, 10);
-        }
-        else if (char === ">" && stringExp.charAt(i - 1) !== "-") { // TODO needed?
-            return illegalCharError(char, i, 11);
-        }
-        else if (char === "(" || char === "[") {
+        if (char === "(" || char === "[") {
             if (i > 0 && !Operator.isOperator(stringExp.charAt(i - 1)) && !isParentheses(stringExp.charAt(i - 1))) {
                 return illegalCharError(char, i, 20);
             }

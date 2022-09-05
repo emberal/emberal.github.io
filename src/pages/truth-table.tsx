@@ -1,4 +1,5 @@
 import * as React from "react";
+import { MouseEventHandler } from "react";
 import Layout, { Links } from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
@@ -14,7 +15,6 @@ import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
-import { MouseEventHandler } from "react";
 
 interface TruthTablePage {
 
@@ -176,7 +176,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                     </MyDisclosureContainer>
                     <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
                            id={ "truth-input" }
-                           placeholder={ "¬A&B>C" }
+                           placeholder={ "¬A & B -> C" }
                            onChange={ onTyping }
                            leading={ <Search className={ "pl-2 absolute" }/> }
                            trailing={
@@ -207,7 +207,8 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                     button={
                                         hideValues.value === Hide.none ?
                                             <Eye className={ "mx-1" }/> :
-                                            <EyeOff className={ "mx-1" }/>
+                                            <EyeOff className={ `mx-1 ${ hideValues.value === Hide.true ?
+                                                "text-green-500" : "text-red-500" }` }/>
                                     }
                                     items={
                                         hideOptions.map(option => (
@@ -222,7 +223,9 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                         </div>
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("sort") + " " + t("results") }
-                                    button={ <Filter/> }
+                                    button={ <Filter
+                                        className={ sortValues.value === Sort.trueFirst ?
+                                            "text-green-500" : sortValues.value === Sort.falseFirst ? "text-red-500" : "" }/> }
                                     items={
                                         <>
                                             {
@@ -288,7 +291,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                     <>
                         {
                             simplifyEnabled &&
-                            <InfoBox className={ "w-fit mx-auto" }
+                            <InfoBox className={ "w-fit mx-auto pb-1 text-lg" }
                                      title={ t("output") + ":" }
                                      content={ search }
                             />

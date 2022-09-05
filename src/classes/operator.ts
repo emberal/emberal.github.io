@@ -3,8 +3,8 @@ interface Values {
     regex?: RegExp,
 }
 
-// TODO remember strength: ¬, &, |, ->
-
+// Remember strength: ¬, ⋀, ⋁, ➔
+// TODO add more operators: XOR, NOR...
 export class Operator {
 
     public constructor(operator: string, weight: number, { values = [], regex }: Values) {
@@ -19,17 +19,17 @@ export class Operator {
     values: string[];
     regex?: RegExp;
 
-    static implication = new Operator("->", 0, {
-        values: ["implication", "imp", "impliserer", "=>"],
-        regex: /=>|implication|impliserer|imp+/ig
+    static implication = new Operator("➔", 0, {
+        values: ["->", "implication", "imp", "impliserer", "=>"],
+        regex: /->|=>|implication|impliserer|imp+/ig
     });
-    static or = new Operator("|", 1, {
-        values: ["or", "eller", "intersection", "snitt", "\\/"],
-        regex: /or|eller|intersection|snitt|\\\/+/ig
+    static or = new Operator("⋁", 1, {
+        values: ["|", "or", "eller", "intersection", "snitt", "\\/"],
+        regex: /\||or|eller|intersection|snitt|\\\/+/ig
     });
-    static and = new Operator("&", 2, {
-        values: ["and", "og", "union", "/\\"],
-        regex: /and|og|union|\/\\+/ig
+    static and = new Operator("⋀", 2, {
+        values: ["&", "and", "og", "union", "/\\"],
+        regex: /&|and|og|union|\/\\+/ig
     });
     static not = new Operator("¬", 3, {
         values: ["not", "ikke", "!", "~"],
@@ -58,10 +58,6 @@ export class Operator {
     public static isOperator(stringOp: string): boolean {
         return this.getValues().some((operator: Operator) => operator.operator === stringOp ||
             operator.values.some((value: string) => value === stringOp));
-    }
-
-    public append(val: string): void {
-        this.values[this.values.length] = val;
     }
 
     public toString(): string {
