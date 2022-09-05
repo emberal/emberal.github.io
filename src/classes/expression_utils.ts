@@ -208,9 +208,6 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
     for (let i = 0; i < stringExp.length; i++) {
         const char = stringExp.charAt(i);
 
-        let trailing = "";
-        let leading = "";
-
         if (!insideSquare && Operator.isOperator(char) && char !== "¬") {
             numberOfOperators++;
             if (numberOfOperators > 9) {
@@ -246,25 +243,20 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
         if (i > 0 && !insideSquare) {
             const prevChar = stringExp.charAt(i - 1);
 
-            if (prevChar === ">") {
-                leading = stringExp.charAt(i - 2);
-            }
-
             if (Operator.not.operator === char) {
-                if (!Operator.isOperator(leading + prevChar) && prevChar !== "(" || i === stringExp.length - 1) {
+                if (!Operator.isOperator(prevChar) && prevChar !== "(" || i === stringExp.length - 1) {
                     return illegalCharError(char, i, 30);
                 }
                 continue;
             }
 
             // Return if two operators are following eachother, but not ¬
-            if (Operator.isOperator(char + trailing) && (Operator.isOperator(leading + prevChar) || prevChar === "(" || i === stringExp.length - 1 ||
-                trailing === ">" && i === stringExp.length - 2)) {
+            if (Operator.isOperator(char) && (Operator.isOperator(prevChar) || prevChar === "(" || i === stringExp.length - 1)) {
                 return illegalCharError(char, i, 40);
             }
             // Return if two atomic values are following eachother
-            else if (!(char.match(/[\]\->]/) || Operator.isOperator(char) ||
-                Operator.isOperator(leading + prevChar) || isParentheses(char) || isParentheses(prevChar))) {
+            else if (!(char.match(/]/) || Operator.isOperator(char) || Operator.isOperator(prevChar) ||
+                isParentheses(char) || isParentheses(prevChar))) {
                 return illegalCharError(char, i, 50);
             }
         }
