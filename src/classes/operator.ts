@@ -21,19 +21,19 @@ export class Operator {
 
     static implication = new Operator("➔", 0, {
         values: ["->", "implication", "imp", "impliserer", "=>"],
-        regex: /->|=>|implication|impliserer|imp+/ig
+        regex: /->|=>|implication|impliserer|imp/ig
     });
     static or = new Operator("⋁", 1, {
         values: ["|", "or", "eller", "intersection", "snitt", "\\/"],
-        regex: /\||or|eller|intersection|snitt|\\\/+/ig
+        regex: /\||or|eller|intersection|snitt|\\\//ig
     });
     static and = new Operator("⋀", 2, {
         values: ["&", "and", "og", "union", "/\\"],
-        regex: /&|and|og|union|\/\\+/ig
+        regex: /&|and|og|union|\/\\/ig
     });
     static not = new Operator("¬", 3, {
         values: ["not", "ikke", "!", "~"],
-        regex: /[!~]|not|ikke+/ig
+        regex: /[!~]|not|ikke/ig
     });
 
     public static getValues(): Operator[] {

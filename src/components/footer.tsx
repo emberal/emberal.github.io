@@ -5,6 +5,7 @@ import { ChevronUp, Globe } from "react-feather";
 import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
 import Row from "./row";
+import { A } from "./link";
 
 interface Footer {
     className?: string,
@@ -64,7 +65,7 @@ const Footer = ({ className }: Footer) => {
     ];
 
     return (
-        <div className={ `absolute text-center w-full bottom-0 mb-5 ${ className }` }>
+        <div className={ `absolute text-center w-full bottom-0 mb-5 border-t border-gray-500 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
                 <MyMenu button={
                     <Row>
@@ -75,28 +76,26 @@ const Footer = ({ className }: Footer) => {
                             langMenu.map(lang => (
                                 <div key={ lang.lang }>
                                     <Menu.Item>
-                                        { (active) =>
-                                            <div className={ "w-max flex-row-center" }>
-                                                <span>{ lang.icon }</span>
-                                                {
-                                                    lang.lang === 'auto' ?
-                                                        <I18Link
-                                                            className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                            to={ originalPath } onClick={ setAuto }
-                                                            language={
-                                                                navigator.language === "nb" || navigator.language === "nn" ||
-                                                                navigator.language === "no" ? langs.nor : langs.eng }>
-                                                            { lang.text }
-                                                        </I18Link> :
-                                                        <I18Link
-                                                            className={ `pl-2 pt-1 ${ active && "hover:underline" }` }
-                                                            to={ originalPath } language={ lang.lang }
-                                                            onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
-                                                            { lang.text }
-                                                        </I18Link>
-                                                }
-                                            </div>
-                                        }
+                                        <div className={ "w-max flex-row-center" }>
+                                            <span>{ lang.icon }</span>
+                                            {
+                                                lang.lang === 'auto' ?
+                                                    <I18Link
+                                                        className={ `pl-2 pt-1 hover:underline` }
+                                                        to={ originalPath } onClick={ setAuto }
+                                                        language={
+                                                            navigator.language === "nb" || navigator.language === "nn" ||
+                                                            navigator.language === "no" ? langs.nor : langs.eng }>
+                                                        { lang.text }
+                                                    </I18Link> :
+                                                    <I18Link
+                                                        className={ `pl-2 pt-1 hover:underline` }
+                                                        to={ originalPath } language={ lang.lang }
+                                                        onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                                        { lang.text }
+                                                    </I18Link>
+                                            }
+                                        </div>
                                     </Menu.Item>
                                 </div>
                             ))
@@ -104,16 +103,10 @@ const Footer = ({ className }: Footer) => {
             </div>
 
             <p>{ t("createdWith") }
-                <a className={ "default-link" } href={ "https://www.gatsbyjs.com/" } target={ "_blank" }
-                   rel={ "noreferrer" }>
-                    Gatsby.js
-                </a>
+                <A to={ "https://www.gatsbyjs.com/" }>Gatsby.js</A>
             </p>
             <p>{ t("iconsFrom") }
-                <a className={ "default-link" } href={ "https://feathericons.com/" } target={ "_blank" }
-                   rel={ "noreferrer" }>
-                    FeatherIcons
-                </a>
+                <A to={ "https://feathericons.com/" }>FeatherIcons</A>
             </p>
         </div>
     );

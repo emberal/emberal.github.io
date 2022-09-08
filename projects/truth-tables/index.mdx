@@ -1,13 +1,21 @@
 ---
-title: "Sannhetstabeller"
-description: "Forenkle sannhetsuttrykk eller bare lag sannhetstabeller."
-hero-image: "./Truth-tables.png"
+title: "Forenkle sannhetsverdier og sannhetstabeller"
+description: "Forenkle sannhetsuttrykk eller bare opprett sannhetstabeller."
+hero-image: "./truth-tables.png"
 hero-image-alt: "Nettsiden med en sannhetstabell"
-tags: "Typescript;GatsbyJS;ReactJS;Tailwind css;Nettside"
+tags: "TypeScript;GatsbyJS;ReactJS;Tailwind css;Nettside"
 source: "https://github.com/h600878/h600878.github.io"
 uploaded: "2022-11-08"
 ---
 
-import { Link } from "gatsby";
+import { MyLink } from "../../src/components/link";
 
-<Link to={ "/truth-table" } className={ "default-link" }>Sannhetstabeller</Link>
+Noen sannhetsverdier kan bli ganske store, og kompliserte. Derfor har jeg laget dette programmet for å forenkle uttrykk mest mulig.
+Programmet bruker flere kjente metoder for å skrive om uttrykkene. Hvilke uttrykk som er brukt og hvilke endringer de gjorde,
+kan vises i menyen under søkefeltet.
+<br/>
+I tillegg til å bare forenkle uttrykk, kan man også generere en sannhetstabell med alle mulige verdier i uttrykket.
+Hvis man ikke ønsker å forenkle uttrykket, men bare generere tabellen, kan man enkelt skru av forenkling. I tillegg har
+man muligheten til å filtrere resultat, enten ved å skjule sanne eller usanne verdier. Eller ved å sortere etter sanne
+eller usanne først.
+<MyLink to={ "/truth-table" }>Sannhetstabeller</MyLink>

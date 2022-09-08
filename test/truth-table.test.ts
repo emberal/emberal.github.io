@@ -80,6 +80,7 @@ test("De Morgan's law", () => {
     expect(simplify("¬(A⋁B)⋀¬(C⋁D)", true).toString()).toBe("¬(A ⋁ B ⋁ C ⋁ D)");
     expect(simplify("¬(¬A⋀B)", true).toString()).toBe("A ⋁ ¬B");
     expect(simplify("A⋀B➔C➔D", true).toString()).toBe("A ⋀ B ⋀ ¬C ⋁ D");
+    // expect(simplify("¬(¬A⋀B⋁C)", true).toString()).toBe("A ⋁ ¬(B ⋁ C)"); // TODO?
 });
 
 test("Parenthesis", () => {
@@ -163,6 +164,7 @@ test("Legal expressions", () => {
 
 test("Illegal expressions", () => {
     expect(isLegalExpression("#", {}) !== "").toBeTruthy();
+    expect(isLegalExpression("⋁", {}) !== "").toBeTruthy();
     expect(isLegalExpression("AB", {}) !== "").toBeTruthy();
     expect(isLegalExpression("A⋁⋀", {}) !== "").toBeTruthy();
     expect(isLegalExpression("A(", {}) !== "").toBeTruthy();

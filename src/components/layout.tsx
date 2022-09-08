@@ -1,10 +1,10 @@
 import * as React from "react";
 import Footer from "./footer";
-import { Link } from "gatsby";
 import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import MyMenu from "./menu";
+import { MyLink } from "./link";
 
 export const Links = {
     home: "/",
@@ -177,10 +177,10 @@ const Layout = (
                             {
                                 navLinks.map(link => (
                                     <li key={ link.to } className={ "w-fit text-lg" }>
-                                        <Link
-                                            className={ `default-link ${ current === link.to && "after:content-['<']" }` }
+                                        <MyLink
+                                            className={ `${ current === link.to && "after:content-['<']" }` }
                                             to={ link.to }> { link.name }
-                                        </Link>
+                                        </MyLink>
                                     </li>
                                 ))
                             }
@@ -210,7 +210,7 @@ const Layout = (
                     </nav>
                 </div>
                 <main>
-                    <div className={ "pb-24" } id={ "main-content" }>{ children }</div>
+                    <div className={ "pb-28" } id={ "main-content" }>{ children }</div>
                     <Footer/>
                 </main>
             </div>

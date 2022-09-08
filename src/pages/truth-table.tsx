@@ -76,7 +76,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
             exp = replaceOperators(exp);
             (document.getElementById("truth-input") as HTMLInputElement).value = exp;
 
-            exp = exp.replace(/\s+/g, ""); // Replace All (g) whitespace (\s) in the string
+            exp = exp.replace(/\s/g, ""); // Replace All (g) whitespace (\s) in the string
 
             const errorMsg = isLegalExpression(exp, {
                 atIndex: t("atIndex"),

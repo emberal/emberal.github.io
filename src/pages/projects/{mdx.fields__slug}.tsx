@@ -5,6 +5,7 @@ import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 import SEO from "../../components/seo";
+import { A } from "../../components/link";
 
 /**
  * A single post containing all the data from an mdx file
@@ -34,9 +35,9 @@ const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.Project
                     <article>
                         <div className={ `max-h-[40rem] flex justify-center` }>
                             {
-                                heroImage && heroImageAlt ?
+                                heroImage && heroImageAlt &&
                                     <GatsbyImage className={ heroImage.height > heroImage.width * 2 ? "w-72" : "" }
-                                                 alt={ heroImageAlt } image={ heroImage }/> : null
+                                                 alt={ heroImageAlt } image={ heroImage }/>
                             }
                         </div>
                         <div className={ "my-2" }>
@@ -46,11 +47,10 @@ const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.Project
                         <p>{ description }</p>
                         <p>
                             Kildekoden på{ " " }
-                            <a className={ "text-primaryPurple dark:text-primaryPink hover:underline" }
-                               href={ source !== null ? source : undefined }
-                               target={ "_blank" } rel={ "noreferrer" }>GitHub</a>
+                            <A to={ source ? source : undefined }>GitHub</A>
                         </p>
-                        <div className={ "mt-2" }>
+                        <div>
+                            <br/>
                             { children }
                         </div>
                     </article>

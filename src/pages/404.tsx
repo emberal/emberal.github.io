@@ -26,12 +26,12 @@ const NotFoundPage = (): JSX.Element => {
 }
 
 export const Head = ({ data }: HeadProps<Queries.NotFoundPageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0].node.data;
+    const locales = data?.locales?.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.pageNotFound } blockCrawlers={ true }/>;
+    return <SEO title={ obj?.pageNotFound ?? "404: Page not found" } blockCrawlers={ true }/>;
 };
 
 export const query = graphql`
