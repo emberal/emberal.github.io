@@ -158,6 +158,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                 description={ t("truthTablesDesc") }
                 containerClass={ "!max-w-full overflow-x-hidden" }
                 titleAndNavClass={ "max-w-2xl mx-auto" }
+                footerClass={ "max-w-2xl left-1/2 -translate-x-1/2" }
                 current={ Links.truthTable }>
             <div className={ "pt-2" } id={ "truth-content" }>
                 <div className={ "max-w-2xl mx-auto" }>

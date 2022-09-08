@@ -24,6 +24,7 @@ interface Layout {
     className?: string,
     titleAndNavClass?: string,
     containerClass?: string,
+    footerClass?: string,
 }
 
 /**
@@ -47,7 +48,8 @@ const Layout = (
         current,
         className,
         titleAndNavClass,
-        containerClass
+        containerClass,
+        footerClass,
     }: Layout) => {
 
     const themeEnum = {
@@ -211,7 +213,7 @@ const Layout = (
                 </div>
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>
-                    <Footer/>
+                    <Footer className={ footerClass }/>
                 </main>
             </div>
             { !isTop &&
