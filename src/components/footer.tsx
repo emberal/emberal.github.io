@@ -79,7 +79,7 @@ const Footer = ({ className }: Footer) => {
                                         <div className={ "w-max flex-row-center" }>
                                             <span>{ lang.icon }</span>
                                             {
-                                                lang.lang === 'auto' ?
+                                                lang.lang === 'auto' && typeof navigator !== "undefined" ?
                                                     <I18Link
                                                         className={ `pl-2 pt-1 hover:underline` }
                                                         to={ originalPath } onClick={ setAuto }

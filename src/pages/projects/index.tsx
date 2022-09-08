@@ -1,5 +1,4 @@
 import * as React from "react";
-import { ChangeEvent } from "react";
 import Layout, { Links } from "../../components/layout";
 import { graphql, HeadProps, PageProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -119,7 +118,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * Called when searching, and updates the state of the search object, stores it in lowercase
      * @param event ChangeEvent from HTMLInputElement
      */
-    function onSearch(event?: ChangeEvent<HTMLInputElement>): void {
+    function onSearch(event?: React.ChangeEvent<HTMLInputElement>): void {
         setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
     }
 
