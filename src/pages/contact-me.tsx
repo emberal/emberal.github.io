@@ -5,6 +5,7 @@ import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import SEO from "../components/seo";
+import { A } from "../components/link";
 
 interface ContactMePage {
 
@@ -34,38 +35,21 @@ const links = [
  */
 const ContactMePage = ({}: ContactMePage): JSX.Element => {
 
-    function handleSubmit() { // TODO
-        Array.from(document.querySelectorAll("input")).forEach(input => input.value = ""); //Clears inputs
-        const element = document.getElementById("contact-me-text-area") as HTMLInputElement; //Clears textArea
-        if (element !== null) {
-            element.value = "";
-        }
-    }
-
-
     React.useEffect(() => {
         let isMounted = true;
         const submitKeys = (e: KeyboardEvent) => {
             if (isMounted && e.ctrlKey && e.key === "Enter") {
-                //Activates button if ctrl and enter is clicked at the same time
+                // Activates button if ctrl and enter is clicked at the same time
                 const element = document.getElementById("submit-button");
-                if (element !== null) {
+                if (element) {
                     element.click();
                 }
             }
         }
-        const postSubmit = (e: SubmitEvent, form: HTMLFormElement) => {
-            if (isMounted) {
-                window.open("https://formspree.io/f/mknykgbn", "_blank");
-                form.reset();
-            }
-        }
-        const form = document.getElementById("form") as HTMLFormElement | null;
-        //form?.addEventListener("submit", (e) => postSubmit(e, form));
-        document.addEventListener("keyup", (e) => submitKeys(e));
+
+        document.addEventListener("keyup", (e: KeyboardEvent) => submitKeys(e));
         return () => {
-            document.removeEventListener("keyup", (e) => submitKeys(e));
-            //form?.removeEventListener("submit", (e) => postSubmit(e, form));
+            document.removeEventListener("keyup", (e: KeyboardEvent) => submitKeys(e));
             isMounted = false;
         };
     });
@@ -82,9 +66,9 @@ const ContactMePage = ({}: ContactMePage): JSX.Element => {
                     {
                         links.map(link => (
                             <div className={ "px-2" } key={ link.id }>
-                                <a title={ link.name } href={ link.to } target={ "_blank" } rel={ "noreferrer" }>
+                                <A title={ link.name } to={ link.to } className={ "!text-inherit" }>
                                     { link.icon }
-                                </a>
+                                </A>
                             </div>
                         ))
                     }
@@ -120,7 +104,7 @@ const ContactMePage = ({}: ContactMePage): JSX.Element => {
 }
 
 export const Head = ({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0].node.data;
+    const locales = data?.locales?.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
