@@ -2,13 +2,13 @@
   "home": "Hjem",
   "projects": "Prosjekter",
   "contactMe": "Kontakt meg",
-  "toggleDarkMode": "Veksle \"dark mode\"",
+  "changeTheme": "Endre tema",
   "goBackToTheTop": "Tilbake til toppen",
   "changeLang": "Endre språk: ",
   "createdWith": "Laget med ",
   "iconsFrom": "Ikoner fra ",
   "welcome": "Velkommen!",
-  "aboutMeDesc": "Hei, jeg heter Martin og studerer for tiden bachelor i Informasjonsteknologi på Høgskulen på Vestlandet i Bergen.",
+  "aboutMeDesc": "Hei, og velkommen til min hjemmeside og portfolio. Jeg heter Martin og studerer for tiden bachelor i Informasjonsteknologi på Høgskulen på Vestlandet i Bergen.",
   "aboutMePicAlt": "Et bilde av meg på fjelltur",
   "yourName": "Ditt navn",
   "subject": "Emne",
@@ -55,8 +55,8 @@
   "implication": "Implisering: \"➔\", \"->\", \"=>\", \"imp\" eller \"impliserer\"",
   "howTo": "Informasjon",
   "keywords": "Nøkkelord",
-  "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomær verdier.",
-  "showMeHowItsDone": "Hvis meg framgangsmåten",
+  "expressionTooBig": "Uttrykket er for stort, det kan ikke være større enn 10 atomære verdier.",
+  "showMeHowItsDone": "Vis meg framgangsmåten",
   "using": "Bruker",
   "filter": "Filtrer",
   "sort": "Sorter",
@@ -69,5 +69,4 @@
   "sortBy": "Sorter etter",
   "default": "standard",
   "first": "først"
-
 }

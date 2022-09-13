@@ -82,7 +82,7 @@ const Layout = (
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function toggleDarkMode(theme: string) {
+    function changeTheme(theme: string) {
         switch (theme) {
             case 'dark':
                 localStorage.theme = themeEnum.dark;
@@ -196,7 +196,7 @@ const Layout = (
                                             themeMenu.map(item => (
                                                 <div key={ item.id }>
                                                     <Menu.Item>
-                                                        <button onClick={ () => toggleDarkMode(item.id) }>
+                                                        <button onClick={ () => changeTheme(item.id) }>
                                                             <span
                                                                 className={ `flex-row-center hover:underline` }>
                                                                 { item.icon }
