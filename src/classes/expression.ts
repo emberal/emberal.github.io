@@ -454,7 +454,7 @@ export class Expression {
                         }
                         // removes the left side of the right side
                         else if (leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            left.leading === right.leading || left.equalsAndOpposite(right.left) &&
+                            !right.leading.includes("(") || left.equalsAndOpposite(right.left) &&
                             this.operator === Operator.or && right.operator === Operator.and || left.equalsAndOpposite(right.right)) {
                             right.left = right.right;
                             removeRight(right);

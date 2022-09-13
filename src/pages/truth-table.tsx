@@ -292,7 +292,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                     <>
                         {
                             simplifyEnabled &&
-                            <InfoBox className={ "w-fit mx-auto pb-1 text-lg" }
+                            <InfoBox className={ "w-fit mx-auto pb-1 text-lg text-center" }
                                      title={ t("output") + ":" }
                                      content={ search }
                             />
