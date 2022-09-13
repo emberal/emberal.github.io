@@ -252,7 +252,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                         />
                     }
                     {
-                        simplifyEnabled && Expression.orderOfOperations.length > 0 &&
+                        search !== "" && simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ t("showMeHowItsDone") } content={
                                 <table className={ "table" }>
