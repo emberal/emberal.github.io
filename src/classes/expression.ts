@@ -19,7 +19,7 @@ interface ExpressionInterface {
 
 export class Expression {
 
-    public constructor(
+    constructor(
         {
             left = null,
             operator = null,
@@ -48,7 +48,7 @@ export class Expression {
      * Stores the before and after of each law
      * @example [index] => ¬(A & B);¬A | ¬B;De Morgan's Laws
      */
-    public static orderOfOperations: { before: string, after: string, law: string }[] = [];
+    static orderOfOperations: { before: string, after: string, law: string }[] = [];
 
     // TODO add weight to each Expression used to compare and sort, using the "value" of child Expressions, atomic uses string value
 
@@ -57,7 +57,7 @@ export class Expression {
      * @param other The object this is compared to
      * @returns {boolean} If this and the other expressions are the same returns 'true' (regardless or order) otherwise 'false'
      */
-    public equals(other: Expression | null): boolean {
+    equals(other: Expression | null): boolean {
 
         if (other) {
             if (this === other) { // If they are the same object, return true
@@ -85,7 +85,7 @@ export class Expression {
      * @param other The other expression
      * @returns {boolean} Returns 'true' if this and other is the opposite of eachother, otherwise 'false'
      */
-    public equalsAndOpposite(other: Expression): boolean {
+    equalsAndOpposite(other: Expression): boolean {
         const _equals = (exp1: Expression, exp2: Expression): boolean => {
             return new Expression({
                 left: exp1.left,
@@ -108,7 +108,7 @@ export class Expression {
      * @param s The string to be checked
      * @param char The 'char' that the method will look for
      */
-    public numberOfChar(s: string, char: string): number {
+    numberOfChar(s: string, char: string): number {
         let numberOf = 0;
         for (let i = 0; i < s.length; i++) {
             if (s.charAt(i) === char) {
@@ -123,7 +123,7 @@ export class Expression {
      * @returns {string} If it finds an atomic value, returns it.
      * @returns {null} If it doesn't find a value, returns null
      */
-    public getAtomicValue(): string | null {
+    getAtomicValue(): string | null {
         if (this.isAtomic()) {
             return this.atomic;
         }
@@ -152,7 +152,7 @@ export class Expression {
     /**
      * Calls all the laws then checks if the expression has been changed after
      */
-    public laws(): void { // TODO translate
+    laws(): void { // TODO translate
         let exp = this.toString();
         this.eliminationOfImplication();
         exp = this.isChangedThenPush(exp, "Elimination of implication");
@@ -171,7 +171,7 @@ export class Expression {
     /**
      * Removes unnecessary parentheses
      */
-    public removeParenthesis(): void {
+    removeParenthesis(): void {
 
         if (this.left && this.right) {
             const exp = this.toString();
@@ -214,7 +214,7 @@ export class Expression {
      * @example (A | B) & (B | C) <=> B | A & C
      * @link https://en.wikipedia.org/wiki/Distributive_property
      */
-    public distributiveProperty(): void {
+    distributiveProperty(): void {
 
         if (this.left && this.right && !(this.left.isAtomic() || this.right.isAtomic())) {
 
@@ -268,7 +268,7 @@ export class Expression {
      * @example !A & !B <=> !(A | B) or !(!A | B) <=> A & !B
      * @link https://en.wikipedia.org/wiki/De_Morgan%27s_laws
      */
-    public deMorgansLaws(): void {
+    deMorgansLaws(): void {
 
         // Left and right side uses negation
         if (this.left?.isNot() && this.right?.isNot()) {
@@ -337,7 +337,7 @@ export class Expression {
      * Checks if an expression has the not operator before it
      * @returns {boolean} Returns 'true' if it contains 'not', otherwise 'false'
      */
-    public isNot(): boolean {
+    isNot(): boolean {
         return this.numberOfChar(this.leading, "¬") % 2 === 1;
     }
 
@@ -352,7 +352,7 @@ export class Expression {
     /**
      * @link https://en.wikipedia.org/wiki/Associative_property
      */
-    public associativeProperty(): void {
+    associativeProperty(): void {
         // TODO?
     }
 
@@ -360,7 +360,7 @@ export class Expression {
      * @example B & A <=> A & B
      * @link https://en.wikipedia.org/wiki/Commutative_property
      */
-    public commutativeProperty(): void {
+    commutativeProperty(): void {
 
         const swap = () => {
             const help = this.left;
@@ -380,7 +380,7 @@ export class Expression {
     /**
      * @example A -> B <=> !A | B
      */
-    public eliminationOfImplication(): void {
+    eliminationOfImplication(): void {
 
         if (this.left && this.right && this.operator === Operator.implication) {
 
@@ -401,7 +401,7 @@ export class Expression {
      * @example A & (A | B) <=> A or A | (A & B) <=> A
      * @link https://en.wikipedia.org/wiki/Absorption_law
      */
-    public absorptionLaw(): void {
+    absorptionLaw(): void {
 
         if (this.left && this.right) {
 
@@ -454,7 +454,7 @@ export class Expression {
                         }
                         // Removes the left side of the right side
                         else if (leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            !right.leading.includes("(") || left.equalsAndOpposite(right.left) &&
+                            !right.isNot() || left.equalsAndOpposite(right.left) &&
                             this.operator === Operator.or && right.operator === Operator.and || left.equalsAndOpposite(right.right)) {
                             right.left = right.right;
                             removeRight(right);
@@ -528,7 +528,7 @@ export class Expression {
      * @example !!A <=> A or !!!A <=> !A
      * @link https://en.wikipedia.org/wiki/Double_negation
      */
-    public doubleNegation(): void {
+    doubleNegation(): void {
         let index = 0;
         while (this.leading.charAt(index) === "¬") {
             index++;
@@ -549,7 +549,7 @@ export class Expression {
      * @param exp The Expression
      * @returns {number} The number of atomic expressions in the expression
      */
-    public static getNumberOfAtomics(exp: Expression | null): number {
+    static getNumberOfAtomics(exp: Expression | null): number {
         if (exp === null) {
             return 0;
         }
@@ -565,7 +565,7 @@ export class Expression {
      * @param right right side of the expression.
      * @returns {boolean} If the expression is truthy, returns 'true', otherwise 'false'
      */
-    public solve(left: boolean, right: boolean): boolean {
+    solve(left: boolean, right: boolean): boolean {
         switch (this.operator) {
             case Operator.and:
                 return left && right;
@@ -582,7 +582,7 @@ export class Expression {
      * Checks if this expression is an atomic value
      * @returns {boolean} Returns 'true' if the expression is atomic
      */
-    public isAtomic(): boolean {
+    isAtomic(): boolean {
         return this.atomic !== null;
     }
 
@@ -591,7 +591,7 @@ export class Expression {
      * @example A & B | (¬C -> D)
      * @returns {string} A string representation of the expression
      */
-    public toString(): string {
+    toString(): string {
         if (this.isAtomic()) {
             return this.leading + this.atomic!;
         }
