@@ -257,7 +257,7 @@ export function TagsSelector(
                                                       onClick={ () => scroll(defScrollLen) }/>
                                     </button>
                                 }
-                                <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                                <Tag title={ hideTagsText.toString() } onClick={ toggleTags }
                                      hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
                                      className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
                                      "default-bg" } shadow-sm shadow-primaryPurple` }/>
