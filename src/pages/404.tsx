@@ -10,7 +10,7 @@ import { MyLink } from "../components/link";
  * @returns {JSX.Element}
  * @constructor
  */
-export function NotFoundPage(): JSX.Element {
+export default function NotFoundPage(): JSX.Element {
 
     const { t } = useTranslation();
 
