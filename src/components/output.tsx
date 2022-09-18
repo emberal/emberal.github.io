@@ -7,7 +7,7 @@ interface InfoBox extends TitleComponent {
     error?: boolean,
 }
 
-export function InfoBox({ title = "", children = "", error = false, className }: InfoBox): JSX.Element {
+export function InfoBox({ title = "", children, error = false, className }: InfoBox): JSX.Element {
     return (
         <div className={ `border-rounded ${ error ? "border-red-500" : "border-gray-500" } ${ className }` }>
             <p className={ `border-b px-2 ${ error ? "border-red-500" : "border-gray-500" }` }>{ title }</p>
