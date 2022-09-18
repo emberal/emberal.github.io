@@ -154,17 +154,17 @@ export default function TruthTablePage(): JSX.Element {
             <div className={ "pt-2" } id={ "truth-content" }>
                 <div className={ "max-w-2xl mx-auto" }>
                     <MyDisclosureContainer>
-                        <MyDisclosure title={ t("howTo") } content={ <p>{ t("truthTableHowTo") }</p> }/>
-                        <MyDisclosure title={ t("keywords") }
-                                      content={
-                                          <>
-                                              <p>{ t("not") }</p>
-                                              <p>{ t("and") }</p>
-                                              <p>{ t("or") }</p>
-                                              <p>{ t("implication") }</p>
-                                          </>
-                                      }
-                        />
+                        <MyDisclosure title={ t("howTo") }>
+                            <p>{ t("truthTableHowTo") }</p>
+                        </MyDisclosure>
+                        <MyDisclosure title={ t("keywords") }>
+                            <>
+                                <p>{ t("not") }</p>
+                                <p>{ t("and") }</p>
+                                <p>{ t("or") }</p>
+                                <p>{ t("implication") }</p>
+                            </>
+                        </MyDisclosure>
                     </MyDisclosureContainer>
                     <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
                            id={ "truth-input" }
@@ -236,16 +236,16 @@ export default function TruthTablePage(): JSX.Element {
                     </Row>
                     {
                         errorMessage !== "" &&
-                        <InfoBox className={ "w-fit" }
+                        <InfoBox className={ "w-fit text-center" }
                                  title={ t("inputError") }
-                                 content={ errorMessage }
-                                 error={ true }
-                        />
+                                 error={ true }>
+                            <p>{ errorMessage }</p>
+                        </InfoBox>
                     }
                     {
                         search !== "" && simplifyEnabled && Expression.orderOfOperations.length > 0 &&
                         <MyDisclosureContainer>
-                            <MyDisclosure title={ t("showMeHowItsDone") } content={
+                            <MyDisclosure title={ t("showMeHowItsDone") }>
                                 <table className={ "table" }>
                                     <tbody>
                                     {
@@ -274,7 +274,7 @@ export default function TruthTablePage(): JSX.Element {
                                     }
                                     </tbody>
                                 </table>
-                            }/>
+                            </MyDisclosure>
                         </MyDisclosureContainer>
                     }
                 </div>
@@ -284,9 +284,9 @@ export default function TruthTablePage(): JSX.Element {
                         {
                             simplifyEnabled &&
                             <InfoBox className={ "w-fit mx-auto pb-1 text-lg text-center" }
-                                     title={ t("output") + ":" }
-                                     content={ search }
-                            />
+                                     title={ t("output") + ":" }>
+                                <p>{ search }</p>
+                            </InfoBox>
                         }
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" }

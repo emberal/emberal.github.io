@@ -1,5 +1,6 @@
 import * as React from "react";
 import Row from "./row";
+import { InputComponent } from "../interfaces/interfaces";
 
 function setupEventListener(id: string, setIsHover: Function): () => void {
     let isMounted = true;
@@ -26,8 +27,7 @@ function setupEventListener(id: string, setIsHover: Function): () => void {
     }
 }
 
-interface Input<T> extends TextArea<T> {
-    type?: string,
+interface Input<T> extends InputComponent<T> {
     leading?: React.ReactElement<HTMLElement>,
     trailing?: React.ReactElement<HTMLElement>,
 }
@@ -86,16 +86,6 @@ export default function Input(
     );
 }
 
-interface TextArea<T> {
-    className?: string,
-    id?: string,
-    name?: string,
-    title?: string,
-    placeholder?: string,
-    required?: boolean,
-    onChange?: React.ChangeEventHandler<T>
-}
-
 export function TextArea(
     {
         className,
@@ -105,7 +95,7 @@ export function TextArea(
         placeholder,
         required = false,
         onChange
-    }: TextArea<HTMLTextAreaElement>): JSX.Element {
+    }: InputComponent<HTMLTextAreaElement>): JSX.Element {
 
     const [isFocused, setIsFocused] = React.useState(false);
     const [isHover, setIsHover] = React.useState(false);
@@ -143,12 +133,7 @@ export function TextArea(
     );
 }
 
-interface HoverTitle {
-    title?: string,
-    isActive?: boolean,
-}
-
-function HoverTitle({ title, isActive = false }: HoverTitle): JSX.Element {
+function HoverTitle({ title, isActive = false }: { title?: string, isActive?: boolean }): JSX.Element {
     return (
         <span className={ `absolute pointer-events-none
                  ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Layout from "../components/layout";
-import { graphql, HeadProps, Link } from "gatsby";
+import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import SEO from "../components/seo";
 import { MyLink } from "../components/link";

@@ -1,36 +1,30 @@
 import * as React from "react";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUp } from "react-feather";
+import { ChildComponent, TitleComponent } from "../interfaces/interfaces";
 
-interface InfoBox {
-    title?: string,
-    content?: string,
+interface InfoBox extends TitleComponent {
     error?: boolean,
-    className?: string,
 }
 
-export function InfoBox({ title = "", content = "", error = false, className }: InfoBox): JSX.Element {
+export function InfoBox({ title = "", children = "", error = false, className }: InfoBox): JSX.Element {
     return (
         <div className={ `border-rounded ${ error ? "border-red-500" : "border-gray-500" } ${ className }` }>
             <p className={ `border-b px-2 ${ error ? "border-red-500" : "border-gray-500" }` }>{ title }</p>
-            <p className={ "px-2" }>{ content }</p>
+            <div className={ "mx-2" }>{ children }</div>
         </div>
     );
 }
 
-interface MyDisclosure {
-    title: string,
-    content: React.ReactElement<HTMLElement>,
+interface MyDisclosure extends TitleComponent {
     defaultOpen?: boolean,
-    className?: string,
-    id?: string,
     isOpen?: Function,
 }
 
 export function MyDisclosure(
     {
         title,
-        content,
+        children,
         defaultOpen = false,
         className,
         id,
@@ -54,7 +48,7 @@ export function MyDisclosure(
                             leaveFrom="transform scale-100 opacity-100"
                             leaveTo="transform scale-95 opacity-0">
                             <Disclosure.Panel>
-                                <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ content }</div>
+                                <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ children }</div>
                             </Disclosure.Panel>
                         </Transition>
                     </>
@@ -64,12 +58,7 @@ export function MyDisclosure(
     );
 }
 
-interface MyDisclosureContainer {
-    children: React.ReactNode,
-    className?: string,
-}
-
-export function MyDisclosureContainer({ children, className }: MyDisclosureContainer): JSX.Element {
+export function MyDisclosureContainer({ children, className }: ChildComponent): JSX.Element {
     return (
         <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
                                 flex flex-col gap-1 ${ className }` }>

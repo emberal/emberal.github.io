@@ -5,6 +5,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import SEO from "../components/seo";
 import { A } from "../components/link";
+import { Component } from "../interfaces/interfaces";
 
 const linkContent = [
     {
@@ -71,11 +72,10 @@ export default function LinksPage(): JSX.Element {
     );
 }
 
-interface MyLink {
+interface MyLink extends Component {
     icon?: React.ReactNode | null,
     text?: string,
     url?: string,
-    className?: string,
 }
 
 function MyLink({ icon, text, url, className }: MyLink): JSX.Element {

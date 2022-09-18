@@ -4,14 +4,11 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { throttle } from "lodash";
 import Row from "./row";
+import { ButtonComponent, Component } from "../interfaces/interfaces";
 
-interface Tag {
-    name?: string,
+interface Tag<T> extends ButtonComponent<T> {
+    title?: string,
     value?: number,
-    hoverTitle?: string,
-    className?: string,
-    onClick?: React.MouseEventHandler<HTMLButtonElement>,
-    id?: string,
 }
 
 /**
@@ -24,9 +21,9 @@ interface Tag {
  * @param id A unique id for the tag
  * @constructor
  */
-export function Tag({ name, value, hoverTitle, className, onClick, id }: Tag): JSX.Element {
+export function Tag({ title, value, hoverTitle, className, onClick, id }: Tag<HTMLButtonElement>): JSX.Element {
 
-    const text = <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>;
+    const text = <span className={ "mx-2 w-max" }>{ title + (value ? `(${ value })` : "") }</span>;
     const classes = "border-rounded border-gray-500";
 
     if (onClick) {
@@ -48,13 +45,11 @@ export function Tag({ name, value, hoverTitle, className, onClick, id }: Tag): J
     }
 }
 
-interface TagsSelector {
+interface TagsSelector extends Component {
     allTag?: string,
     tagMap?: { key: string, value: number }[],
     selectedTag?: string,
     onClick?: Function,
-    id?: string,
-    className?: string,
 }
 
 /**
@@ -233,14 +228,14 @@ export function TagsSelector(
                     {
                         allTag &&
                         <Tag
-                            name={ allTag }
+                            title={ allTag }
                             onClick={ onClick ? () => onClick(allTag) : undefined }
                             className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
                     }
                     {
                         tagMap?.map(tag =>
                             <div key={ tag.key }>
-                                <Tag name={ tag.key }
+                                <Tag title={ tag.key }
                                      value={ tag.value }
                                      onClick={ onClick ? () => onClick(tag.key) : undefined }
                                      className={ `hover:border-primaryPurple w-max
@@ -282,11 +277,9 @@ export function TagsSelector(
     );
 }
 
-interface TagsRow {
+interface TagsRow extends Component {
     tags?: string[],
     sort?: boolean,
-    className?: string,
-    id?: string,
 }
 
 /**
@@ -308,7 +301,7 @@ export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Elem
                 {
                     tags.map(tag =>
                         <div key={ tag }>
-                            <Tag name={ tag }/>
+                            <Tag title={ tag }/>
                         </div>
                     )
                 }

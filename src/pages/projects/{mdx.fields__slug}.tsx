@@ -6,6 +6,7 @@ import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 import SEO from "../../components/seo";
 import { A } from "../../components/link";
+import { ProjectPostInterface } from "../../interfaces/interfaces";
 
 /**
  * A single post containing all the data from an mdx file
@@ -13,11 +14,7 @@ import { A } from "../../components/link";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function ProjectPost(
-    {
-        data: { mdx: { frontmatter } },
-        children
-    }: any/*PageProps<Queries.ProjectPostQuery>*/): JSX.Element { // FIXME
+export default function ProjectPost({ data: { mdx: { frontmatter } }, children }: ProjectPostInterface): JSX.Element {
 
     const heroImageData: IGatsbyImageData | undefined = frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
     const heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData) : undefined;
@@ -54,12 +51,13 @@ export default function ProjectPost(
     );
 }
 
-export function Head(props: any /*HeadProps<Queries.ProjectPostQuery>*/): JSX.Element {
-    return <SEO title={ props.data.mdx?.frontmatter?.title } description={ props.data.mdx?.frontmatter?.description }/>;
+export function Head({ data: { mdx } }: ProjectPostInterface): JSX.Element {
+    return <SEO title={ mdx?.frontmatter?.title ?? undefined }
+                description={ mdx?.frontmatter?.description ?? undefined }/>;
 }
 
 export const query = graphql`
-    query ($id: String, $language: String!) { # query ProjectPost($id: String, $language: String!) { # FIXME can't use name?
+    query ($id: String, $language: String!) {
         locales: allLocale(filter: {language: {eq: $language}}) {
             edges {
                 node {

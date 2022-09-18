@@ -3,12 +3,12 @@ import { Search as SearchIcon, X } from "react-feather";
 import { ChangeEvent } from "react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "./input";
+import { Component } from "../interfaces/interfaces";
 
-interface Search {
+interface Search extends Component {
     onChange?: Function,
     collapse?: boolean,
     searchWithoutFocus?: boolean,
-    className?: string,
 }
 
 export default function Search(

@@ -6,6 +6,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import SEO from "../components/seo";
 import { A } from "../components/link";
+import { InputComponent } from "../interfaces/interfaces";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
@@ -122,15 +123,7 @@ export const query = graphql`
     }
 `;
 
-interface FormInput {
-    name?: string,
-    type?: string,
-    title: string,
-    className?: string
-    id?: string,
-}
-
-function FormInput({ name, type, title, className, id }: FormInput): JSX.Element {
+function FormInput({ name, type, title, className, id }: InputComponent<HTMLInputElement>): JSX.Element {
     return (
         <Input className={ `${ inputStyle } ${ className }` }
                name={ name }

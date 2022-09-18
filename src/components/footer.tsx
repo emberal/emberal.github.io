@@ -6,12 +6,9 @@ import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
 import Row from "./row";
 import { A } from "./link";
+import { Component } from "../interfaces/interfaces";
 
-interface Footer {
-    className?: string,
-}
-
-export default function Footer({ className }: Footer): JSX.Element {
+export default function Footer({ className }: Component): JSX.Element {
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();

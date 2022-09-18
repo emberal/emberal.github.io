@@ -1,19 +1,17 @@
 import { Switch } from "@headlessui/react";
 import * as React from "react";
+import { TitleComponent } from "../interfaces/interfaces";
 
-interface Switch {
-    onChange?: any,
+interface Switch extends TitleComponent {
+    onChange?: (bool: boolean) => boolean,
     checked?: boolean,
-    title?: string,
-    name?: string,
-    className?: string,
 }
 
 export default function MySwitch({ onChange, checked = true, title, name, className }: Switch):JSX.Element {
 
     return (
         <Switch checked={ checked }
-                onChange={ bool => onChange(bool) }
+                onChange={ bool => onChange ? onChange(bool) : null }
                 title={ title }
                 className={ `${ checked ? "bg-primaryPurple" : "bg-gray-500" } 
                                        relative inline-flex h-6 w-11 items-center rounded-full my-2 ${ className }` }>

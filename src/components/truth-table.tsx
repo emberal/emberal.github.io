@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Expression } from "../classes/expression";
+import { Component } from "../interfaces/interfaces";
 
 export enum Hide {
     none,
@@ -13,10 +14,8 @@ export enum Sort {
     falseFirst,
 }
 
-interface TruthTable {
+interface TruthTable extends Component {
     expression: Expression,
-    className?: string,
-    id?: string,
     hide?: Hide,
     sort?: Sort,
 }

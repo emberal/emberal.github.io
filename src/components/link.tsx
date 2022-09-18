@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Link } from "gatsby";
+import { LinkComponent } from "../interfaces/interfaces";
 
-interface A extends MyLink {
+interface A extends LinkComponent {
     newTab?: boolean,
 }
 
@@ -17,15 +18,7 @@ export function A({ to, title, children, newTab = true, className, id }: A): JSX
     );
 }
 
-interface MyLink {
-    to?: string,
-    title?: string,
-    children?: React.ReactNode,
-    className?: string,
-    id?: string,
-}
-
-export function MyLink({ to, title, children, className, id }: MyLink): JSX.Element {
+export function MyLink({ to, title, children, className, id }: LinkComponent): JSX.Element {
     return (
         <Link to={ to ?? "/" } id={ id }
               title={ title }

@@ -1,11 +1,10 @@
 import * as React from "react";
 import { graphql, useStaticQuery } from "gatsby";
+import { TitleComponent } from "../interfaces/interfaces";
 
-interface SEO {
-    title?: string,
+interface SEO extends TitleComponent {
     description?: string,
     blockCrawlers?: boolean,
-    children?: React.ReactNode,
 }
 
 export default function SEO({ title, description, blockCrawlers = false, children }: SEO): JSX.Element {

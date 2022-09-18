@@ -163,7 +163,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
      * @param arr An array of strings
      * @returns {string[]} An array of strings without any 'null' or 'undefined' values
      */
-    function removeNullValues(arr: any[]): any[] {
+    function removeNullValues(arr: any[]): any[] { // TODO remove 'any'
         return arr.filter((element: string | null | undefined) => element && element) as string[];
     }
 

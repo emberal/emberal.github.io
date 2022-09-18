@@ -6,9 +6,9 @@ import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "../pages/projects";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { A } from "./link";
+import { TitleComponent } from "../interfaces/interfaces";
 
-interface ProjectCard {
-    title?: string,
+interface ProjectCard extends TitleComponent {
     description?: string,
     slug?: string,
     source?: string,
@@ -16,9 +16,6 @@ interface ProjectCard {
     tags?: string,
     image?: ImageDataLike,
     imageAlt?: string,
-    className?: string,
-    key?: string,
-    id?: string,
 }
 
 export default function ProjectCard(
