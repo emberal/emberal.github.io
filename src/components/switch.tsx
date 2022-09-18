@@ -2,12 +2,12 @@ import { Switch } from "@headlessui/react";
 import * as React from "react";
 import { TitleComponent } from "../interfaces/interfaces";
 
-interface Switch extends TitleComponent {
-    onChange?: (bool: boolean) => boolean,
+interface MySwitch extends TitleComponent {
+    onChange?: React.Dispatch<React.SetStateAction<boolean>>,
     checked?: boolean,
 }
 
-export default function MySwitch({ onChange, checked = true, title, name, className }: Switch):JSX.Element {
+export default function MySwitch({ onChange, checked = true, title, name, className }: MySwitch): JSX.Element {
 
     return (
         <Switch checked={ checked }
