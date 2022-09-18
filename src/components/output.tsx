@@ -9,14 +9,14 @@ interface InfoBox {
     className?: string,
 }
 
-export const InfoBox = ({ title = "", content = "", error = false, className }: InfoBox) => {
+export function InfoBox({ title = "", content = "", error = false, className }: InfoBox): JSX.Element {
     return (
-        <div className={ `border rounded-lg ${ error ? "border-red-500" : "border-gray-500" } ${ className }` }>
+        <div className={ `border-rounded ${ error ? "border-red-500" : "border-gray-500" } ${ className }` }>
             <p className={ `border-b px-2 ${ error ? "border-red-500" : "border-gray-500" }` }>{ title }</p>
             <p className={ "px-2" }>{ content }</p>
         </div>
-    )
-};
+    );
+}
 
 interface MyDisclosure {
     title: string,
@@ -27,14 +27,22 @@ interface MyDisclosure {
     isOpen?: Function,
 }
 
-export const MyDisclosure = ({ title, content, defaultOpen = false, className, id, isOpen }: MyDisclosure) => {
+export function MyDisclosure(
+    {
+        title,
+        content,
+        defaultOpen = false,
+        className,
+        id,
+        isOpen
+    }: MyDisclosure): JSX.Element {
     return (
         <div id={ id } className={ `border-rounded dark:border-gray-900 default-bg default-text ${ className }` }>
             <Disclosure defaultOpen={ defaultOpen }>
                 { ({ open }) => (
                     <>
                         <Disclosure.Button onClick={ isOpen ? () => isOpen(open) : undefined }
-                                           className={ `flex flex-row items-center w-full justify-between px-2` }>
+                                           className={ `flex-row-center w-full justify-between px-2` }>
                             <p className={ `py-1` }>{ title }</p>
                             <ChevronUp className={ `w-5 ${ open && "transform rotate-180" } transition` }/>
                         </Disclosure.Button>
@@ -53,19 +61,19 @@ export const MyDisclosure = ({ title, content, defaultOpen = false, className, i
                 ) }
             </Disclosure>
         </div>
-    )
-};
+    );
+}
 
 interface MyDisclosureContainer {
     children: React.ReactNode,
     className?: string,
 }
 
-export const MyDisclosureContainer = ({ children, className }: MyDisclosureContainer): JSX.Element => {
+export function MyDisclosureContainer({ children, className }: MyDisclosureContainer): JSX.Element {
     return (
         <div className={ `dark:bg-gray-800 bg-gray-300 border-rounded dark:border-gray-800 p-2 mb-2
                                 flex flex-col gap-1 ${ className }` }>
             { children }
         </div>
-    )
-};
+    );
+}

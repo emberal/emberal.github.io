@@ -11,7 +11,7 @@ interface Footer {
     className?: string,
 }
 
-const Footer = ({ className }: Footer) => {
+export default function Footer({ className }: Footer): JSX.Element {
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();
@@ -111,5 +111,3 @@ const Footer = ({ className }: Footer) => {
         </div>
     );
 }
-
-export default Footer;

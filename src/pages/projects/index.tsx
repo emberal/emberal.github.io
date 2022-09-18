@@ -20,7 +20,7 @@ export const splitCSV = (csv: string) => csv.split(";");
  * @returns {JSX.Element} A page
  * @constructor
  */
-const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element => {
+export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -45,7 +45,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     const [nodes, setNodes] = React.useState(allMdx.nodes);
 
     // TODO? the option to select multiple tags to improve search, use string[] in useState
-    const tagMap: any[] = [];
+    const tagMap: { key: string, value: number }[] = [];
     let objectIndex = 0;
     for (const tag of nodes) {
 
@@ -72,7 +72,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     }
 
     // Sorts the map by value, then by name
-    tagMap.sort((a: any, b: any) => {
+    tagMap.sort((a, b) => {
         let sum: number;
         if (b.value !== a.value) {
             sum = b.value - a.value;
@@ -119,7 +119,7 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
      * @param event ChangeEvent from HTMLInputElement
      */
     function onSearch(event?: React.ChangeEvent<HTMLInputElement>): void {
-        setSearchState((document.getElementById("search") as HTMLInputElement).value.toLowerCase());
+        setSearchState((document.getElementById("search") as HTMLInputElement | null)?.value.toLowerCase() ?? "");
     }
 
     React.useEffect(() => {
@@ -179,27 +179,26 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
-                    allMdx.nodes.map((node: any) => (
+                    allMdx.nodes.map((node) => (
                         <div key={ node.id }>
                             <>
                                 {
-                                    containsSearchString(node.frontmatter.title, node.frontmatter.tags) ?
+                                    containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ?
 
                                         <ProjectCard
-                                            title={ node.frontmatter.title }
-                                            slug={ node.fields.slug }
-                                            description={ node.frontmatter.description }
-                                            tags={ node.frontmatter.tags }
-                                            timeToRead={ node.fields.timeToRead.text }
-                                            source={ node.frontmatter.source }
-                                            image={ node.frontmatter.hero_image.childImageSharp.gatsbyImageData }
-                                            imageAlt={ node.frontmatter.hero_image_alt }/>
+                                            title={ node.frontmatter?.title ?? undefined }
+                                            slug={ node.fields?.slug ?? undefined }
+                                            description={ node.frontmatter?.description ?? undefined }
+                                            tags={ node.frontmatter?.tags ?? undefined }
+                                            timeToRead={ Number.parseInt(node.fields?.timeToRead?.text ?? "1") }
+                                            source={ node.frontmatter?.source ?? undefined }
+                                            image={ node.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData }
+                                            imageAlt={ node.frontmatter?.hero_image_alt ?? undefined }/>
                                         :
-                                        nodes.length === 0 ?
-                                            <div className={ "absolute w-full mt-14" }>
-                                                <span className={ "flex justify-center" }>{ t("noResults") }</span>
-                                            </div>
-                                            : null
+                                        nodes.length === 0 &&
+                                        <div className={ "absolute w-full mt-14" }>
+                                            <span className={ "flex justify-center" }>{ t("noResults") }</span>
+                                        </div>
                                 }
                             </>
                         </div>
@@ -210,14 +209,14 @@ const ProjectPage = ({ data: { allMdx } }: PageProps<Queries.ProjectPageQuery>):
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element => {
+export function Head({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element {
     const locales = data.locales.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <SEO title={ obj?.myProjects } description={ obj?.projectsByMe }/>;
-};
+}
 
 export const query = graphql`
     query ProjectPage($language: String!) {
@@ -249,12 +248,10 @@ export const query = graphql`
                 fields {
                     slug
                     timeToRead {
-                        time
+                        text
                     }
                 }
             }
         }
     }
 `;
-
-export default ProjectPage;

@@ -5,16 +5,12 @@ import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import SEO from "../components/seo";
 
-interface Homepage {
-
-}
-
 /**
  * The front page containing information about yours truly
  * @returns {JSX.Element}
  * @constructor
  */
-const Homepage = ({}: Homepage): JSX.Element => {
+export default function Homepage(): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -34,17 +30,17 @@ const Homepage = ({}: Homepage): JSX.Element => {
                 </p>
             </>
         </Layout>
-    )
+    );
 }
 
-export const Head = ({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element => {
+export function Head({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element {
     const locales = data.locales.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <SEO title={ obj?.home } description={ obj?.aboutMeDesc }/>;
-};
+}
 
 export const query = graphql`
     query Homepage($language: String!) {
@@ -59,5 +55,3 @@ export const query = graphql`
         }
     }
 `;
-
-export default Homepage;

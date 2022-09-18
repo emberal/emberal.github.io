@@ -1,4 +1,5 @@
 import * as React from "react";
+import Row from "./row";
 
 function setupEventListener(id: string, setIsHover: Function): () => void {
     let isMounted = true;
@@ -25,20 +26,25 @@ function setupEventListener(id: string, setIsHover: Function): () => void {
     }
 }
 
-interface Input {
-    className?: string,
-    id?: string,
-    name?: string,
+interface Input<T> extends TextArea<T> {
     type?: string,
-    title?: string,
-    placeholder?: string,
-    required?: boolean,
-    onChange?: React.ChangeEventHandler<HTMLInputElement>,
     leading?: React.ReactElement<HTMLElement>,
     trailing?: React.ReactElement<HTMLElement>,
 }
 
-const Input = ({ className, id, name, type, title, placeholder, required, onChange, leading, trailing }: Input) => {
+export default function Input(
+    {
+        className,
+        id,
+        name,
+        type,
+        title,
+        placeholder,
+        required,
+        onChange,
+        leading,
+        trailing
+    }: Input<HTMLInputElement>): JSX.Element {
 
     const [isFocused, setIsFocused] = React.useState(false);
     const [isHover, setIsHover] = React.useState(false);
@@ -60,11 +66,11 @@ const Input = ({ className, id, name, type, title, placeholder, required, onChan
     }, []);
 
     return (
-        <div className={ "flex flex-row items-center relative" }>
+        <Row className={ "relative" }>
             { leading }
             <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
             <input
-                className={ `dark:bg-gray-900 focus:border-primaryPurple outline-none border-2 border-gray-500 
+                className={ `default-bg focus:border-primaryPurple outline-none border-2 border-gray-500 
                 hover:border-t-primary-purple pl-2 ${ className }` }
                 id={ id }
                 onFocus={ () => setIsFocused(true) }
@@ -76,23 +82,30 @@ const Input = ({ className, id, name, type, title, placeholder, required, onChan
                 onInput={ setSetIsText }
                 onChange={ onChange }/>
             { trailing }
-        </div>
+        </Row>
     );
 }
 
-export default Input;
-
-interface TextArea {
+interface TextArea<T> {
     className?: string,
     id?: string,
     name?: string,
     title?: string,
     placeholder?: string,
     required?: boolean,
-    onChange?: React.ChangeEventHandler<HTMLTextAreaElement>
+    onChange?: React.ChangeEventHandler<T>
 }
 
-export const TextArea = ({ className, id, name, title, placeholder, required = false, onChange }: TextArea) => {
+export function TextArea(
+    {
+        className,
+        id,
+        name,
+        title,
+        placeholder,
+        required = false,
+        onChange
+    }: TextArea<HTMLTextAreaElement>): JSX.Element {
 
     const [isFocused, setIsFocused] = React.useState(false);
     const [isHover, setIsHover] = React.useState(false);
@@ -117,7 +130,7 @@ export const TextArea = ({ className, id, name, title, placeholder, required = f
         <div className={ "relative" }>
             <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
             <textarea id={ id }
-                      className={ `pl-2 min-h-[3rem] dark:bg-gray-900 focus:border-primaryPurple outline-none
+                      className={ `pl-2 min-h-[3rem] default-bg focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
                       name={ name }
                       placeholder={ placeholder }
@@ -128,20 +141,20 @@ export const TextArea = ({ className, id, name, title, placeholder, required = f
                       onChange={ onChange }/>
         </div>
     );
-};
+}
 
 interface HoverTitle {
     title?: string,
     isActive?: boolean,
 }
 
-const HoverTitle = ({ title, isActive = false }: HoverTitle) => {
+function HoverTitle({ title, isActive = false }: HoverTitle): JSX.Element {
     return (
         <span className={ `absolute pointer-events-none
-                 ${ isActive ? "-top-2 left-3 bg-white dark:bg-gray-900 text-sm" : "left-2 top-1" } 
+                 ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 
             transition-all duration-150 text-gray-600 dark:text-gray-400` }>
                 <div className={ "z-50 relative" }>{ title }</div>
-                <div className={ "w-full h-2 bg-white dark:bg-gray-900 absolute bottom-1/3 z-10" }/>
-            </span>
+                <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" }/>
+        </span>
     );
 }

@@ -9,14 +9,14 @@ interface MyMenu {
     itemsClassName?: string,
 }
 
-const MyMenu = (
+export default function MyMenu(
     {
         title,
         button,
         items,
         buttonClassName,
         itemsClassName,
-    }: MyMenu) => {
+    }: MyMenu): JSX.Element {
     return ( // TODO transition
         <Menu>
             <Menu.Button title={ title } className={ `flex-row-center ${ buttonClassName }` }>
@@ -29,5 +29,3 @@ const MyMenu = (
         </Menu>
     )
 };
-
-export default MyMenu;

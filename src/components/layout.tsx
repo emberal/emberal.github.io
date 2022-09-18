@@ -40,7 +40,7 @@ interface Layout {
  * @returns {JSX.Element}
  * @constructor
  */
-const Layout = (
+export default function Layout(
     {
         title,
         headline,
@@ -50,8 +50,9 @@ const Layout = (
         titleAndNavClass,
         containerClass,
         footerClass,
-    }: Layout) => {
+    }: Layout): JSX.Element {
 
+    // TODO use actual Enum?
     const themeEnum = {
         auto: 'auto',
         dark: 'dark',
@@ -108,11 +109,15 @@ const Layout = (
         document.documentElement.scrollTop = 0; // Firefox, chromium, opera and the others
     }
 
+    /**
+     * Is true if the window is almost at the top
+     */
     const [isTop, setIsTop] = React.useState(true);
 
     React.useEffect(() => {
         let isMounted = true;
-        const onScroll = () => {
+
+        function onScroll() {
             if (isMounted) {
                 const show = window.scrollY < 50;
                 if (show !== isTop) {
@@ -120,6 +125,7 @@ const Layout = (
                 }
             }
         }
+
         const _ = require("lodash");
         document.addEventListener("scroll", _.throttle(onScroll, 100));
 
@@ -216,7 +222,8 @@ const Layout = (
                     <Footer className={ footerClass }/>
                 </main>
             </div>
-            { !isTop &&
+            {
+                !isTop &&
                 <button
                     className={ "fixed right-10 bottom-20 border-rounded shadow-sm shadow-primaryPurple p-1 z-50" }
                     title={ t('goBackToTheTop') } onClick={ backUp }>
@@ -227,5 +234,3 @@ const Layout = (
         </div>
     );
 }
-
-export default Layout;

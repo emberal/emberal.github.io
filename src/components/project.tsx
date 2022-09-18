@@ -5,6 +5,7 @@ import { TagsRow } from "./tags";
 import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "../pages/projects";
 import { useTranslation } from "gatsby-plugin-react-i18next";
+import { A } from "./link";
 
 interface ProjectCard {
     title?: string,
@@ -20,7 +21,7 @@ interface ProjectCard {
     id?: string,
 }
 
-const ProjectCard = (
+export default function ProjectCard(
     {
         title = "",
         description = "",
@@ -33,7 +34,7 @@ const ProjectCard = (
         className,
         key,
         id,
-    }: ProjectCard) => {
+    }: ProjectCard): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -50,9 +51,7 @@ const ProjectCard = (
                                 to={ slug }>
                                 <h2 className={ "text-xl" }>{ title }</h2>
                             </Link>
-                            <a title={ t("openInGitHub") } href={ source }
-                               target={ "_blank" } rel={ "noreferrer" }><GitHub/>
-                            </a>
+                            <A title={ t("openInGitHub") } to={ source } className={ "!text-inherit" }><GitHub/></A>
                         </div>
                         <div className={ "grid grid-flow-col justify-between mb-2" }>
                             <p>{ `${ timeToRead } ${ timeToRead === 1 ? t("minute") : t("minutes") } ${ t("read") }` }</p>
@@ -74,5 +73,3 @@ const ProjectCard = (
         </div>
     );
 }
-
-export default ProjectCard;

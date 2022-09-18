@@ -48,7 +48,7 @@ export class Expression {
      * Stores the before and after of each law
      * @example [index] => ¬(A & B);¬A | ¬B;De Morgan's Laws
      */
-    public static orderOfOperations: any[] = [];
+    public static orderOfOperations: { before: string, after: string, law: string }[] = [];
 
     // TODO add weight to each Expression used to compare and sort, using the "value" of child Expressions, atomic uses string value
 
@@ -452,7 +452,7 @@ export class Expression {
                             }
                             removeRight(this);
                         }
-                        // removes the left side of the right side
+                        // Removes the left side of the right side
                         else if (leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
                             !right.leading.includes("(") || left.equalsAndOpposite(right.left) &&
                             this.operator === Operator.or && right.operator === Operator.and || left.equalsAndOpposite(right.right)) {

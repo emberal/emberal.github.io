@@ -104,12 +104,12 @@ function isAtomic(exp: string): boolean {
  * @param stringExp A truth expression as a string, with no spaces between characters
  * @returns {number} The index position of the center operator based on the weight of the operators
  */
-function getCenterOperatorIndex(stringExp: string): any {
+function getCenterOperatorIndex(stringExp: string): { operator: Operator, index: number } {
 
     stringExp = removeOuterParentheses(stringExp);
 
     let index = 0;
-    const operatorArray: any[] = [];
+    const operatorArray: { operator: Operator, index: number }[] = [];
     for (let i = 0; i < stringExp.length; i++) {
 
         let parentheses = 0;

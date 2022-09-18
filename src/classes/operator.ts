@@ -63,5 +63,4 @@ export class Operator {
     public toString(): string {
         return this.operator;
     }
-
 }

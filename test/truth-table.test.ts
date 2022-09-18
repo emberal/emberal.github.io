@@ -60,6 +60,7 @@ test("Absorption w/ different values", () => {
     expect(simplify("A⋁B⋁C⋁A", true).toString()).toBe("A ⋁ B ⋁ C");
     expect(simplify("¬A⋀B⋁(A➔B)", true).toString()).toBe("¬A ⋁ B");
     expect(simplify("¬A⋀A⋁B", true).toString()).toBe("B");
+    expect(simplify("A⋀B➔¬A", true).toString()).toBe("¬A ⋁ ¬B"); // FIXME De Morgan's Law???
 });
 
 test("Distributivity", () => {

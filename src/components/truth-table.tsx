@@ -22,7 +22,14 @@ interface TruthTable {
 }
 
 // TODO export to excel or similar
-const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.default }: TruthTable) => {
+export default function TruthTable(
+    {
+        expression,
+        className,
+        id,
+        hide = Hide.none,
+        sort = Sort.default
+    }: TruthTable): JSX.Element {
 
     const expressions: Expression[] = [];
 
@@ -113,7 +120,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.d
         tBodyMatrix[row] = [];
 
         // Finds the location of an expression, then checks the value
-        const findExp = (exp: Expression | null): boolean => {
+        function findExp(exp: Expression | null): boolean {
             for (let i = 0; i < expressions.length; i++) {
 
                 if (exp?.equals(expressions[i])) {
@@ -121,7 +128,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.d
                 }
             }
             return false;
-        };
+        }
 
         for (let column = 0; column < expressions.length && row < tBodyMatrix.length; column++) {
 
@@ -201,7 +208,7 @@ const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.d
                     <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
                         {
                             tBodyMatrix[rowIndex]?.map((value: string, colIndex: number) => (
-                                <td key={ colIndex } className={ `text-center border border-gray-500 last:font-extrabold
+                                <td key={ colIndex } className={ `text-center border border-gray-500 last:underline
                                 ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
                                     <p>{ value }</p>
                                 </td>
@@ -213,6 +220,4 @@ const TruthTable = ({ expression, className, id, hide = Hide.none, sort = Sort.d
             </tbody>
         </table>
     );
-};
-
-export default TruthTable;
+}

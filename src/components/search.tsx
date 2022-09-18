@@ -11,10 +11,19 @@ interface Search {
     className?: string,
 }
 
-const Search = ({ onChange, collapse = false, searchWithoutFocus = false, className }: Search) => {
+export default function Search(
+    {
+        onChange,
+        collapse = false,
+        searchWithoutFocus = false,
+        className
+    }: Search): JSX.Element {
 
     const { t } = useTranslation();
 
+    /**
+     * Is 'true' if the searchbox is not empty
+     */
     const [searched, setSearched] = React.useState(false);
 
     function getSearchElement(): HTMLInputElement | null {
@@ -26,7 +35,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
         if (searchWithoutFocus) {
             let isMounted = true;
 
-            function keyboardListener(keyboardEvent: KeyboardEvent) {
+            function keyboardListener(keyboardEvent: KeyboardEvent): void {
                 if (isMounted && element && !element.matches(":focus")) {
 
                     element.focus();
@@ -50,7 +59,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
 
             return () => {
                 document.removeEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
-                document.removeEventListener("keyup", () => null);
+                document.removeEventListener("keyup", keyboardEvent => keyboardListener(keyboardEvent));
                 isMounted = false;
             };
         }
@@ -87,7 +96,7 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
     const iconClasses = "sm:w-4 sm:h-4 h-5 w-5";
 
     return (
-        <div className={ `absolute right-0 flex -top-24 sm:-top-9 flex-row items-center` }>
+        <div className={ `absolute right-0 -top-24 sm:-top-9` }>
             <Input id={ "search" }
                    type={ "text" }
                    name={ "search" }
@@ -113,6 +122,4 @@ const Search = ({ onChange, collapse = false, searchWithoutFocus = false, classN
             />
         </div>
     );
-};
-
-export default Search;
+}

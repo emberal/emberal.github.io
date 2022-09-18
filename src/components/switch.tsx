@@ -9,11 +9,11 @@ interface Switch {
     className?: string,
 }
 
-const MySwitch = ({ onChange, checked = true, title, name, className }: Switch) => {
+export default function MySwitch({ onChange, checked = true, title, name, className }: Switch):JSX.Element {
 
     return (
         <Switch checked={ checked }
-                onChange={ (bool: boolean) => onChange(bool) }
+                onChange={ bool => onChange(bool) }
                 title={ title }
                 className={ `${ checked ? "bg-primaryPurple" : "bg-gray-500" } 
                                        relative inline-flex h-6 w-11 items-center rounded-full my-2 ${ className }` }>
@@ -22,7 +22,5 @@ const MySwitch = ({ onChange, checked = true, title, name, className }: Switch) 
             } inline-block h-4 w-4 transform rounded-full bg-white transition-all` }
             />
         </Switch>
-    )
-};
-
-export default MySwitch;
+    );
+}

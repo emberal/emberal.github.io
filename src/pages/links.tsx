@@ -4,10 +4,7 @@ import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import SEO from "../components/seo";
-
-interface LinksPage {
-
-}
+import { A } from "../components/link";
 
 const linkContent = [
     {
@@ -51,7 +48,7 @@ const linkContent = [
  * @returns {JSX.Element}
  * @constructor
  */
-const LinksPage = ({}: LinksPage): JSX.Element => {
+export default function LinksPage(): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -74,34 +71,34 @@ const LinksPage = ({}: LinksPage): JSX.Element => {
     );
 }
 
-interface Props {
+interface MyLink {
     icon?: React.ReactNode | null,
     text?: string,
     url?: string,
     className?: string,
 }
 
-const MyLink = ({ icon, text, url, className }: Props) => {
+function MyLink({ icon, text, url, className }: MyLink): JSX.Element {
     return (
-        <a href={ url } target={ "_blank" } rel={ "noreferrer" } className={ className }>
+        <A to={ url } className={ `!text-inherit ${ className }` }>
             <div
-                className={ `hover:underline bg-gradient-to-r from-primaryPurple border-gray-500
+                className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ icon !== undefined ? icon : <LinkIcon/> }</div>
+                <div className={ "pr-2" }>{ icon ? icon : <LinkIcon/> }</div>
                 <span>{ text }</span>
             </div>
-        </a>
+        </A>
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0].node.data;
+export function Head({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element {
+    const locales = data?.locales?.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <SEO title={ obj?.myLinks }/>; // TODO description
-};
+}
 
 export const query = graphql`
     query LinksPage($language: String!) {
@@ -116,5 +113,3 @@ export const query = graphql`
         }
     }
 `;
-
-export default LinksPage;

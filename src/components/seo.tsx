@@ -8,7 +8,7 @@ interface SEO {
     children?: React.ReactNode,
 }
 
-const SEO = ({ title, description, blockCrawlers = false, children }: SEO) => {
+export default function SEO({ title, description, blockCrawlers = false, children }: SEO): JSX.Element {
 
     const query = useStaticQuery(graphql`
         query {
@@ -22,15 +22,13 @@ const SEO = ({ title, description, blockCrawlers = false, children }: SEO) => {
         }
     `);
 
-    return ( //TODO move to gatsby-ssr.jsx as HTML
+    return ( //TODO use HTML tag in gatsby-ssr.jsx
         <>
             <meta lang={ query.site.siteMetadata.lang }/>
-            <meta name={ "description" } content={ description ?? query.site.siteMetadata.description}/>
+            <meta name={ "description" } content={ description ?? query.site.siteMetadata.description }/>
             { blockCrawlers && <meta name={ "robots" } content={ "noindex" }/> }
             <title>{ title && title + " | " } { query.site.siteMetadata.title }</title>
             { children }
         </>
     );
 }
-
-export default SEO;

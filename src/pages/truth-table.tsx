@@ -16,11 +16,7 @@ import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
 
-interface TruthTablePage {
-
-}
-
-const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
+export default function TruthTablePage(): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -114,7 +110,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
         const el = (document.getElementById("truth-input") as HTMLInputElement | null);
         if (el) {
             el.value = "";
-            setSearch(el.value);
+            setSearch("");
             setErrorMessage("");
             setTyping(false);
             el.focus();
@@ -122,11 +118,6 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
     }
 
     React.useEffect(() => {
-
-        // Resets the array on page load, if the page has been used before
-        if (search === "") {
-            Expression.orderOfOperations = [];
-        }
 
         let isMounted = true;
 
@@ -258,7 +249,7 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                 <table className={ "table" }>
                                     <tbody>
                                     {
-                                        Expression.orderOfOperations.map((operation: any, index: number) => (
+                                        Expression.orderOfOperations.map((operation, index: number) => (
                                             <tr key={ index } className={ "border-b border-dotted border-gray-500" }>
                                                 <td>{ index + 1 }:</td>
                                                 <td className={ "px-2" }>
@@ -267,8 +258,8 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
                                                             (part, index: number) => (
                                                                 <span key={ index }
                                                                       className={
-                                                                          `${ part.added && "bg-green-500 dark:bg-green-700 text-black dark:text-white" } 
-                                                                    ${ part.removed && "bg-red-500 dark:bg-red-700 text-black dark:text-white" }` }>
+                                                                          `${ part.added && "bg-green-500 dark:bg-green-700 default-text-black-white" } 
+                                                                    ${ part.removed && "bg-red-500 dark:bg-red-700 default-text-black-white" }` }>
                                                                 { part.value }
                                                             </span>
                                                             ))
@@ -315,14 +306,14 @@ const TruthTablePage = ({}: TruthTablePage): JSX.Element => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.TruthTablePageQuery>): JSX.Element => {
-    const locales = data.locales.edges[0]?.node?.data;
+export function Head({ data }: HeadProps<Queries.TruthTablePageQuery>): JSX.Element {
+    const locales = data?.locales?.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <SEO title={ obj?.truthTables } description={ obj?.truthTablesDesc }/>;
-};
+}
 
 export const query = graphql`
     query TruthTablePage($language: String!) {
@@ -344,7 +335,7 @@ interface SingleMenuItem {
     onClick: MouseEventHandler<HTMLDivElement>,
 }
 
-const SingleMenuItem = ({ option, currentValue, onClick }: SingleMenuItem) => {
+function SingleMenuItem({ option, currentValue, onClick }: SingleMenuItem): JSX.Element {
     return (
         <Menu.Item>
             <div
@@ -356,6 +347,4 @@ const SingleMenuItem = ({ option, currentValue, onClick }: SingleMenuItem) => {
             </div>
         </Menu.Item>
     );
-};
-
-export default TruthTablePage;
+}

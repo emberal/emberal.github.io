@@ -1,7 +1,7 @@
 import * as React from "react";
 import Layout, { Links } from "../../components/layout";
 import { graphql } from "gatsby";
-import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 import SEO from "../../components/seo";
@@ -13,59 +13,50 @@ import { A } from "../../components/link";
  * @returns {JSX.Element}
  * @constructor
  */
-const ProjectPost = ({ data: { mdx }, children }: any/*PageProps<Queries.ProjectPostQuery>*/): JSX.Element | null => { // FIXME
+export default function ProjectPost(
+    {
+        data: { mdx: { frontmatter } },
+        children
+    }: any/*PageProps<Queries.ProjectPostQuery>*/): JSX.Element { // FIXME
 
-    if (mdx) {
+    const heroImageData: IGatsbyImageData | undefined = frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
+    const heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData) : undefined;
 
-        const heroImageData = mdx.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
-        const heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData as ImageDataLike) : undefined;
-        const heroImageAlt = mdx.frontmatter?.hero_image_alt;
-        const title = mdx.frontmatter?.title;
-        const description = mdx.frontmatter?.description;
-        const source = mdx.frontmatter?.source;
-        const tags = mdx.frontmatter?.tags;
+    return (
+        <Layout
+            title={ frontmatter?.title ? frontmatter.title : "Blogpost" }
+            headline={ frontmatter?.title ?? undefined }
+            description={ frontmatter?.description ? frontmatter.description : "A blogpost by Martin Berg Alstad" }
+            current={ Links.projects }>
+            <article>
+                <div className={ `max-h-[40rem] flex justify-center` }>
+                    {
+                        heroImage && frontmatter?.hero_image_alt &&
+                        <GatsbyImage className={ heroImage.height > heroImage.width * 2 ? "w-72" : "" }
+                                     alt={ frontmatter.hero_image_alt } image={ heroImage }/>
+                    }
+                </div>
+                <div className={ "my-2" }>
+                    <TagsRow tags={ splitCSV(frontmatter?.tags ?? "") }/>
+                </div>
 
-        return (
-            <>
-                <Layout
-                    title={ typeof title === "string" ? title : "Blogpost" }
-                    headline={ title ?? undefined }
-                    description={ typeof description === "string" ? description : "A blogpost by Martin Berg Alstad" }
-                    current={ Links.projects }>
-                    <article>
-                        <div className={ `max-h-[40rem] flex justify-center` }>
-                            {
-                                heroImage && heroImageAlt &&
-                                    <GatsbyImage className={ heroImage.height > heroImage.width * 2 ? "w-72" : "" }
-                                                 alt={ heroImageAlt } image={ heroImage }/>
-                            }
-                        </div>
-                        <div className={ "my-2" }>
-                            <TagsRow tags={ splitCSV(tags ?? "") }/>
-                        </div>
-
-                        <p>{ description }</p>
-                        <p>
-                            Kildekoden på{ " " }
-                            <A to={ source ? source : undefined }>GitHub</A>
-                        </p>
-                        <div>
-                            <br/>
-                            { children }
-                        </div>
-                    </article>
-                </Layout>
-            </>
-        );
-    }
-    else {
-        return null;
-    }
+                <p>{ frontmatter?.description }</p>
+                <p>
+                    Kildekoden på{ " " }
+                    <A to={ frontmatter?.source ? frontmatter?.source : undefined }>GitHub</A>
+                </p>
+                <div>
+                    <br/>
+                    { children }
+                </div>
+            </article>
+        </Layout>
+    );
 }
 
-export const Head = (props: any /*HeadProps<Queries.ProjectPostQuery>*/): JSX.Element => {
+export function Head(props: any /*HeadProps<Queries.ProjectPostQuery>*/): JSX.Element {
     return <SEO title={ props.data.mdx?.frontmatter?.title } description={ props.data.mdx?.frontmatter?.description }/>;
-};
+}
 
 export const query = graphql`
     query ($id: String, $language: String!) { # query ProjectPost($id: String, $language: String!) { # FIXME can't use name?
@@ -92,13 +83,6 @@ export const query = graphql`
                 uploaded
                 tags
             }
-            fields {
-                timeToRead {
-                    minutes
-                }
-            }
         }
     }
 `;
-
-export default ProjectPost;

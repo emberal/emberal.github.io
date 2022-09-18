@@ -3,6 +3,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import ScrollContainer from "react-indiana-drag-scroll";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { throttle } from "lodash";
+import Row from "./row";
 
 interface Tag {
     name?: string,
@@ -23,10 +24,10 @@ interface Tag {
  * @param id A unique id for the tag
  * @constructor
  */
-export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) => {
+export function Tag({ name, value, hoverTitle, className, onClick, id }: Tag): JSX.Element {
 
     const text = <span className={ "mx-2 w-max" }>{ name + (value ? `(${ value })` : "") }</span>;
-    const classes = "border-rounded border-gray-500"
+    const classes = "border-rounded border-gray-500";
 
     if (onClick) {
         return (
@@ -49,7 +50,7 @@ export const Tag = ({ name, value, hoverTitle, className, onClick, id }: Tag) =>
 
 interface TagsSelector {
     allTag?: string,
-    tagMap?: any[],
+    tagMap?: { key: string, value: number }[],
     selectedTag?: string,
     onClick?: Function,
     id?: string,
@@ -69,7 +70,15 @@ interface TagsSelector {
  * @param className Styling of the root element
  * @constructor
  */
-export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onClick, id, className }: TagsSelector) => {
+export function TagsSelector(
+    {
+        allTag = "All",
+        selectedTag = "All",
+        tagMap,
+        onClick,
+        id,
+        className
+    }: TagsSelector): JSX.Element {
 
     const { t } = useTranslation();
 
@@ -89,7 +98,6 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
     function toggleTags() {
         setHideTags(!hideTags);
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
-
     }
 
     React.useEffect(() => {
@@ -103,7 +111,7 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
          * @returns {boolean} Returns 'true' if the element overflows, false otherwise
          */
         function isOverflowingHorizontally(element: HTMLElement | null): boolean {
-            if (element !== null) {
+            if (element) {
                 let sum = 0;
                 const children = element.children[0].children;
 
@@ -223,15 +231,14 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
                  cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
                     {
-                        allTag ?
-                            <Tag
-                                name={ allTag }
-                                onClick={ onClick ? () => onClick(allTag) : undefined }
-                                className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
-                            : null
+                        allTag &&
+                        <Tag
+                            name={ allTag }
+                            onClick={ onClick ? () => onClick(allTag) : undefined }
+                            className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
                     }
                     {
-                        tagMap?.map((tag: any) =>
+                        tagMap?.map(tag =>
                             <div key={ tag.key }>
                                 <Tag name={ tag.key }
                                      value={ tag.value }
@@ -241,35 +248,33 @@ export const TagsSelector = ({ allTag = "All", selectedTag = "All", tagMap, onCl
                             </div>)
                     }
                     {
-                        isOverflowing ?
-                            <>
-                                <div id={ "invisible-box" }
-                                     className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
-                                    { hideTags && t("showMore") }
-                                </div>
-                                <div
-                                    className={ `${ hideTags && "absolute right-0 flex flex-row gap-3 items-center" }` }>
-                                    {
-                                        hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
-                                            <button title={ t("clickToScroll") }>
-                                                <ChevronRight className={ chevronClasses }
-                                                              onClick={ () => scroll(defScrollLen) }/>
-                                            </button>
-                                    }
-                                    <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
-                                         hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
-                                         className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
-                                         "bg-white dark:bg-gray-900" } shadow-sm shadow-primaryPurple` }/>
-                                </div>
+                        isOverflowing &&
+                        <>
+                            <div id={ "invisible-box" }
+                                 className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
+                                { hideTags && t("showMore") }
+                            </div>
+                            <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
                                 {
-                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft ?
-                                        <button className={ "absolute left-0" } title={ t("clickToScroll") }>
-                                            <ChevronLeft className={ chevronClasses + " mt-[1px]" }
-                                                         onClick={ () => scroll(-defScrollLen) }/>
-                                        </button> : null
+                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
+                                    <button title={ t("clickToScroll") }>
+                                        <ChevronRight className={ chevronClasses }
+                                                      onClick={ () => scroll(defScrollLen) }/>
+                                    </button>
                                 }
-                            </>
-                            : null
+                                <Tag name={ hideTagsText.toString() } onClick={ toggleTags }
+                                     hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
+                                     className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
+                                     "default-bg" } shadow-sm shadow-primaryPurple` }/>
+                            </Row>
+                            {
+                                hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft &&
+                                <button className={ "absolute left-0" } title={ t("clickToScroll") }>
+                                    <ChevronLeft className={ chevronClasses + " mt-[1px]" }
+                                                 onClick={ () => scroll(-defScrollLen) }/>
+                                </button>
+                            }
+                        </>
                     }
                 </>
             </ScrollContainer>
@@ -292,14 +297,14 @@ interface TagsRow {
  * @param id A unique id for the component
  * @constructor
  */
-export const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
+export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Element | null {
     if (tags) {
         if (sort) {
             tags.sort();
         }
 
         return (
-            <div className={ `flex flex-row flex-wrap gap-1 ${ className }` } id={ id }>
+            <Row className={ `flex-wrap gap-1 ${ className }` } id={ id }>
                 {
                     tags.map(tag =>
                         <div key={ tag }>
@@ -307,7 +312,7 @@ export const TagsRow = ({ tags, sort = true, className, id }: TagsRow) => {
                         </div>
                     )
                 }
-            </div>
+            </Row>
         );
     }
     else {

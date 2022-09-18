@@ -7,10 +7,6 @@ import Input, { TextArea } from "../components/input";
 import SEO from "../components/seo";
 import { A } from "../components/link";
 
-interface ContactMePage {
-
-}
-
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
 const links = [
@@ -33,7 +29,7 @@ const links = [
  * @returns {JSX.Element}
  * @constructor
  */
-const ContactMePage = ({}: ContactMePage): JSX.Element => {
+export default function ContactMePage(): JSX.Element {
 
     React.useEffect(() => {
         let isMounted = true;
@@ -103,14 +99,14 @@ const ContactMePage = ({}: ContactMePage): JSX.Element => {
     );
 }
 
-export const Head = ({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element => {
+export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element {
     const locales = data?.locales?.edges[0]?.node?.data;
     let obj = undefined;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <SEO title={ obj?.contactMe }/>; // TODO description
-};
+}
 
 export const query = graphql`
     query ContactMePage($language: String!) {
@@ -126,17 +122,15 @@ export const query = graphql`
     }
 `;
 
-export default ContactMePage;
-
 interface FormInput {
     name?: string,
-    id?: string,
     type?: string,
     title: string,
     className?: string
+    id?: string,
 }
 
-const FormInput = ({ name, id, type, title, className }: FormInput) => {
+function FormInput({ name, type, title, className, id }: FormInput): JSX.Element {
     return (
         <Input className={ `${ inputStyle } ${ className }` }
                name={ name }
@@ -145,4 +139,4 @@ const FormInput = ({ name, id, type, title, className }: FormInput) => {
                title={ title }
                required={ true }/>
     );
-};
+}
