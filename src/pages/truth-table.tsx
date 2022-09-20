@@ -290,7 +290,7 @@ export default function TruthTablePage(): JSX.Element {
                         }
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" }
-                                 className={ "h-[45rem] overflow-scroll" }>
+                                 className={ "h-[45rem] overflow-auto" }>
                                 <TruthTable
                                     expression={ expression.current }
                                     hide={ hideValues.value }
