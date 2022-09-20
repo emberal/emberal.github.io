@@ -222,7 +222,7 @@ export function TagsSelector(
                 vertical={ false }
                 onScroll={ throttle(onScroll, 100) }
                 hideScrollbars={ false }
-                className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none]
+                className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none] hide-scrollbar
                  cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
                     {
