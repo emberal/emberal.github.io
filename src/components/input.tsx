@@ -159,11 +159,11 @@ export function TextArea(
 
 function HoverTitle({ title, isActive = false }: { title?: string, isActive?: boolean }): JSX.Element {
     return (
-        <span className={ `absolute pointer-events-none
+        <label className={ `absolute pointer-events-none
                  ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 
             transition-all duration-150 text-gray-600 dark:text-gray-400` }>
                 <div className={ "z-50 relative" }>{ title }</div>
                 <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" }/>
-        </span>
+        </label>
     );
 }
