@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 @layer base {
-    .border-outline {
+
+    .debug {
         @apply border border-red-600 border-dashed;
     }
 

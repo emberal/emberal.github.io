@@ -77,15 +77,27 @@ export function TagsSelector(
 
     const { t } = useTranslation();
 
+    /**
+     * If 'true' most tags will be hidden, only one row will be visible.
+     * It is possible to scroll through all the tags.
+     */
     const [hideTags, setHideTags] = React.useState(true);
-
+    /**
+     * The text displayed on the button to hide or unhide tags
+     */
     const [hideTagsText, setHideTagsText] = React.useState(t("showMore"));
-
+    /**
+     * If the content in the container is wider than the container, this state is 'true'
+     */
     const [isOverflowing, setIsOverflowing] = React.useState(false);
-
+    /**
+     * If the container is scrolled all the way to the left, this is 'true', otherwise 'false'
+     */
     const [isScrollLeft, setIsScrollLeft] = React.useState(true);
+    /**
+     * If the container is scrolled all the way to the right, this is 'true', otherwise 'false'
+     */
     const [isScrollRight, setIsScrollRight] = React.useState(false);
-
 
     /**
      * Update the tags and tagsText states, to the opposite one
@@ -130,8 +142,15 @@ export function TagsSelector(
         }
     }, [tagMap]);
 
+    /**
+     * The scrollable container the tags will be stored in
+     */
     const scrollContainer = React.useRef<HTMLElement>(null);
-
+    /**
+     * The default scrollength when clicking on the arrows on the left and right side.
+     * Default is half the size of the container, when loading the page.
+     * If 'undefined' the value is 350px
+     */
     const defScrollLen = (scrollContainer?.current?.clientWidth ?? 700) / 2;
 
     /**
@@ -212,7 +231,7 @@ export function TagsSelector(
         }
     }, [hideTags, isOverflowing]);
 
-    const chevronClasses = `text-primaryPink animate-pulse bg-white-transparent-1/2 dark:bg-black-transparent-1/2 border-rounded
+    const chevronClasses = `default-text animate-pulse bg-white-transparent-1/2 dark:bg-black-transparent-1/2 border-rounded
      border-transparent overflow-auto cursor-pointer`;
 
     return (
@@ -227,10 +246,9 @@ export function TagsSelector(
                 <>
                     {
                         allTag &&
-                        <Tag
-                            title={ allTag }
-                            onClick={ onClick ? () => onClick(allTag) : undefined }
-                            className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
+                        <Tag title={ allTag }
+                             onClick={ onClick ? () => onClick(allTag) : undefined }
+                             className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
                     }
                     {
                         tagMap?.map(tag =>
@@ -240,7 +258,8 @@ export function TagsSelector(
                                      onClick={ onClick ? () => onClick(tag.key) : undefined }
                                      className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key && "!border-primaryPurple" }` }/>
-                            </div>)
+                            </div>
+                        )
                     }
                     {
                         isOverflowing &&
@@ -278,7 +297,7 @@ export function TagsSelector(
 }
 
 interface TagsRow extends Component {
-    tags?: string[],
+    tags: string[],
     sort?: boolean,
 }
 
@@ -290,25 +309,21 @@ interface TagsRow extends Component {
  * @param id A unique id for the component
  * @constructor
  */
-export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Element | null {
-    if (tags) {
-        if (sort) {
-            tags.sort();
-        }
+export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Element {
 
-        return (
-            <Row className={ `flex-wrap gap-1 ${ className }` } id={ id }>
-                {
-                    tags.map(tag =>
-                        <div key={ tag }>
-                            <Tag title={ tag }/>
-                        </div>
-                    )
-                }
-            </Row>
-        );
+    if (sort) {
+        tags.sort();
     }
-    else {
-        return null;
-    }
+
+    return (
+        <Row className={ `flex-wrap gap-1 ${ className }` } id={ id }>
+            {
+                tags.map(tag =>
+                    <div key={ tag }>
+                        <Tag title={ tag }/>
+                    </div>
+                )
+            }
+        </Row>
+    );
 }

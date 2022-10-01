@@ -68,35 +68,36 @@ export default function Footer({ className }: Component): JSX.Element {
                     <Row>
                         Change language <ChevronUp className={ "w-5 h-5" }/>
                     </Row>
-                }
-                        items={
-                            langMenu.map(lang => (
-                                <div key={ lang.lang }>
-                                    <Menu.Item>
-                                        <div className={ "w-max flex-row-center" }>
-                                            <span>{ lang.icon }</span>
-                                            {
-                                                lang.lang === 'auto' && typeof navigator !== "undefined" ?
-                                                    <I18Link
-                                                        className={ `pl-2 pt-1 hover:underline` }
-                                                        to={ originalPath } onClick={ setAuto }
-                                                        language={
-                                                            navigator.language === "nb" || navigator.language === "nn" ||
-                                                            navigator.language === "no" ? langs.nor : langs.eng }>
-                                                        { lang.text }
-                                                    </I18Link> :
-                                                    <I18Link
-                                                        className={ `pl-2 pt-1 hover:underline` }
-                                                        to={ originalPath } language={ lang.lang }
-                                                        onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
-                                                        { lang.text }
-                                                    </I18Link>
-                                            }
-                                        </div>
-                                    </Menu.Item>
-                                </div>
-                            ))
-                        } itemsClassName={ "-top-24 rounded-t-xl !rounded-b-none" }/>
+                } itemsClassName={ "-top-24 rounded-t-xl !rounded-b-none" }>
+                    {
+                        langMenu.map(lang =>
+                            <div key={ lang.lang }>
+                                <Menu.Item>
+                                    <div className={ "w-max flex-row-center" }>
+                                        <span>{ lang.icon }</span>
+                                        {
+                                            lang.lang === 'auto' && typeof navigator !== "undefined" ?
+                                                <I18Link
+                                                    className={ `pl-2 pt-1 hover:underline` }
+                                                    to={ originalPath } onClick={ setAuto }
+                                                    language={
+                                                        navigator.language === "nb" || navigator.language === "nn" ||
+                                                        navigator.language === "no" ? langs.nor : langs.eng }>
+                                                    { lang.text }
+                                                </I18Link> :
+                                                <I18Link
+                                                    className={ `pl-2 pt-1 hover:underline` }
+                                                    to={ originalPath } language={ lang.lang }
+                                                    onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                                    { lang.text }
+                                                </I18Link>
+                                        }
+                                    </div>
+                                </Menu.Item>
+                            </div>
+                        )
+                    }
+                </MyMenu>
             </div>
 
             <p>{ t("createdWith") }

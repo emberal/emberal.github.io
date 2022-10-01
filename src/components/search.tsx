@@ -68,7 +68,10 @@ export default function Search(
 
     React.useEffect(() => {
         const element = getSearchElement();
-        setSearched(element?.value !== "");
+        const notEmpty = element?.value !== "";
+        if (notEmpty !== searched) {
+            setSearched(notEmpty);
+        }
     }, [onChange])
 
     /**

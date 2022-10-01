@@ -34,7 +34,7 @@ export default function ContactMePage(): JSX.Element {
 
     React.useEffect(() => {
         let isMounted = true;
-        const submitKeys = (e: KeyboardEvent) => {
+        function submitKeys(e: KeyboardEvent): void {
             if (isMounted && e.ctrlKey && e.key === "Enter") {
                 // Activates button if ctrl and enter is clicked at the same time
                 const element = document.getElementById("submit-button");
@@ -61,13 +61,13 @@ export default function ContactMePage(): JSX.Element {
             <>
                 <div className={ "flex justify-center pb-2" }>
                     {
-                        links.map(link => (
+                        links.map(link =>
                             <div className={ "px-2" } key={ link.id }>
                                 <A title={ link.name } to={ link.to } className={ "!text-inherit" }>
                                     { link.icon }
                                 </A>
                             </div>
-                        ))
+                        )
                     }
                 </div>
                 <form acceptCharset={ "UTF-8" }
@@ -102,7 +102,7 @@ export default function ContactMePage(): JSX.Element {
 
 export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element {
     const locales = data?.locales?.edges[0]?.node?.data;
-    let obj = undefined;
+    let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }

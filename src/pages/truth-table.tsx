@@ -202,14 +202,14 @@ export default function TruthTablePage(): JSX.Element {
                                             <EyeOff className={ `mx-1 ${ hideValues.value === Hide.true ?
                                                 "text-green-500" : "text-red-500" }` }/>
                                     }
-                                    items={
-                                        hideOptions.map(option => (
+                                    children={
+                                        hideOptions.map(option =>
                                             <div key={ option.value }>
                                                 <SingleMenuItem onClick={ () => setHideValues(option) }
                                                                 option={ option }
                                                                 currentValue={ hideValues }/>
                                             </div>
-                                        ))
+                                        )
                                     } itemsClassName={ "right-0" }
                             />
                         </div>
@@ -218,7 +218,7 @@ export default function TruthTablePage(): JSX.Element {
                                     button={ <Filter
                                         className={ sortValues.value === Sort.trueFirst ?
                                             "text-green-500" : sortValues.value === Sort.falseFirst ? "text-red-500" : "" }/> }
-                                    items={
+                                    children={
                                         <>
                                             {
                                                 sortOptions.map(option => (

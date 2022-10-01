@@ -29,9 +29,8 @@ export interface ButtonComponent<T> extends ChildComponent {
     hoverTitle?: string,
 }
 
-export interface LinkComponent extends ChildComponent {
+export interface LinkComponent extends TitleComponent {
     to?: string,
-    title?: string,
 }
 
 export interface ProjectPostInterface {

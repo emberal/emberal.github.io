@@ -40,9 +40,9 @@ export default function ProjectCard(
     return (
         <div key={ key } id={ id } className={ `${ className }` }>
             {
-                <article className={ "border-2 border-gray-500 rounded-xl mb-10 shadow" }>
+                <article className={ "border-rounded border-gray-500 mb-10 shadow" }>
                     <div className={ "mx-2 mb-2" }>
-                        <div className={ "flex items-center my-3" }>
+                        <div className={ "flex-row-center my-3" }>
                             <Link
                                 className={ "default-link mr-2" }
                                 to={ slug }>

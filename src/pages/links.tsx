@@ -5,7 +5,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import SEO from "../components/seo";
 import { A } from "../components/link";
-import { Component } from "../interfaces/interfaces";
+import { ChildComponent } from "../interfaces/interfaces";
 
 const linkContent = [
     {
@@ -61,30 +61,31 @@ export default function LinksPage(): JSX.Element {
             current={ Links.links }>
             <div className={ "pt-5" }>
                 {
-                    linkContent.map(link => (
+                    linkContent.map(link =>
                         <div key={ link.key }>
-                            <MyLink icon={ link.icon } text={ link.text } url={ link.url }/>
+                            <MyLink text={ link.text } url={ link.url }>
+                                { link.icon }
+                            </MyLink>
                         </div>
-                    ))
+                    )
                 }
             </div>
         </Layout>
     );
 }
 
-interface MyLink extends Component {
-    icon?: React.ReactNode | null,
+interface MyLink extends ChildComponent {
     text?: string,
     url?: string,
 }
 
-function MyLink({ icon, text, url, className }: MyLink): JSX.Element {
+function MyLink({ children, text, url, className }: MyLink): JSX.Element {
     return (
         <A to={ url } className={ `!text-inherit ${ className }` }>
             <div
                 className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ icon ? icon : <LinkIcon/> }</div>
+                <div className={ "pr-2" }>{ children ? children : <LinkIcon/> }</div>
                 <span>{ text }</span>
             </div>
         </A>
@@ -93,7 +94,7 @@ function MyLink({ icon, text, url, className }: MyLink): JSX.Element {
 
 export function Head({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element {
     const locales = data?.locales?.edges[0]?.node?.data;
-    let obj = undefined;
+    let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }

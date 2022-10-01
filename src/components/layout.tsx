@@ -5,6 +5,7 @@ import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import MyMenu from "./menu";
 import { MyLink } from "./link";
+import { TitleComponent } from "../interfaces/interfaces";
 
 export const Links = {
     home: "/",
@@ -15,13 +16,10 @@ export const Links = {
     truthTable: "/truth-table",
 }
 
-interface Layout {
-    title: string,
+interface Layout extends TitleComponent {
     headline?: string,
     description: string,
-    children?: React.ReactNode,
     current?: string,
-    className?: string,
     titleAndNavClass?: string,
     containerClass?: string,
     footerClass?: string,
@@ -62,20 +60,22 @@ export default function Layout(
     const [theme, setTheme] = React.useState(themeEnum.auto);
 
     React.useEffect(() => {
+        const classList = document.documentElement.classList;
+
         if (!('theme' in localStorage) || localStorage.theme === themeEnum.auto) {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
-                document.documentElement.classList.add('dark');
+                classList.add('dark');
             }
             else {
-                document.documentElement.classList.remove('dark');
+                classList.remove('dark');
             }
-            localStorage.theme = themeEnum.auto; // Incase theme does not exist yet
+            localStorage.theme = themeEnum.auto; // If theme does not exist yet
         }
         else if (localStorage.theme === themeEnum.dark) {
-            document.documentElement.classList.add('dark');
+            classList.add('dark');
         }
         else if (localStorage.theme === themeEnum.light) {
-            document.documentElement.classList.remove('dark');
+            classList.remove('dark');
         }
     }, [theme]);
 
@@ -183,36 +183,35 @@ export default function Layout(
                     <nav>
                         <ul className={ "list-none flex gap-3 mb-2" }>
                             {
-                                navLinks.map(link => (
+                                navLinks.map(link =>
                                     <li key={ link.to } className={ "w-fit text-lg" }>
                                         <MyLink
                                             className={ `${ current === link.to && "after:content-['<']" }` }
                                             to={ link.to }> { link.name }
                                         </MyLink>
                                     </li>
-                                ))
+                                )
                             }
                             <li className={ "mr-6 w-fit relative" }>
-                                <MyMenu button={
-                                    <>
-                                        { t('theme') }<ChevronDown className={ "w-5 h-5" }/>
-                                    </>
-                                } buttonClassName={ "default-link flex items-center text-lg" }
-                                        items={
-                                            themeMenu.map(item => (
-                                                <div key={ item.id }>
-                                                    <Menu.Item>
-                                                        <button onClick={ () => changeTheme(item.id) }>
+                                <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" }/></> }
+                                        buttonClassName={ "default-link text-lg" }
+                                        itemsClassName={ "right-0" }>
+                                    {
+                                        themeMenu.map(item =>
+                                            <div key={ item.id }>
+                                                <Menu.Item>
+                                                    <button onClick={ () => changeTheme(item.id) }>
                                                             <span
                                                                 className={ `flex-row-center hover:underline` }>
                                                                 { item.icon }
                                                                 <p className={ "pl-2 w-max" }>{ item.text }</p>
                                                             </span>
-                                                        </button>
-                                                    </Menu.Item>
-                                                </div>
-                                            ))
-                                        } itemsClassName={ "right-0" }/>
+                                                    </button>
+                                                </Menu.Item>
+                                            </div>
+                                        )
+                                    }
+                                </MyMenu>
                             </li>
                         </ul>
                     </nav>

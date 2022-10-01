@@ -33,7 +33,7 @@ export function MyDisclosure(
     return (
         <div id={ id } className={ `border-rounded dark:border-gray-900 default-bg default-text ${ className }` }>
             <Disclosure defaultOpen={ defaultOpen }>
-                { ({ open }) => (
+                { ({ open }) =>
                     <>
                         <Disclosure.Button onClick={ isOpen ? () => isOpen(open) : undefined }
                                            className={ `flex-row-center w-full justify-between px-2` }>
@@ -52,7 +52,7 @@ export function MyDisclosure(
                             </Disclosure.Panel>
                         </Transition>
                     </>
-                ) }
+                }
             </Disclosure>
         </div>
     );

@@ -2,10 +2,10 @@ import * as React from "react";
 import Row from "./row";
 import { InputComponent } from "../interfaces/interfaces";
 
-function setupEventListener(id: string, setIsHover: Function): () => void {
+function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStateAction<boolean>>): () => void {
     let isMounted = true;
 
-    function hover(hover: boolean) {
+    function hover(hover: boolean): void {
         if (isMounted) {
             setIsHover(hover);
         }
@@ -46,11 +46,23 @@ export default function Input(
         trailing
     }: Input<HTMLInputElement>): JSX.Element {
 
+    /**
+     * Is 'true' if the input element is in focus
+     */
     const [isFocused, setIsFocused] = React.useState(false);
+    /**
+     * Is 'true' if the user is hovering over the input element
+     */
     const [isHover, setIsHover] = React.useState(false);
+    /**
+     * Is 'true' if the input element contains any characters
+     */
     const [isText, setIsText] = React.useState(false);
 
-    function setSetIsText() {
+    /**
+     * Sets isText to 'true' or 'false' if the value of the input element is not empty and it's different from the current value
+     */
+    function setSetIsText(): void {
         if (id) {
             const el = document.getElementById(id) as HTMLInputElement;
             if (el.value !== "" !== isText) {
@@ -97,10 +109,22 @@ export function TextArea(
         onChange
     }: InputComponent<HTMLTextAreaElement>): JSX.Element {
 
+    /**
+     * Is 'true' if the textArea element is in focus
+     */
     const [isFocused, setIsFocused] = React.useState(false);
+    /**
+     * Is 'true' if the user is hovering over the textArea element
+     */
     const [isHover, setIsHover] = React.useState(false);
+    /**
+     * Is 'true' if the textArea element contains any characters
+     */
     const [isText, setIsText] = React.useState(false);
 
+    /**
+     * Sets isText to 'true' or 'false' if the value of the textArea element is not empty and it's different from the current value
+     */
     function setSetIsText() {
         if (id) {
             const el = document.getElementById(id) as HTMLTextAreaElement;

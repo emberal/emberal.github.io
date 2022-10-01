@@ -122,7 +122,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
         setSearchState((document.getElementById("search") as HTMLInputElement | null)?.value.toLowerCase() ?? "");
     }
 
-    React.useEffect(() => {
+    React.useEffect(() => { // TODO use filter directly, without .map?
         if (searchState !== "") { // TODO sort searches after priority: title -> tags -> description
             let newNodes = allMdx.nodes.map(node =>
                 containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ? node : null);
@@ -159,12 +159,12 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
     }
 
     /**
-     * Removes all 'null' and 'undefined' values in a string array
-     * @param arr An array of strings
-     * @returns {string[]} An array of strings without any 'null' or 'undefined' values
+     * Removes all 'null' and 'undefined' values in an array
+     * @param arr An array of T
+     * @returns {<T>[]} An array of objects without any 'null' or 'undefined' values
      */
-    function removeNullValues(arr: any[]): any[] { // TODO remove 'any'
-        return arr.filter((element: string | null | undefined) => element && element) as string[];
+    function removeNullValues<T>(arr: (T | null | undefined)[]): T[] {
+        return arr.filter((element: T | null | undefined) => element) as T[];
     }
 
     return (
@@ -179,7 +179,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState }/>
                 {
-                    allMdx.nodes.map((node) => (
+                    allMdx.nodes.map(node =>
                         <div key={ node.id }>
                             <>
                                 {
@@ -202,7 +202,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
                                 }
                             </>
                         </div>
-                    ))
+                    )
                 }
             </div>
         </Layout>
@@ -210,8 +210,8 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
 }
 
 export function Head({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element {
-    const locales = data.locales.edges[0]?.node?.data;
-    let obj = undefined;
+    const locales = data?.locales?.edges[0]?.node?.data;
+    let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }
