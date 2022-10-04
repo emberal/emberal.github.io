@@ -80,7 +80,7 @@ export default function Input(
     return (
         <Row className={ "relative" }>
             { leading }
-            <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
+            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id }/>
             <input
                 className={ `default-bg focus:border-primaryPurple outline-none border-2 border-gray-500 
                 hover:border-t-primary-purple pl-2 ${ className }` }
@@ -142,7 +142,7 @@ export function TextArea(
 
     return ( // TODO expand textArea when typing
         <div className={ "relative" }>
-            <HoverTitle title={ title } isActive={ isFocused || isHover || isText }/>
+            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id }/>
             <textarea id={ id }
                       className={ `pl-2 min-h-[3rem] default-bg focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
@@ -157,13 +157,19 @@ export function TextArea(
     );
 }
 
-function HoverTitle({ title, isActive = false }: { title?: string, isActive?: boolean }): JSX.Element {
+function HoverTitle(
+    {
+        title,
+        isActive = false,
+        htmlFor
+    }: { title?: string, isActive?: boolean, htmlFor?: string }): JSX.Element {
     return (
         <label className={ `absolute pointer-events-none
                  ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 
-            transition-all duration-150 text-gray-600 dark:text-gray-400` }>
-                <div className={ "z-50 relative" }>{ title }</div>
-                <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" }/>
+            transition-all duration-150 text-gray-600 dark:text-gray-400` }
+               htmlFor={ htmlFor }>
+            <div className={ "z-50 relative" }>{ title }</div>
+            <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" }/>
         </label>
     );
 }
