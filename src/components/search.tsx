@@ -101,7 +101,7 @@ export default function Search(
     return (
         <div className={ `absolute right-0 -top-24 sm:-top-9` }>
             <Input id={ "search" }
-                   type={ "text" }
+                   type={ "search" }
                    name={ "search" }
                    placeholder={ t("search") }
                    className={ `sm:pl-6 pl-7 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }

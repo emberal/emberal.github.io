@@ -37,10 +37,10 @@ export default function Input(
         className,
         id,
         name,
-        type,
+        type = "text",
         title,
         placeholder,
-        required,
+        required = false,
         onChange,
         leading,
         trailing

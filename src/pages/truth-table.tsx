@@ -66,7 +66,8 @@ export default function TruthTablePage(): JSX.Element {
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
      */
-    function onClick() {
+    function onClick(e: { preventDefault: () => void; }) {
+        e.preventDefault(); // Stops the page from reloading onClick
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
             exp = replaceOperators(exp);
@@ -118,30 +119,8 @@ export default function TruthTablePage(): JSX.Element {
     }
 
     React.useEffect(() => {
-
-        let isMounted = true;
-
-        function keyPress(e: KeyboardEvent) {
-            if (isMounted && e.key === "Enter") {
-                const el = document.getElementById("truth-input-button");
-                if (el) {
-                    el.click();
-                }
-            }
-        }
-
-        const el = document.getElementById("truth-input") as HTMLInputElement | null;
-
-        if (el) {
-            el.focus(); // Focuses search on load
-            el.addEventListener("keypress", (e: KeyboardEvent) => keyPress(e));
-        }
-        return () => {
-            if (el) {
-                el.removeEventListener("keypress", (e: KeyboardEvent) => keyPress(e));
-            }
-            isMounted = false;
-        };
+        // Focuses searchbar on load
+        (document.getElementById("truth-input") as HTMLInputElement | null)?.focus();
     }, []);
 
     return (
@@ -166,30 +145,29 @@ export default function TruthTablePage(): JSX.Element {
                             </>
                         </MyDisclosure>
                     </MyDisclosureContainer>
-                    <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
-                           id={ "truth-input" }
-                           placeholder={ "¬A & B -> C" }
-                           onChange={ onTyping }
-                           leading={ <Search className={ "pl-2 absolute" }/> }
-                           trailing={
-                               <>
-                                   {
-                                       typing &&
-                                       <button className={ "absolute left-44 sm:left-[22rem]" }
-                                               title={ t("clear") }
-                                               onClick={ clearSearch }>
-                                           <X/>
-                                       </button>
-                                   }
-                                   <button id={ "truth-input-button" }
-                                           title={ t("generate") + " (Enter)" }
-                                           className={ "mx-1 px-1 border-rounded border-gray-500 shadow shadow-primaryPurple h-10" }
-                                           onClick={ onClick }>
-                                       { t("generate") }
-                                   </button>
-                               </>
-                           }
-                    />
+
+                    <form className={ "flex-row-center" } onSubmit={ onClick } autoComplete={ "off" }>
+                        <Input className={ `rounded-xl pl-7 h-10 w-52 sm:w-96 pr-8` }
+                               id={ "truth-input" }
+                               placeholder={ "¬A & B -> C" }
+                               type={ "text" }
+                               onChange={ onTyping }
+                               leading={ <Search className={ "pl-2 absolute" }/> }
+                               trailing={ typing ?
+                                   <button className={ "absolute left-44 sm:left-[22rem]" }
+                                           title={ t("clear") }
+                                           type={ "reset" }
+                                           onClick={ clearSearch }>
+                                       <X/>
+                                   </button> : undefined }
+                        />
+                        <input id={ "truth-input-button" }
+                               title={ t("generate") + " (Enter)" }
+                               type={ "submit" }
+                               className={ "mx-1 px-1 border-rounded border-gray-500 shadow shadow-primaryPurple h-10 cursor-pointer" }
+                               value={ t("generate") }/>
+                    </form>
+
                     <Row className={ "my-1 gap-2" }>
                         <span className={ "h-min" }>{ t("simplify") }: </span>
                         <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
@@ -219,16 +197,12 @@ export default function TruthTablePage(): JSX.Element {
                                         className={ sortValues.value === Sort.trueFirst ?
                                             "text-green-500" : sortValues.value === Sort.falseFirst ? "text-red-500" : "" }/> }
                                     children={
-                                        <>
-                                            {
-                                                sortOptions.map(option => (
-                                                    <div key={ option.value }>
-                                                        <SingleMenuItem option={ option } currentValue={ sortValues }
-                                                                        onClick={ () => setSortValues(option) }/>
-                                                    </div>
-                                                ))
-                                            }
-                                        </>
+                                        sortOptions.map(option => (
+                                            <div key={ option.value }>
+                                                <SingleMenuItem option={ option } currentValue={ sortValues }
+                                                                onClick={ () => setSortValues(option) }/>
+                                            </div>
+                                        ))
                                     }
                                     itemsClassName={ "right-0" }
                             />
