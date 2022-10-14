@@ -409,8 +409,10 @@ export class Expression {
                 if (exp.isNot() && exp.left) {
                     exp.left.leading = "¬";
                 }
+                exp.leading = "";
                 exp.operator = null;
                 exp.right = null;
+                exp.trailing = "";
             };
 
             // If both are atomic values

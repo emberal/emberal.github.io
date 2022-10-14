@@ -125,6 +125,7 @@ test("Always true / false", () => {
     expect(simplify("A⋀B⋀¬A", true).toString()).toBe("A ⋀ ¬A");
     expect(simplify("¬A⋀B⋀A", true).toString()).toBe("A ⋀ ¬A");
     expect(simplify("¬A⋁B⋁¬B", true).toString()).toBe("B ⋁ ¬B");
+    expect(simplify("A⋀B➔A", true).toString()).toBe("A ⋁ ¬A");
     expect(simplify("A➔A⋁B", true).toString()).toBe("A ⋁ ¬A");
     expect(simplify("A➔A⋀A⋁A", true).toString()).toBe("A ⋁ ¬A");
     expect(simplify("((A⋁A)➔(A⋀(A⋁A)))", true).toString()).toBe("A ⋁ ¬A");
