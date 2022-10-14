@@ -68,6 +68,15 @@ module.exports = {
                 policy: [{userAgent: `*`, allow: `/`}]
             }
         },
+        {
+            resolve: 'gatsby-plugin-security-txt',
+            options: {
+                contact: 'https://h600878.github.io/contact-me',
+                expires: '2032-10-14T23:59:59z',
+                canonical: 'https://h600878.github.io/.well-known/security.txt',
+                languages: 'en, no',
+            },
+        },
         "react-feather",
         {
             resolve: 'gatsby-source-filesystem',
