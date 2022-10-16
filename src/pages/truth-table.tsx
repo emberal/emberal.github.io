@@ -18,6 +18,7 @@ import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/MyDialog";
 
+// TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
 
     const { t } = useTranslation();
@@ -131,7 +132,6 @@ export default function TruthTablePage(): JSX.Element {
     /**
      * Exports the generated truth table to an excel (.xlsx) file
      *
-     * @param e
      * @param type The downloaded files extension. Default is "xlsx"
      * @param name The name of the file, excluding the extension. Default is "Truth Table"
      * @param dl
@@ -272,8 +272,9 @@ export default function TruthTablePage(): JSX.Element {
                                       acceptButtonName={ t("download") }
                                       cancelButtonName={ t("cancel") }
                                       buttonClasses={ `float-right` }
-                                      buttonTitle={ t("exportCurrentTable") }>
-                                <p>{ t("filename") }: ({ t("fileWillBeStoredInYourDownloads") })</p>
+                                      buttonTitle={ t("exportCurrentTable") }
+                                      acceptButtonId={ "download-accept" }>
+                                <p>{ t("filename") }:</p>
                                 <Input className={ "border-rounded h-10" } id={ filenameId }
                                        placeholder={ "Truth Table" }/>
                             </MyDialog>

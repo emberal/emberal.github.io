@@ -27,7 +27,7 @@ export default function MyDialog(
         buttonClasses,
         buttonTitle,
         acceptButtonId,
-        id,
+        id = "headlessui-dialog-:rd:", // Don't change, custom id doesn't work
     }: MyDialog): JSX.Element {
 
     const [isOpen, setIsOpen] = React.useState(false);
@@ -43,6 +43,31 @@ export default function MyDialog(
         setIsOpen(false);
     }, [callback]);
 
+    React.useEffect(() => {
+
+        let isMounted = true;
+
+        /**
+         * Pressing "Enter" when the modal is open, will click the accept button
+         * @param e KeyboardEvent of keypress
+         */
+        function click(e: KeyboardEvent) {
+            if (isMounted && e.key === "Enter") {
+                (document.getElementById(acceptButtonId ?? "") as HTMLButtonElement | null)?.click();
+            }
+        }
+
+        if (id && isOpen) {
+            const el = document.getElementById(id);
+            el?.addEventListener("keypress", e => click(e));
+            return () => {
+                el?.removeEventListener("keypress", e => click(e));
+                isMounted = false;
+            }
+        }
+
+    }, [isOpen]);
+
     return (
         <div className={ "w-fit h-fit" }>
             <button onClick={ () => setIsOpen(true) } className={ buttonClasses } title={ buttonTitle }>
@@ -50,8 +75,7 @@ export default function MyDialog(
             </button>
             { /*TODO fix not centered when scrolling and remove "hack"*/ }
             <Dialog open={ isOpen } onClose={ () => setIsOpen(false) }
-                    className={ `absolute m-auto w-full h-screen flex justify-content [top:calc(-50vh+50%);] z-50 ${ className }` }
-                    id={ id }>
+                    className={ `absolute m-auto w-full h-screen flex justify-content [top:calc(-50vh+50%);] z-50 ${ className }` }>
 
                 <div className={ "fixed inset-0 bg-black/40" /*Backdrop*/ } aria-hidden={ true }/>
 

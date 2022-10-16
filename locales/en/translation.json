@@ -73,6 +73,5 @@
   "download": "Download",
   "exportCurrentTable": "Export the current table to an excel file",
   "filename": "Filename",
-  "fileWillBeStoredInYourDownloads": "The file will be stored in your download directory",
   "cancel": "Cancel"
 }
