@@ -120,13 +120,13 @@ export default function TruthTablePage(): JSX.Element {
         }
     }
 
+    const tableId = "truth-table";
+    const filenameId = "excel-filename";
+
     React.useEffect(() => {
         // Focuses searchbar on load
         (document.getElementById("truth-input") as HTMLInputElement | null)?.focus();
     }, []);
-
-    const tableId = "truth-table";
-    const filenameId = "excel-filename";
 
     /**
      * Exports the generated truth table to an excel (.xlsx) file
@@ -170,8 +170,9 @@ export default function TruthTablePage(): JSX.Element {
     }
 
     function _exportToExcel(): void {
+        const value = (document.getElementById(filenameId) as HTMLInputElement | null)?.value;
         exportToExcel({
-            name: (document.getElementById(filenameId) as HTMLInputElement | null)?.value
+            name: value !== "" ? value : undefined,
         });
     }
 
@@ -262,17 +263,21 @@ export default function TruthTablePage(): JSX.Element {
                             />
                         </div>
 
-                        <MyDialog title={ t("download") }
-                                  description={ t("exportCurrentTable") }
-                                  button={ <><p className={ "sr-only" }>{ t("download") }</p><Download/></> }
-                                  callback={ _exportToExcel }
-                                  acceptButtonName={ t("download") }
-                                  cancelButtonName={ t("cancel") }
-                                  buttonClasses={ `float-right` }
-                                  buttonTitle={ t("exportCurrentTable") }>
-                            <p>{ t("filename") }: ({ t("fileWillBeStoredInYourDownloads") })</p>
-                            <Input className={ "border-rounded h-10" } id={ filenameId }/>
-                        </MyDialog>
+                        {
+                            search !== "" &&
+                            <MyDialog title={ t("download") }
+                                      description={ t("exportCurrentTable") + " (.xlsx)" }
+                                      button={ <><p className={ "sr-only" }>{ t("download") }</p><Download/></> }
+                                      callback={ _exportToExcel }
+                                      acceptButtonName={ t("download") }
+                                      cancelButtonName={ t("cancel") }
+                                      buttonClasses={ `float-right` }
+                                      buttonTitle={ t("exportCurrentTable") }>
+                                <p>{ t("filename") }: ({ t("fileWillBeStoredInYourDownloads") })</p>
+                                <Input className={ "border-rounded h-10" } id={ filenameId }
+                                       placeholder={ "Truth Table" }/>
+                            </MyDialog>
+                        }
 
                     </Row>
                     {

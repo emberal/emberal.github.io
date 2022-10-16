@@ -7,6 +7,7 @@ interface MyDialog extends TitleComponent {
     description?: string,
     button?: React.ReactNode,
     acceptButtonName?: string,
+    acceptButtonId?: string,
     cancelButtonName?: string,
     callback?: MouseEventHandler<HTMLButtonElement>,
     buttonClasses?: string,
@@ -25,6 +26,7 @@ export default function MyDialog(
         className,
         buttonClasses,
         buttonTitle,
+        acceptButtonId,
         id,
     }: MyDialog): JSX.Element {
 
@@ -62,7 +64,8 @@ export default function MyDialog(
                         { children }
 
                         <div className={ "my-2" }>
-                            <button onClick={ callbackAndClose } className={ "button" }>{ acceptButtonName }</button>
+                            <button onClick={ callbackAndClose } className={ "button" }
+                                    id={ acceptButtonId }>{ acceptButtonName }</button>
                             <button onClick={ () => setIsOpen(false) }
                                     className={ "button" }>{ cancelButtonName }</button>
                         </div>
