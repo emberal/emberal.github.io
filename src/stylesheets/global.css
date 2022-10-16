@@ -41,4 +41,9 @@
     .hide-scrollbar::-webkit-scrollbar {
         display: none;
     }
+
+    .button {
+        @apply mx-1 px-1 border-rounded border-gray-500 shadow-sm shadow-primaryPurple h-10 cursor-pointer hover:shadow-primary-pink;
+        min-width: 50px;
+    }
 }

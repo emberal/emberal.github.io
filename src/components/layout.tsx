@@ -1,11 +1,12 @@
 import * as React from "react";
 import Footer from "./footer";
-import { Globe, Sun, Moon, ArrowUp, ChevronDown } from "react-feather";
+import { Globe, Sun, Moon, ArrowUp, ChevronDown, Download } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import MyMenu from "./menu";
 import { MyLink } from "./link";
 import { TitleComponent } from "../interfaces/interfaces";
+import MyDialog from "./MyDialog";
 
 export const Links = {
     home: "/",

@@ -69,5 +69,10 @@
   "showAll": "Show all",
   "sortBy": "Sort by",
   "default": "default",
-  "first": "first"
+  "first": "first",
+  "download": "Download",
+  "exportCurrentTable": "Export the current table to an excel file",
+  "filename": "Filename",
+  "fileWillBeStoredInYourDownloads": "The file will be stored in your download directory",
+  "cancel": "Cancel"
 }

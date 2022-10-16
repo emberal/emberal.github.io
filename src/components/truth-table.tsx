@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Expression } from "../classes/expression";
 import { Component } from "../interfaces/interfaces";
+import { Script } from "gatsby";
 
 export enum Hide {
     none,
@@ -20,7 +21,6 @@ interface TruthTable extends Component {
     sort?: Sort,
 }
 
-// TODO export to excel or similar
 export default function TruthTable(
     {
         expression,
@@ -188,33 +188,33 @@ export default function TruthTable(
     return (
         <table className={ `border-2 border-gray-500 border-collapse table z-10 ${ className }` } id={ id }>
             <thead>
-            <tr>
-                {
-                    expressions?.map((exp: Expression, index: number) =>
-                        <th key={ index } scope={ "col" }
-                            className={ `default-bg text-center sticky top-0 [position:-webkit-sticky;]
+                <tr>
+                    {
+                        expressions?.map((exp: Expression, index: number) =>
+                            <th key={ index } scope={ "col" }
+                                className={ `default-bg text-center sticky top-0 [position:-webkit-sticky;]
                              outline outline-2 outline-offset-[-1px] outline-gray-500` /*TODO sticky header at the top of the screen*/ }>
-                            <p className={ "px-2" }>{ exp.toString() }</p>
-                        </th>
-                    )
-                }
-            </tr>
+                                <p className={ "px-2" }>{ exp.toString() }</p>
+                            </th>
+                        )
+                    }
+                </tr>
             </thead>
             <tbody>
-            {
-                tBodyMatrix?.map((row: string[], rowIndex: number) =>
-                    <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
-                        {
-                            tBodyMatrix[rowIndex]?.map((value: string, colIndex: number) =>
-                                <td key={ colIndex } className={ `text-center border border-gray-500 last:underline
+                {
+                    tBodyMatrix?.map((row: string[], rowIndex: number) =>
+                        <tr key={ rowIndex } className={ "dark:hover:text-black hover:text-white" }>
+                            {
+                                tBodyMatrix[rowIndex]?.map((value: string, colIndex: number) =>
+                                    <td key={ colIndex } className={ `text-center border border-gray-500 last:underline
                                 ${ value === "T" ? "bg-green-500 dark:bg-green-700" : "bg-red-500 dark:bg-red-700" }` }>
-                                    <p>{ value }</p>
-                                </td>
-                            )
-                        }
-                    </tr>
-                )
-            }
+                                        <p>{ value }</p>
+                                    </td>
+                                )
+                            }
+                        </tr>
+                    )
+                }
             </tbody>
         </table>
     );

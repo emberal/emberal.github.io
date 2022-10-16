@@ -4,7 +4,7 @@ import Layout, { Links } from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
 import { Expression } from "../classes/expression";
-import { Check, Eye, EyeOff, Filter, Search, X } from "react-feather";
+import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
 import TruthTable, { Hide, Sort } from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
@@ -15,6 +15,8 @@ import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
+import { BookType, utils, write, writeFile } from "xlsx"
+import MyDialog from "../components/MyDialog";
 
 export default function TruthTablePage(): JSX.Element {
 
@@ -123,6 +125,56 @@ export default function TruthTablePage(): JSX.Element {
         (document.getElementById("truth-input") as HTMLInputElement | null)?.focus();
     }, []);
 
+    const tableId = "truth-table";
+    const filenameId = "excel-filename";
+
+    /**
+     * Exports the generated truth table to an excel (.xlsx) file
+     *
+     * @param e
+     * @param type The downloaded files extension. Default is "xlsx"
+     * @param name The name of the file, excluding the extension. Default is "Truth Table"
+     * @param dl
+     * @returns {any}
+     * @author SheetJS
+     * @link https://cdn.sheetjs.com/
+     * @license Apache 2.0 License
+     * SheetJS Community Edition -- https://sheetjs.com/
+     *
+     * Copyright (C) 2012-present   SheetJS LLC
+     *
+     * Licensed under the Apache License, Version 2.0 (the "License");
+     * you may not use this file except in compliance with the License.
+     * You may obtain a copy of the License at
+     *
+     *       http://www.apache.org/licenses/LICENSE-2.0
+     *
+     * Unless required by applicable law or agreed to in writing, software
+     * distributed under the License is distributed on an "AS IS" BASIS,
+     * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     * See the License for the specific language governing permissions and
+     * limitations under the License.
+     */
+    function exportToExcel(
+        {
+            type = "xlsx",
+            name = "Truth Table",
+            dl = false
+        }: { type?: BookType, name?: string, dl?: boolean }): any {
+
+        const element = document.getElementById(tableId);
+        const wb = utils.table_to_book(element, { sheet: "sheet1" });
+        return dl ?
+            write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
+            writeFile(wb, name + "." + type);
+    }
+
+    function _exportToExcel(): void {
+        exportToExcel({
+            name: (document.getElementById(filenameId) as HTMLInputElement | null)?.value
+        });
+    }
+
     return (
         <Layout title={ t("truthTables") }
                 description={ t("truthTablesDesc") }
@@ -164,7 +216,7 @@ export default function TruthTablePage(): JSX.Element {
                         <input id={ "truth-input-button" }
                                title={ t("generate") + " (Enter)" }
                                type={ "submit" }
-                               className={ "mx-1 px-1 border-rounded border-gray-500 shadow shadow-primaryPurple h-10 cursor-pointer" }
+                               className={ "button" }
                                value={ t("generate") }/>
                     </form>
 
@@ -172,6 +224,7 @@ export default function TruthTablePage(): JSX.Element {
                         <span className={ "h-min" }>{ t("simplify") }: </span>
                         <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
                                   name={ t("toggleSimplify") } className={ "mx-1" }/>
+
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("filter") + " " + t("results") }
                                     button={
@@ -191,6 +244,7 @@ export default function TruthTablePage(): JSX.Element {
                                     } itemsClassName={ "right-0" }
                             />
                         </div>
+
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("sort") + " " + t("results") }
                                     button={ <Filter
@@ -207,6 +261,19 @@ export default function TruthTablePage(): JSX.Element {
                                     itemsClassName={ "right-0" }
                             />
                         </div>
+
+                        <MyDialog title={ t("download") }
+                                  description={ t("exportCurrentTable") }
+                                  button={ <><p className={ "sr-only" }>{ t("download") }</p><Download/></> }
+                                  callback={ _exportToExcel }
+                                  acceptButtonName={ t("download") }
+                                  cancelButtonName={ t("cancel") }
+                                  buttonClasses={ `float-right` }
+                                  buttonTitle={ t("exportCurrentTable") }>
+                            <p>{ t("filename") }: ({ t("fileWillBeStoredInYourDownloads") })</p>
+                            <Input className={ "border-rounded h-10" } id={ filenameId }/>
+                        </MyDialog>
+
                     </Row>
                     {
                         errorMessage !== "" &&
@@ -222,30 +289,31 @@ export default function TruthTablePage(): JSX.Element {
                             <MyDisclosure title={ t("showMeHowItsDone") }>
                                 <table className={ "table" }>
                                     <tbody>
-                                    {
-                                        Expression.orderOfOperations.map((operation, index: number) => (
-                                            <tr key={ index } className={ "border-b border-dotted border-gray-500" }>
-                                                <td>{ index + 1 }:</td>
-                                                <td className={ "px-2" }>
-                                                    {
-                                                        diffChars(operation.before, operation.after).map(
-                                                            (part, index: number) => (
-                                                                <span key={ index }
-                                                                      className={
-                                                                          `${ part.added && "bg-green-500 dark:bg-green-700 default-text-black-white" } 
+                                        {
+                                            Expression.orderOfOperations.map((operation, index: number) => (
+                                                <tr key={ index }
+                                                    className={ "border-b border-dotted border-gray-500" }>
+                                                    <td>{ index + 1 }:</td>
+                                                    <td className={ "px-2" }>
+                                                        {
+                                                            diffChars(operation.before, operation.after).map(
+                                                                (part, index: number) => (
+                                                                    <span key={ index }
+                                                                          className={
+                                                                              `${ part.added && "bg-green-500 dark:bg-green-700 default-text-black-white" } 
                                                                     ${ part.removed && "bg-red-500 dark:bg-red-700 default-text-black-white" }` }>
                                                                 { part.value }
                                                             </span>
-                                                            ))
-                                                    }
-                                                    { typeof window !== "undefined" && window.outerWidth <= 640 &&
-                                                        <p>{ t("using") }: { operation.law }</p> }
-                                                </td>
-                                                { typeof window !== "undefined" && window.outerWidth > 640 &&
-                                                    <td>{ t("using") }: { operation.law }</td> }
-                                            </tr>
-                                        ))
-                                    }
+                                                                ))
+                                                        }
+                                                        { typeof window !== "undefined" && window.outerWidth <= 640 &&
+                                                            <p>{ t("using") }: { operation.law }</p> }
+                                                    </td>
+                                                    { typeof window !== "undefined" && window.outerWidth > 640 &&
+                                                        <td>{ t("using") }: { operation.law }</td> }
+                                                </tr>
+                                            ))
+                                        }
                                     </tbody>
                                 </table>
                             </MyDisclosure>
@@ -255,23 +323,27 @@ export default function TruthTablePage(): JSX.Element {
                 {
                     search !== "" &&
                     <>
-                        {
-                            simplifyEnabled &&
-                            <InfoBox className={ "w-fit mx-auto pb-1 text-lg text-center" }
-                                     title={ t("output") + ":" }>
-                                <p>{ search }</p>
-                            </InfoBox>
-                        }
+                        <div className={ "flex flex-row" }>
+                            {
+                                simplifyEnabled &&
+                                <InfoBox className={ "w-fit mx-auto pb-1 text-lg text-center" }
+                                         title={ t("output") + ":" } id={ "expression-output" }>
+                                    <p>{ search }</p>
+                                </InfoBox>
+                            }
+                        </div>
+
                         <div className={ "flex justify-center m-2" }>
-                            <div id={ "table" }
-                                 className={ "h-[45rem] overflow-auto" }>
+                            <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
                                 <TruthTable
                                     expression={ expression.current }
                                     hide={ hideValues.value }
                                     sort={ sortValues.value }
                                     className={ `relative w-max default-text-black-white` }
+                                    id={ tableId }
                                 />
                             </div>
+
                         </div>
                     </>
                 }

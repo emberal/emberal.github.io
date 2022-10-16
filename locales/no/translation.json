@@ -68,5 +68,10 @@
   "showAll": "Vis alle",
   "sortBy": "Sorter etter",
   "default": "standard",
-  "first": "først"
+  "first": "først",
+  "download": "Last ned",
+  "exportCurrentTable": "Eksporter den nåværende tabellen til en excel fil",
+  "filename": "Filnavn",
+  "fileWillBeStoredInYourDownloads": "Filen vil bli lagret i nedlastinger mappen",
+  "cancel": "Avbryt"
 }
