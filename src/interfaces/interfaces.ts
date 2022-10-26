@@ -53,3 +53,5 @@ export interface ProjectPostInterface {
     },
     readonly children: ReactNode,
 }
+
+export type Theme = "auto" | "dark" | "light";

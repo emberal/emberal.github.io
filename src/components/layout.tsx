@@ -1,12 +1,9 @@
 import * as React from "react";
 import Footer from "./footer";
-import { Globe, Sun, Moon, ArrowUp, ChevronDown, Download } from "react-feather";
-import { Menu } from "@headlessui/react";
+import { ArrowUp } from "react-feather";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import MyMenu from "./menu";
-import { MyLink } from "./link";
 import { TitleComponent } from "../interfaces/interfaces";
-import MyDialog from "./MyDialog";
+import Navbar from "./navbar";
 
 export const Links = {
     home: "/",
@@ -51,55 +48,6 @@ export default function Layout(
         footerClass,
     }: Layout): JSX.Element {
 
-    // TODO use actual Enum?
-    const themeEnum = {
-        auto: 'auto',
-        dark: 'dark',
-        light: 'light'
-    }
-
-    const [theme, setTheme] = React.useState(themeEnum.auto);
-
-    React.useEffect(() => {
-        const classList = document.documentElement.classList;
-
-        if (!('theme' in localStorage) || localStorage.theme === themeEnum.auto) {
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
-                classList.add('dark');
-            }
-            else {
-                classList.remove('dark');
-            }
-            localStorage.theme = themeEnum.auto; // If theme does not exist yet
-        }
-        else if (localStorage.theme === themeEnum.dark) {
-            classList.add('dark');
-        }
-        else if (localStorage.theme === themeEnum.light) {
-            classList.remove('dark');
-        }
-    }, [theme]);
-
-    /**
-     * Changes the theme to the specified one
-     * @param theme The desired theme, can be 'auto', 'dark' or 'light'
-     */
-    function changeTheme(theme: string) {
-        switch (theme) {
-            case 'dark':
-                localStorage.theme = themeEnum.dark;
-                setTheme(themeEnum.dark);
-                break;
-            case 'light':
-                localStorage.theme = themeEnum.light;
-                setTheme(themeEnum.light);
-                break;
-            default:
-                localStorage.theme = themeEnum.auto;
-                setTheme(themeEnum.auto);
-        }
-    }
-
     const { t } = useTranslation();
 
     /**
@@ -136,41 +84,6 @@ export default function Layout(
         };
     }, [isTop]);
 
-    const navLinks = [
-        {
-            to: Links.home,
-            name: t('home'),
-        },
-        {
-            to: Links.projects,
-            name: t('projects'),
-        },
-        {
-            to: Links.contactMe,
-            name: t('contactMe'),
-        },
-    ];
-
-    const iconCss = "w-4 h-4";
-
-    const themeMenu = [
-        {
-            id: themeEnum.auto,
-            text: t('followBrowser'),
-            icon: <Globe className={ iconCss }/>
-        },
-        {
-            id: themeEnum.dark,
-            text: t('dark'),
-            icon: <Moon className={ iconCss }/>
-        },
-        {
-            id: themeEnum.light,
-            text: t('light'),
-            icon: <Sun className={ iconCss }/>
-        },
-    ];
-
     return (
         <div className={ `default-bg default-text-black-white overflow-clip ${ className }` }>
             <div id={ "main-container" }
@@ -178,44 +91,10 @@ export default function Layout(
                 <div className={ ` ${ titleAndNavClass }` }>
                     <h1
                         className={ `default-text font-bold text-4xl mb-6 pt-6` }>
-                        { (headline) ? headline : title }
+                        { headline ? headline : title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
-                    <nav>
-                        <ul className={ "list-none flex gap-3 mb-2" }>
-                            {
-                                navLinks.map(link =>
-                                    <li key={ link.to } className={ "w-fit text-lg" }>
-                                        <MyLink
-                                            className={ `${ current === link.to && "after:content-['<']" }` }
-                                            to={ link.to }> { link.name }
-                                        </MyLink>
-                                    </li>
-                                )
-                            }
-                            <li className={ "mr-6 w-fit relative" }>
-                                <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" }/></> }
-                                        buttonClassName={ "default-link text-lg" }
-                                        itemsClassName={ "right-0" }>
-                                    {
-                                        themeMenu.map(item =>
-                                            <div key={ item.id }>
-                                                <Menu.Item>
-                                                    <button onClick={ () => changeTheme(item.id) }>
-                                                            <span
-                                                                className={ `flex-row-center hover:underline` }>
-                                                                { item.icon }
-                                                                <p className={ "pl-2 w-max" }>{ item.text }</p>
-                                                            </span>
-                                                    </button>
-                                                </Menu.Item>
-                                            </div>
-                                        )
-                                    }
-                                </MyMenu>
-                            </li>
-                        </ul>
-                    </nav>
+                    <Navbar current={ current }/>
                 </div>
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>

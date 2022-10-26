@@ -27,7 +27,6 @@ export default function MyDialog(
         buttonClasses,
         buttonTitle,
         acceptButtonId,
-        id = "headlessui-dialog-:rd:", // Don't change, custom id doesn't work
     }: MyDialog): JSX.Element {
 
     const [isOpen, setIsOpen] = React.useState(false);
@@ -57,7 +56,8 @@ export default function MyDialog(
             }
         }
 
-        if (id && isOpen) {
+        if (isOpen) {
+            const id = "headlessui-dialog-:rd:"
             const el = document.getElementById(id);
             el?.addEventListener("keypress", e => click(e));
             return () => {

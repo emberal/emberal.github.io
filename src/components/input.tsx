@@ -27,6 +27,19 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
     }
 }
 
+/**
+ * Sets isText to 'true' or 'false' using the setIsText function.
+ * if the value of the input element is not empty and it's different from the current value
+ */
+function setSetIsText(id: string | undefined, isText: boolean, setIsText: React.Dispatch<React.SetStateAction<boolean>>): void {
+    if (id) {
+        const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement;
+        if (el.value !== "" !== isText) {
+            setIsText(el.value !== "");
+        }
+    }
+}
+
 interface Input<T> extends InputComponent<T> {
     leading?: React.ReactElement<HTMLElement>,
     trailing?: React.ReactElement<HTMLElement>,
@@ -59,18 +72,6 @@ export default function Input(
      */
     const [isText, setIsText] = React.useState(false);
 
-    /**
-     * Sets isText to 'true' or 'false' if the value of the input element is not empty and it's different from the current value
-     */
-    function setSetIsText(): void {
-        if (id) {
-            const el = document.getElementById(id) as HTMLInputElement;
-            if (el.value !== "" !== isText) {
-                setIsText(el.value !== "");
-            }
-        }
-    }
-
     React.useEffect(() => {
         if (id && title) {
             setupEventListener(id, setIsHover);
@@ -91,7 +92,7 @@ export default function Input(
                 type={ type }
                 placeholder={ placeholder }
                 required={ required }
-                onInput={ setSetIsText }
+                onInput={ () => setSetIsText(id, isText, setIsText) }
                 onChange={ onChange }/>
             { trailing }
         </Row>
@@ -122,18 +123,6 @@ export function TextArea(
      */
     const [isText, setIsText] = React.useState(false);
 
-    /**
-     * Sets isText to 'true' or 'false' if the value of the textArea element is not empty and it's different from the current value
-     */
-    function setSetIsText() {
-        if (id) {
-            const el = document.getElementById(id) as HTMLTextAreaElement;
-            if (el.value !== "" !== isText) {
-                setIsText(el.value !== "");
-            }
-        }
-    }
-
     React.useEffect(() => {
         if (id && title) {
             setupEventListener(id, setIsHover);
@@ -149,7 +138,7 @@ export function TextArea(
                       name={ name }
                       placeholder={ placeholder }
                       required={ required }
-                      onInput={ setSetIsText }
+                      onInput={ () => setSetIsText(id, isText, setIsText) }
                       onFocus={ () => setIsFocused(true) }
                       onBlur={ () => setIsFocused(false) }
                       onChange={ onChange }/>

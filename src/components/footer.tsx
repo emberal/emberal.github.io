@@ -35,11 +35,11 @@ export default function Footer({ className }: Component): JSX.Element {
             localStorage.setItem("gatsby-i18next-language", lang);
         }
         else if (item === null) {
-            setAuto();
+            setLangAuto();
         }
     }
 
-    function setAuto() {
+    function setLangAuto() {
         localStorage.setItem("lang-follow-browser", "true");
     }
 
@@ -79,7 +79,7 @@ export default function Footer({ className }: Component): JSX.Element {
                                             lang.lang === 'auto' && typeof navigator !== "undefined" ?
                                                 <I18Link
                                                     className={ `pl-2 pt-1 hover:underline` }
-                                                    to={ originalPath } onClick={ setAuto }
+                                                    to={ originalPath } onClick={ setLangAuto }
                                                     language={
                                                         navigator.language === "nb" || navigator.language === "nn" ||
                                                         navigator.language === "no" ? langs.nor : langs.eng }>
