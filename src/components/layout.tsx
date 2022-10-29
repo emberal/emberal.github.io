@@ -1,9 +1,9 @@
 import * as React from "react";
 import Footer from "./footer";
-import { ArrowUp } from "react-feather";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TitleComponent } from "../interfaces/interfaces";
 import Navbar from "./navbar";
+import { BackUpButton } from "./button";
 
 export const Links = {
     home: "/",
@@ -91,7 +91,7 @@ export default function Layout(
                 <div className={ ` ${ titleAndNavClass }` }>
                     <h1
                         className={ `default-text font-bold text-4xl mb-6 pt-6` }>
-                        { headline ? headline : title }
+                        { headline ?? title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
                     <Navbar current={ current }/>
@@ -101,15 +101,7 @@ export default function Layout(
                     <Footer className={ footerClass }/>
                 </main>
             </div>
-            {
-                !isTop &&
-                <button
-                    className={ "fixed right-10 bottom-20 border-rounded shadow-sm shadow-primaryPurple p-1 z-50" }
-                    title={ t('goBackToTheTop') } onClick={ backUp }>
-                    <ArrowUp/>
-                    <p className={ "sr-only" }>{ t('goBackToTheTop') }</p>
-                </button>
-            }
+            { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") }/> }
         </div>
     );
 }

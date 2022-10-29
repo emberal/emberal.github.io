@@ -116,9 +116,8 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
 
     /**
      * Called when searching, and updates the state of the search object, stores it in lowercase
-     * @param event ChangeEvent from HTMLInputElement
      */
-    function onSearch(event?: React.ChangeEvent<HTMLInputElement>): void {
+    function onSearch(): void {
         setSearchState((document.getElementById("search") as HTMLInputElement | null)?.value.toLowerCase() ?? "");
     }
 

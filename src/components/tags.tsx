@@ -102,7 +102,7 @@ export function TagsSelector(
     /**
      * Update the tags and tagsText states, to the opposite one
      */
-    function toggleTags() {
+    function toggleTags(): void {
         setHideTags(!hideTags);
         setHideTagsText(!hideTags ? t("showMore") : t("showLess"));
     }

@@ -16,7 +16,7 @@ import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
-import MyDialog from "../components/MyDialog";
+import MyDialog from "../components/myDialog";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
@@ -217,7 +217,7 @@ export default function TruthTablePage(): JSX.Element {
                         <input id={ "truth-input-button" }
                                title={ t("generate") + " (Enter)" }
                                type={ "submit" }
-                               className={ "button" }
+                               className={ "button min-w-50px h-10" }
                                value={ t("generate") }/>
                     </form>
 

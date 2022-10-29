@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Expression } from "../classes/expression";
 import { Component } from "../interfaces/interfaces";
-import { Script } from "gatsby";
 
 export enum Hide {
     none,
@@ -90,18 +89,18 @@ export default function TruthTable(
     let changeIndex = powerToLength / 2;
 
     // Creates a helper matrix with the correct truth values, in order to get all the different combinations
-    for (let i = 0; i < truthMatrix.length; i++) {
+    for (let column = 0; column < truthMatrix.length; column++) {
         let boolValue = true;
         let counter = 0;
 
-        truthMatrix[i] = new Array(powerToLength);
+        truthMatrix[column] = new Array(powerToLength);
 
-        for (let j = 0; j < truthMatrix[i].length; j++) {
+        for (let row = 0; row < truthMatrix[column].length; row++) {
             if (counter === changeIndex) {
                 boolValue = !boolValue;
                 counter = 0;
             }
-            truthMatrix[i][j] = boolValue;
+            truthMatrix[column][row] = boolValue;
             counter++;
         }
         changeIndex /= 2;
@@ -160,10 +159,6 @@ export default function TruthTable(
                 const right = findExp(exp.right);
 
                 let boolExp = exp.solve(left, right);
-
-                if (exp.isNot()) {
-                    boolExp = !boolExp;
-                }
 
                 if (exp === expressions[expressions.length - 1] && (hide === Hide.true && boolExp || hide === Hide.false && !boolExp)) {
                     tBodyMatrix.splice(row);

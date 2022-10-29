@@ -1,12 +1,11 @@
 import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
-import { ChangeEvent } from "react";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "./input";
 import { Component } from "../interfaces/interfaces";
 
 interface Search extends Component {
-    onChange?: Function,
+    onChange?: () => void,
     collapse?: boolean,
     searchWithoutFocus?: boolean,
 }
@@ -16,7 +15,8 @@ export default function Search(
         onChange,
         collapse = false,
         searchWithoutFocus = false,
-        className
+        className,
+        id
     }: Search): JSX.Element {
 
     const { t } = useTranslation();
@@ -31,8 +31,8 @@ export default function Search(
     }
 
     React.useEffect(() => {
-        const element = getSearchElement();
         if (searchWithoutFocus) {
+            const element = getSearchElement();
             let isMounted = true;
 
             function keyboardListener(keyboardEvent: KeyboardEvent): void {
@@ -48,18 +48,20 @@ export default function Search(
                 }
 
                 // Used to exit the box with 'Escape'
-                document.addEventListener("keyup", keyUpEvent => {
-                    if (isMounted && keyUpEvent.key === "Escape") {
-                        element?.blur();
-                    }
-                });
+                document.addEventListener("keyup", keyUpEvent => blurElement(keyUpEvent));
+            }
+
+            function blurElement(keyUpEvent: KeyboardEvent): void {
+                if (isMounted && keyUpEvent.key === "Escape") {
+                    element?.blur();
+                }
             }
 
             document.addEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
 
             return () => {
                 document.removeEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
-                document.removeEventListener("keyup", keyboardEvent => keyboardListener(keyboardEvent));
+                document.removeEventListener("keyup", keyUpEvent => blurElement(keyUpEvent));
                 isMounted = false;
             };
         }
@@ -77,7 +79,7 @@ export default function Search(
     /**
      * Focuses the searchbar
      */
-    function focusSearch() {
+    function focusSearch(): void {
         const element = getSearchElement();
         element?.focus();
     }
@@ -85,7 +87,7 @@ export default function Search(
     /**
      * Removes all text from the search bar
      */
-    function clearSearch() {
+    function clearSearch(): void {
         const element = getSearchElement();
         if (element) {
             element.value = "";
@@ -106,7 +108,7 @@ export default function Search(
                    placeholder={ t("search") }
                    className={ `sm:pl-6 pl-7 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
                     rounded-xl shadow-sm shadow-primaryPurple transition-all duration-200 ease-in-out h-10 sm:h-7 ${ className }` }
-                   onChange={ onChange ? (event: ChangeEvent<HTMLInputElement>) => onChange(event) : undefined }
+                   onChange={ onChange }
                    leading={
                        <button className={ `absolute mx-[0.40rem]` }
                                onClick={ focusSearch }

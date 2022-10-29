@@ -568,16 +568,18 @@ export class Expression {
      * @returns {boolean} If the expression is truthy, returns 'true', otherwise 'false'
      */
     solve(left: boolean, right: boolean): boolean {
+        let result = false;
         switch (this.operator) {
             case Operator.and:
-                return left && right;
+                result = left && right;
+                break;
             case Operator.or:
-                return left || right;
+                result = left || right;
+                break;
             case Operator.implication:
-                return !left || right;
-            default:
-                return false;
+                result = !left || right;
         }
+        return this.isNot() ? !result : result;
     }
 
     /**

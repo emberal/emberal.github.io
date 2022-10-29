@@ -13,6 +13,7 @@ interface NavbarProps extends Component {
 
 export default function Navbar({ current }: NavbarProps): JSX.Element {
 
+    // TODO use ENUM?
     const THEME = {
         AUTO: 'auto',
         DARK: 'dark',
@@ -47,7 +48,7 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
      * Changes the theme to the specified one
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
-    function changeTheme(theme: Theme) {
+    function changeTheme(theme: Theme): void {
         switch (theme) {
             case 'dark':
                 localStorage.theme = THEME.DARK;

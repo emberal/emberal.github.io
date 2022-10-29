@@ -31,7 +31,7 @@ export default function MyDialog(
 
     const [isOpen, setIsOpen] = React.useState(false);
 
-    function callbackAndClose(e: React.MouseEvent<HTMLButtonElement>) {
+    function callbackAndClose(e: React.MouseEvent<HTMLButtonElement>): void {
         if (callback) {
             callback(e);
         }
@@ -50,7 +50,7 @@ export default function MyDialog(
          * Pressing "Enter" when the modal is open, will click the accept button
          * @param e KeyboardEvent of keypress
          */
-        function click(e: KeyboardEvent) {
+        function click(e: KeyboardEvent): void {
             if (isMounted && e.key === "Enter") {
                 (document.getElementById(acceptButtonId ?? "") as HTMLButtonElement | null)?.click();
             }
@@ -99,4 +99,4 @@ export default function MyDialog(
             </Dialog>
         </div>
     );
-};
+}
