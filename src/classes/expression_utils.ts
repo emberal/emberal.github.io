@@ -209,6 +209,9 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
         const char = stringExp.charAt(i);
 
         if (!insideSquare && Operator.isOperator(char) && char !== "¬") {
+            if (i === 0) {
+                return illegalCharError(char, i, 10);
+            }
             numberOfOperators++;
             if (numberOfOperators > 9) {
                 return expressionTooBig;
