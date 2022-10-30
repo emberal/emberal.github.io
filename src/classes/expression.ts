@@ -87,18 +87,9 @@ export class Expression {
      */
     equalsAndOpposite(other: Expression): boolean {
         const _equals = (exp1: Expression, exp2: Expression): boolean => {
-            let operator = exp1.operator;
-            if (exp1.leading.includes("¬(")) {
-                if (exp1.operator === Operator.and) {
-                    operator = Operator.or;
-                }
-                else {
-                    operator = Operator.and;
-                }
-            }
             return new Expression({
                 left: exp1.left,
-                operator: operator,
+                operator: exp1.operator,
                 right: exp1.right,
                 atomic: exp1.atomic
             }).equals(exp2);
@@ -507,7 +498,7 @@ export class Expression {
                         const leftRightEqRightLeft = this.left.right?.equals(this.right.left);
 
                         // Ex: (A | B) | (A & B), remove (A & B)
-                        if (leftLeftEqRightLeft && leftRightEqRightRight || leftLeftEqRightRight && leftRightEqRightLeft) {
+                        if (this.inverseEqual(this.left, this.right) && (leftLeftEqRightLeft && leftRightEqRightRight || leftLeftEqRightRight && leftRightEqRightLeft)) {
 
                             if (this.left.operator === Operator.and) {
                                 this.left = this.right;
@@ -531,6 +522,10 @@ export class Expression {
                 }
             }
         }
+    }
+
+    private inverseEqual(exp1: Expression, exp2: Expression): boolean {
+        return exp1.isNot() === exp2.isNot();
     }
 
     /**
