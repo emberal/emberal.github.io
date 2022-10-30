@@ -87,9 +87,18 @@ export class Expression {
      */
     equalsAndOpposite(other: Expression): boolean {
         const _equals = (exp1: Expression, exp2: Expression): boolean => {
+            let operator = exp1.operator;
+            if (exp1.leading.includes("¬(")) {
+                if (exp1.operator === Operator.and) {
+                    operator = Operator.or;
+                }
+                else {
+                    operator = Operator.and;
+                }
+            }
             return new Expression({
                 left: exp1.left,
-                operator: exp1.operator,
+                operator: operator,
                 right: exp1.right,
                 atomic: exp1.atomic
             }).equals(exp2);
