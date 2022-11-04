@@ -4,15 +4,16 @@ import { LinkComponent } from "../interfaces/interfaces";
 
 interface A extends LinkComponent {
     newTab?: boolean,
+    rel?: string,
 }
 
-export function A({ to, title, children, newTab = true, className, id }: A): JSX.Element {
+export function A({ to, title, children, newTab = true, rel, className, id }: A): JSX.Element {
     return (
         <a className={ `default-link ${ className }` } id={ id }
            title={ title }
            href={ to }
            target={ newTab ? "_blank" : undefined }
-           rel={ newTab ? "noopener" : undefined }>
+           rel={ newTab ? `noopener ${ rel }` : undefined }>
             { children }
         </a>
     );
