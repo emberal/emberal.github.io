@@ -248,6 +248,7 @@ export class Expression {
                 const rightLeft = this.right.left.getAtomicValue();
                 const rightRight = this.right.right.getAtomicValue();
 
+                // TODO add to loop? lokk at pattern
                 if (leftLeft === rightLeft && leftRight !== rightRight) {
                     setObjects(this.left.right, this.right.right, this.left.left);
                 }
