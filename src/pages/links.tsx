@@ -81,7 +81,7 @@ interface MyLink extends ChildComponent {
 
 function MyLink({ children, text, url, className }: MyLink): JSX.Element {
     return (
-        <A to={ url } className={ `!text-inherit ${ className }` }>
+        <A to={ url } className={ `!text-inherit ${ className }` } rel={ text?.includes("Mastodon") ? "me" : "" }>
             <div
                 className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
