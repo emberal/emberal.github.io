@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Expression } from "../classes/expression";
-import { Component } from "../interfaces/interfaces";
+import { Component, Expression } from "../interfaces/interfaces";
 
 export enum Hide {
     none,

@@ -3,20 +3,20 @@ import { MouseEventHandler } from "react";
 import Layout, { Links } from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
-import { Expression } from "../classes/expression";
 import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
-import TruthTable, { Hide, Sort } from "../components/truth-table";
+import { Hide, Sort } from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
 import { diffChars } from "diff";
-import { isLegalExpression, replaceOperators, simplify } from "../classes/expression_utils";
+import { simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
+import { Expression, OrderOfOperations } from "../interfaces/interfaces";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
@@ -31,7 +31,8 @@ export default function TruthTablePage(): JSX.Element {
      * The state element used to store the simplified string, "empty string" by default
      */
     const [search, setSearch] = React.useState("");
-    const expression = React.useRef(new Expression({}));
+    const expression = React.useRef<Expression>();
+    const orderOfOperations = React.useRef<OrderOfOperations>();
 
     /**
      * If there's an error, it will be stored in this state, otherwise it will be "empty string"
@@ -69,33 +70,29 @@ export default function TruthTablePage(): JSX.Element {
      * Updates the state of the current expression to the new search with all whitespace removed.
      * If the element is not found, reset.
      */
-    function onClick(e: { preventDefault: () => void; }) {
+    async function onClick(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault(); // Stops the page from reloading onClick
         let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
-            exp = replaceOperators(exp);
-            (document.getElementById("truth-input") as HTMLInputElement).value = exp;
 
-            exp = exp.replace(/\s/g, ""); // Replace All (g) whitespace (\s) in the string
+            let result: any;
+            await fetch(`http://localhost:8080/api?exp=${ exp }&simplify=${ simplifyEnabled }`)
+                .then(res => res.json())
+                .then(res => result = res)
+                .catch(err => console.error(err));
 
-            const errorMsg = isLegalExpression(exp, {
-                atIndex: t("atIndex"),
-                missingChar: t("missingChar"),
-                illegalChar: t("illegalChar"),
-                expressionTooBig: t("expressionTooBig"),
-            });
-            setErrorMessage(errorMsg);
+            console.log(result);
 
-            if (errorMsg === "") {
-                const sExp = simplify(exp, simplifyEnabled); // Magic happens
-
-                if (sExp) {
-                    expression.current = sExp;
-                    setSearch(sExp.toString());
+            if (result) {
+                (document.getElementById("truth-input") as HTMLInputElement).value = result.after;
+                setErrorMessage(result.status.code === 200 ? "" : result.status.message);
+                if (result.status.code === 200) {
+                    expression.current = result.expression;
+                    setSearch(result.after);
                 }
-            }
-            else {
-                setSearch("");
+                else {
+                    setSearch("");
+                }
             }
         }
         else {
@@ -290,13 +287,13 @@ export default function TruthTablePage(): JSX.Element {
                         </InfoBox>
                     }
                     {
-                        search !== "" && simplifyEnabled && Expression.orderOfOperations.length > 0 &&
+                        search !== "" && simplifyEnabled && orderOfOperations.current && orderOfOperations.current.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ t("showMeHowItsDone") }>
                                 <table className={ "table" }>
                                     <tbody>
                                         {
-                                            Expression.orderOfOperations.map((operation, index: number) => (
+                                            orderOfOperations.current.map((operation, index: number) => (
                                                 <tr key={ index }
                                                     className={ "border-b border-dotted border-gray-500" }>
                                                     <td>{ index + 1 }:</td>
@@ -341,15 +338,17 @@ export default function TruthTablePage(): JSX.Element {
 
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
-                                <TruthTable
-                                    expression={ expression.current }
-                                    hide={ hideValues.value }
-                                    sort={ sortValues.value }
-                                    className={ `relative w-max default-text-black-white` }
-                                    id={ tableId }
-                                />
+                                {/*{*/ }
+                                {/*    expression.current &&*/ }
+                                {/*    <TruthTable*/ }
+                                {/*        expression={ expression.current }*/ }
+                                {/*        hide={ hideValues.value }*/ }
+                                {/*        sort={ sortValues.value }*/ }
+                                {/*        className={ `relative w-max default-text-black-white` }*/ }
+                                {/*        id={ tableId }*/ }
+                                {/*    />*/ }
+                                {/*}*/ }
                             </div>
-
                         </div>
                     </>
                 }
