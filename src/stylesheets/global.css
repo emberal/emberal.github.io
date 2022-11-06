@@ -43,7 +43,7 @@
     }
 
     .button {
-        @apply mx-1 px-1 border-rounded border-gray-500 shadow-sm shadow-primaryPurple cursor-pointer hover:shadow-primary-pink;
+        @apply px-1 border-rounded border-gray-500 shadow-sm shadow-primaryPurple cursor-pointer hover:shadow-primary-pink;
     }
 
     .min-w-50px {

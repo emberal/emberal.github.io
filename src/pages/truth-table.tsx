@@ -217,7 +217,7 @@ export default function TruthTablePage(): JSX.Element {
                         <input id={ "truth-input-button" }
                                title={ t("generate") + " (Enter)" }
                                type={ "submit" }
-                               className={ "button min-w-50px h-10" }
+                               className={ "button min-w-50px h-10 ml-2" }
                                value={ t("generate") }/>
                     </form>
 

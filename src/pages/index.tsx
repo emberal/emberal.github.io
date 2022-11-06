@@ -4,7 +4,6 @@ import { StaticImage } from "gatsby-plugin-image";
 import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import SEO from "../components/seo";
-import { A } from "../components/link";
 
 /**
  * The front page containing information about yours truly
@@ -22,7 +21,7 @@ export default function Homepage(): JSX.Element {
             description={ t("aboutMeDesc") }
             current={ Links.home }>
             <>
-                <A to={ "https://snabelen.no/web/@Martials" } rel={ "me" } className={ "sr-only" }/>
+                <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" }/>
                 <div className={ "w-full flex justify-center my-5" }>
                     <StaticImage className={ "max-w-sm border border-gray-500 rounded-3xl" } src={ "../images/me.jpg" }
                                  alt={ t("aboutMePicAlt") }/>

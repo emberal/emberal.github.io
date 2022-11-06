@@ -88,10 +88,10 @@ export default function MyDialog(
                         { children }
 
                         <div className={ "my-2" }>
-                            <button onClick={ callbackAndClose } className={ "button" }
+                            <button onClick={ callbackAndClose } className={ "button h-10 mr-2" }
                                     id={ acceptButtonId }>{ acceptButtonName }</button>
                             <button onClick={ () => setIsOpen(false) }
-                                    className={ "button" }>{ cancelButtonName }</button>
+                                    className={ "button h-10" }>{ cancelButtonName }</button>
                         </div>
 
                     </Dialog.Panel>
