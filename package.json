@@ -45,7 +45,7 @@
     "react-indiana-drag-scroll": "^2.2.0",
     "reading-time": "^1.5.0",
     "selenium-webdriver": "^4.6.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.12/xlsx-0.18.12.tgz"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/jest": "^29.2.2",
