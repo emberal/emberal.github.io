@@ -1,6 +1,5 @@
 module.exports = {
-    content: ["./src/pages/*.{js,jsx,ts,tsx}", "./src/components/*.{js,jsx,ts,tsx}", "./src/classes/*.{js,jsx,ts,tsx}",
-        "./projects/**/*"],
+    content: ["./src/pages/*.{js,jsx,ts,tsx}", "./src/components/*.{js,jsx,ts,tsx}", "./projects/**/*"],
     darkMode: "class",
     theme: {
         extend: {
@@ -16,7 +15,5 @@ module.exports = {
             },
         },
     },
-    plugins: [
-        require('@headlessui/tailwindcss')({ prefix: 'ui' }),
-    ],
+    plugins: [require('@headlessui/tailwindcss')({ prefix: 'ui' }),],
 };

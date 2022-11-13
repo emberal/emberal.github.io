@@ -9,19 +9,19 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
 import { diffChars } from "diff";
-import { simplify } from "../classes/expression_utils";
 import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
-import { FetchResult, OrderOfOperations } from "../interfaces/types";
+import { FetchResult } from "../interfaces/types";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
 
     const { t } = useTranslation();
+    const inputId = "truth-input";
 
     /**
      * Stores the boolean value of the simplify toggle
@@ -30,14 +30,7 @@ export default function TruthTablePage(): JSX.Element {
     /**
      * The state element used to store the simplified string, "empty string" by default
      */
-    const [search, setSearch] = React.useState("");
-    const [fetchResult, setFetchResult] = React.useState<FetchResult>();
-    const orderOfOperations = React.useRef<OrderOfOperations>();
-
-    /**
-     * If there's an error, it will be stored in this state, otherwise it will be "empty string"
-     */
-    const [errorMessage, setErrorMessage] = React.useState("");
+    const [fetchResult, setFetchResult] = React.useState<FetchResult | null>();
 
     /**
      * If the searchbar is empty, this state is 'false', otherwise 'true'
@@ -72,48 +65,35 @@ export default function TruthTablePage(): JSX.Element {
      */
     async function onClick(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault(); // Stops the page from reloading onClick
-        const exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
+        const exp = (document.getElementById(inputId) as HTMLInputElement | null)?.value;
+
         if (exp && exp !== "") {
 
-            let result: any;
+            let result: FetchResult | undefined;
             await fetch(`http://localhost:8080/simplify/table?exp=${ exp }&simplify=${ simplifyEnabled }`)
                 .then(res => res.json())
                 .then(res => result = res)
                 .catch(err => console.error(err));
 
-            // console.log(result);
-
-            if (result) {
-                (document.getElementById("truth-input") as HTMLInputElement).value = result.after;
-                setErrorMessage(result.status.code === 200 ? "" : result.status.message);
-
-                if (result.status.code === 200) {
-                    setFetchResult(result);
-                    setSearch(result.after); // TODO use setExpression instead
-                }
-                else {
-                    setSearch("");
-                }
-            }
+            setFetchResult(result);
         }
         else {
-            setSearch("");
+            setFetchResult(null);
         }
     }
 
     function onTyping() {
-        const el = (document.getElementById("truth-input") as HTMLInputElement | null);
+        const el = (document.getElementById(inputId) as HTMLInputElement | null);
         if (el && (el.value !== "") !== typing) {
             setTyping(el.value !== "");
         }
     }
 
     function clearSearch() {
-        const el = (document.getElementById("truth-input") as HTMLInputElement | null);
+        const el = (document.getElementById(inputId) as HTMLInputElement | null);
         if (el) {
             el.value = "";
-            setSearch("");
-            setErrorMessage("");
+            setFetchResult(null);
             setTyping(false);
             el.focus();
         }
@@ -124,7 +104,7 @@ export default function TruthTablePage(): JSX.Element {
 
     React.useEffect(() => {
         // Focuses searchbar on load
-        (document.getElementById("truth-input") as HTMLInputElement | null)?.focus();
+        (document.getElementById(inputId) as HTMLInputElement | null)?.focus();
     }, []);
 
     /**
@@ -262,7 +242,7 @@ export default function TruthTablePage(): JSX.Element {
                         </div>
 
                         {
-                            search !== "" &&
+                            fetchResult?.expression &&
                             <MyDialog title={ t("download") }
                                       description={ t("exportCurrentTable") + " (.xlsx)" }
                                       button={ <><p className={ "sr-only" }>{ t("download") }</p><Download/></> }
@@ -280,21 +260,21 @@ export default function TruthTablePage(): JSX.Element {
 
                     </Row>
                     {
-                        errorMessage !== "" &&
+                        fetchResult && fetchResult?.status.code !== 200 &&
                         <InfoBox className={ "w-fit text-center" }
                                  title={ t("inputError") }
                                  error={ true }>
-                            <p>{ errorMessage }</p>
+                            <p>{ fetchResult?.status.message }</p>
                         </InfoBox>
                     }
                     {
-                        search !== "" && simplifyEnabled && orderOfOperations.current && orderOfOperations.current.length > 0 &&
+                        fetchResult?.orderOperations && simplifyEnabled && fetchResult?.orderOperations.length > 0 &&
                         <MyDisclosureContainer>
                             <MyDisclosure title={ t("showMeHowItsDone") }>
                                 <table className={ "table" }>
                                     <tbody>
                                         {
-                                            orderOfOperations.current.map((operation, index: number) => (
+                                            fetchResult?.orderOperations.map((operation, index: number) => (
                                                 <tr key={ index }
                                                     className={ "border-b border-dotted border-gray-500" }>
                                                     <td>{ index + 1 }:</td>
@@ -325,14 +305,14 @@ export default function TruthTablePage(): JSX.Element {
                     }
                 </div>
                 {
-                    search !== "" &&
+                    fetchResult?.expression &&
                     <>
                         <div className={ "flex flex-row" }>
                             {
                                 simplifyEnabled &&
                                 <InfoBox className={ "w-fit mx-auto pb-1 text-lg text-center" }
                                          title={ t("output") + ":" } id={ "expression-output" }>
-                                    <p>{ search }</p>
+                                    <p>{ fetchResult?.after }</p>
                                 </InfoBox>
                             }
                         </div>
@@ -340,7 +320,8 @@ export default function TruthTablePage(): JSX.Element {
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
 
-                                <TruthTable header={ fetchResult?.header ?? undefined } table={ fetchResult?.table?.truthMatrix }/>
+                                <TruthTable header={ fetchResult?.header ?? undefined }
+                                            table={ fetchResult?.table?.truthMatrix } id={ tableId }/>
 
                             </div>
                         </div>
