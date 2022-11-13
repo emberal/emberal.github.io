@@ -1,6 +1,5 @@
 import { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactNode } from "react";
 import { IGatsbyImageData } from "gatsby-plugin-image";
-import { Operator } from "../classes/operator";
 
 export interface Component {
     className?: string,
@@ -54,20 +53,3 @@ export interface ProjectPostInterface {
     },
     readonly children: ReactNode,
 }
-
-export type Theme = "auto" | "dark" | "light";
-
-export type Expression = {
-    leading: string,
-    left: Expression | null,
-    operator: Operator | null,
-    right: Expression | null,
-    trailing: string,
-    atomic: string | null,
-}
-
-export type OrderOfOperations = {
-    before: string,
-    after: string,
-    law: string,
-}[]

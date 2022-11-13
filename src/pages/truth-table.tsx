@@ -16,7 +16,7 @@ import Row from "../components/row";
 import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
-import { OrderOfOperations } from "../interfaces/interfaces";
+import { FetchResult, OrderOfOperations } from "../interfaces/types";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
@@ -31,7 +31,7 @@ export default function TruthTablePage(): JSX.Element {
      * The state element used to store the simplified string, "empty string" by default
      */
     const [search, setSearch] = React.useState("");
-    const [expression, setExpression] = React.useState<any>();
+    const [fetchResult, setFetchResult] = React.useState<FetchResult>();
     const orderOfOperations = React.useRef<OrderOfOperations>();
 
     /**
@@ -81,15 +81,15 @@ export default function TruthTablePage(): JSX.Element {
                 .then(res => result = res)
                 .catch(err => console.error(err));
 
-            console.log(result);
+            // console.log(result);
 
             if (result) {
                 (document.getElementById("truth-input") as HTMLInputElement).value = result.after;
                 setErrorMessage(result.status.code === 200 ? "" : result.status.message);
 
                 if (result.status.code === 200) {
-                    setExpression(result);
-                    setSearch(result.after);
+                    setFetchResult(result);
+                    setSearch(result.after); // TODO use setExpression instead
                 }
                 else {
                     setSearch("");
@@ -340,7 +340,7 @@ export default function TruthTablePage(): JSX.Element {
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
 
-                                <TruthTable table={ expression.table.truthMatrix }/>
+                                <TruthTable header={ fetchResult?.header ?? undefined } table={ fetchResult?.table?.truthMatrix }/>
 
                             </div>
                         </div>
