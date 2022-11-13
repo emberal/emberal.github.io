@@ -4,7 +4,7 @@ import Layout, { Links } from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
 import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
-import { Hide, Sort } from "../components/truth-table";
+import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { InfoBox, MyDisclosure, MyDisclosureContainer } from "../components/output";
 import MySwitch from "../components/switch";
@@ -16,7 +16,7 @@ import Row from "../components/row";
 import MyMenu from "../components/menu";
 import { BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
-import { Expression, OrderOfOperations } from "../interfaces/interfaces";
+import { OrderOfOperations } from "../interfaces/interfaces";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
@@ -31,7 +31,7 @@ export default function TruthTablePage(): JSX.Element {
      * The state element used to store the simplified string, "empty string" by default
      */
     const [search, setSearch] = React.useState("");
-    const expression = React.useRef<Expression>();
+    const [expression, setExpression] = React.useState<any>();
     const orderOfOperations = React.useRef<OrderOfOperations>();
 
     /**
@@ -45,15 +45,15 @@ export default function TruthTablePage(): JSX.Element {
     const [typing, setTyping] = React.useState(false);
 
     const hideOptions = [
-        { name: t("showAll") + " " + t("results"), value: Hide.none },
-        { name: t("hide") + " " + t("true") + " " + t("results"), value: Hide.true },
-        { name: t("hide") + " " + t("false") + " " + t("results"), value: Hide.false },
+        { name: t("showAll") + " " + t("results"), value: "none" },
+        { name: t("hide") + " " + t("true") + " " + t("results"), value: "trueFirst" },
+        { name: t("hide") + " " + t("false") + " " + t("results"), value: "falseFirst" },
     ];
 
     const sortOptions = [
-        { name: t("sortBy") + " " + t("default"), value: Sort.default },
-        { name: t("sortBy") + " " + t("true") + " " + t("first"), value: Sort.trueFirst },
-        { name: t("sortBy") + " " + t("false") + " " + t("first"), value: Sort.falseFirst },
+        { name: t("sortBy") + " " + t("default"), value: "defaultSort" },
+        { name: t("sortBy") + " " + t("true") + " " + t("first"), value: "trueFirst" },
+        { name: t("sortBy") + " " + t("false") + " " + t("first"), value: "falseFirst" },
     ];
 
     /**
@@ -72,11 +72,11 @@ export default function TruthTablePage(): JSX.Element {
      */
     async function onClick(e: { preventDefault: () => void; }): Promise<void> {
         e.preventDefault(); // Stops the page from reloading onClick
-        let exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
+        const exp = (document.getElementById("truth-input") as HTMLInputElement | null)?.value;
         if (exp && exp !== "") {
 
             let result: any;
-            await fetch(`http://localhost:8080/api?exp=${ exp }&simplify=${ simplifyEnabled }`)
+            await fetch(`http://localhost:8080/simplify/table?exp=${ exp }&simplify=${ simplifyEnabled }`)
                 .then(res => res.json())
                 .then(res => result = res)
                 .catch(err => console.error(err));
@@ -86,8 +86,9 @@ export default function TruthTablePage(): JSX.Element {
             if (result) {
                 (document.getElementById("truth-input") as HTMLInputElement).value = result.after;
                 setErrorMessage(result.status.code === 200 ? "" : result.status.message);
+
                 if (result.status.code === 200) {
-                    expression.current = result.expression;
+                    setExpression(result);
                     setSearch(result.after);
                 }
                 else {
@@ -226,9 +227,9 @@ export default function TruthTablePage(): JSX.Element {
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("filter") + " " + t("results") }
                                     button={
-                                        hideValues.value === Hide.none ?
+                                        hideValues.value === "none" ?
                                             <Eye className={ "mx-1" }/> :
-                                            <EyeOff className={ `mx-1 ${ hideValues.value === Hide.true ?
+                                            <EyeOff className={ `mx-1 ${ hideValues.value === "trueFirst" ?
                                                 "text-green-500" : "text-red-500" }` }/>
                                     }
                                     children={
@@ -246,8 +247,8 @@ export default function TruthTablePage(): JSX.Element {
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("sort") + " " + t("results") }
                                     button={ <Filter
-                                        className={ sortValues.value === Sort.trueFirst ?
-                                            "text-green-500" : sortValues.value === Sort.falseFirst ? "text-red-500" : "" }/> }
+                                        className={ sortValues.value === "trueFirst" ?
+                                            "text-green-500" : sortValues.value === "falseFirst" ? "text-red-500" : "" }/> }
                                     children={
                                         sortOptions.map(option => (
                                             <div key={ option.value }>
@@ -338,16 +339,9 @@ export default function TruthTablePage(): JSX.Element {
 
                         <div className={ "flex justify-center m-2" }>
                             <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
-                                {/*{*/ }
-                                {/*    expression.current &&*/ }
-                                {/*    <TruthTable*/ }
-                                {/*        expression={ expression.current }*/ }
-                                {/*        hide={ hideValues.value }*/ }
-                                {/*        sort={ sortValues.value }*/ }
-                                {/*        className={ `relative w-max default-text-black-white` }*/ }
-                                {/*        id={ tableId }*/ }
-                                {/*    />*/ }
-                                {/*}*/ }
+
+                                <TruthTable table={ expression.table.truthMatrix }/>
+
                             </div>
                         </div>
                     </>
