@@ -1,5 +1,5 @@
 import * as React from "react"
-import Layout, { Links } from "../components/layout";
+import Layout, { links } from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
 import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -19,7 +19,7 @@ export default function Homepage(): JSX.Element {
             title={ t("home") }
             headline={ t("welcome") }
             description={ t("aboutMeDesc") }
-            current={ Links.home }>
+            current={ links.home }>
             <>
                 <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" }/>
                 <div className={ "w-full flex justify-center my-5" }>

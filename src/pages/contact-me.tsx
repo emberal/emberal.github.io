@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { Links } from "../components/layout";
+import Layout, { links } from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
 import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -10,7 +10,7 @@ import { InputComponent } from "../interfaces/interfaces";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
-const links = [
+const urls = [
     {
         id: 0,
         to: "https://www.linkedin.com/in/martin-b-2a69391a3",
@@ -57,11 +57,11 @@ export default function ContactMePage(): JSX.Element {
         <Layout
             title={ t("contactMe") }
             description={ t("contactMeDescription") /*TODO add translation*/ }
-            current={ Links.contactMe }>
+            current={ links.contactMe }>
             <>
                 <div className={ "flex justify-center pb-2" }>
                     {
-                        links.map(link =>
+                        urls.map(link =>
                             <div className={ "px-2" } key={ link.id }>
                                 <A title={ link.name } to={ link.to } className={ "!text-inherit" }>
                                     { link.icon }

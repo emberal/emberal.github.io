@@ -39,10 +39,6 @@ export default function MyDialog(
     }
 
     React.useEffect(() => {
-        setIsOpen(false);
-    }, [callback]);
-
-    React.useEffect(() => {
 
         let isMounted = true;
 

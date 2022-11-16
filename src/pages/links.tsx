@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { Links } from "../components/layout";
+import Layout, { links } from "../components/layout";
 import { graphql, HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
@@ -58,7 +58,7 @@ export default function LinksPage(): JSX.Element {
             title={ t("links") }
             headline={ t("myLinks") }
             description={ t("linksDescription") }
-            current={ Links.links }>
+            current={ links.links }>
             <div className={ "pt-5" }>
                 {
                     linkContent.map(link =>

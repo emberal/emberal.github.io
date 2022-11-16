@@ -91,13 +91,10 @@ export function TagsSelector(
      */
     const [isOverflowing, setIsOverflowing] = React.useState(false);
     /**
-     * If the container is scrolled all the way to the left, this is 'true', otherwise 'false'
+     * If the container is scrolled all the way to the left, left is 'true', otherwise 'false'
+     * If the container is scrolled all the way to the right, right is 'true', otherwise 'false'
      */
-    const [isScrollLeft, setIsScrollLeft] = React.useState(true);
-    /**
-     * If the container is scrolled all the way to the right, this is 'true', otherwise 'false'
-     */
-    const [isScrollRight, setIsScrollRight] = React.useState(false);
+    const [isScrolled, setIsScrolled] = React.useState({ left: true, right: false });
 
     /**
      * Update the tags and tagsText states, to the opposite one
@@ -178,11 +175,11 @@ export function TagsSelector(
     function checkScrollLeft(): void {
         if (scrollContainer.current) {
             const left = isLeft();
-            if (isScrollLeft !== left) {
-                setIsScrollLeft(left);
+            if (isScrolled.left !== left) {
+                setIsScrolled({ left: left, right: isScrolled.right });
             }
-            if (!isRight()) {
-                setIsScrollRight(false);
+            else if (!isRight()) {
+                setIsScrolled({ left: isScrolled.left, right: false });
             }
         }
     }
@@ -193,11 +190,12 @@ export function TagsSelector(
     function checkScrollRight(): void {
         if (scrollContainer.current) {
             const right = isRight();
-            if (isScrollRight !== right) {
-                setIsScrollRight(right);
+            if (isScrolled.right !== right) {
+                setIsScrolled({ left: isScrolled.left, right: right });
+
             }
-            if (!isLeft()) {
-                setIsScrollLeft(false);
+            else if (!isLeft()) {
+                setIsScrolled({ left: false, right: isScrolled.right });
             }
         }
     }
@@ -226,8 +224,7 @@ export function TagsSelector(
 
     React.useEffect(() => {
         if (hideTags || !isOverflowing) {
-            setIsScrollLeft(true);
-            setIsScrollRight(false);
+            setIsScrolled({ left: true, right: false });
         }
     }, [hideTags, isOverflowing]);
 
@@ -270,7 +267,7 @@ export function TagsSelector(
                             </div>
                             <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
                                 {
-                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
+                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrolled.right &&
                                     <button title={ t("clickToScroll") }>
                                         <ChevronRight className={ chevronClasses }
                                                       onClick={ () => scroll(defScrollLen) }/>
@@ -282,7 +279,7 @@ export function TagsSelector(
                                      "default-bg" } shadow-sm shadow-primaryPurple` }/>
                             </Row>
                             {
-                                hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft &&
+                                hideTags && !("ontouchstart" in document.documentElement) && !isScrolled.left &&
                                 <button className={ "absolute left-0" } title={ t("clickToScroll") }>
                                     <ChevronLeft className={ chevronClasses + " mt-[1px]" }
                                                  onClick={ () => scroll(-defScrollLen) }/>

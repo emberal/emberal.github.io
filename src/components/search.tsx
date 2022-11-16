@@ -69,8 +69,7 @@ export default function Search(
     }, []);
 
     React.useEffect(() => {
-        const element = getSearchElement();
-        const notEmpty = element?.value !== "";
+        const notEmpty = getSearchElement()?.value !== "";
         if (notEmpty !== searched) {
             setSearched(notEmpty);
         }
@@ -80,8 +79,7 @@ export default function Search(
      * Focuses the searchbar
      */
     function focusSearch(): void {
-        const element = getSearchElement();
-        element?.focus();
+        getSearchElement()?.focus();
     }
 
     /**
@@ -101,7 +99,7 @@ export default function Search(
     const iconClasses = "sm:w-4 sm:h-4 h-5 w-5";
 
     return (
-        <div className={ `absolute right-0 -top-24 sm:-top-9` }>
+        <div className={ `absolute right-0 -top-24 sm:-top-9` } id={ id }>
             <Input id={ "search" }
                    type={ "search" }
                    name={ "search" }

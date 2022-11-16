@@ -11,19 +11,14 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
         }
     }
 
-    if (id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener("pointerenter", () => hover(true));
-            el.addEventListener("pointerleave", () => hover(false));
-        }
-    }
+    const el = document.getElementById(id);
+    el?.addEventListener("pointerenter", () => hover(true));
+    el?.addEventListener("pointerleave", () => hover(false));
+
     return () => {
-        if (id) {
-            document.getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
-            document.getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
-            isMounted = false;
-        }
+        el?.removeEventListener("pointerenter", () => hover(true));
+        el?.removeEventListener("pointerleave", () => hover(false));
+        isMounted = false;
     }
 }
 
@@ -33,8 +28,8 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
  */
 function setSetIsText(id: string | undefined, isText: boolean, setIsText: React.Dispatch<React.SetStateAction<boolean>>): void {
     if (id) {
-        const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement;
-        if (el.value !== "" !== isText) {
+        const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement | null;
+        if (el && el.value !== "" !== isText) {
             setIsText(el.value !== "");
         }
     }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { Links } from "../../components/layout";
+import Layout, { links } from "../../components/layout";
 import { graphql } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
@@ -24,7 +24,7 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
             title={ frontmatter?.title ? frontmatter.title : "Blogpost" }
             headline={ frontmatter?.title ?? undefined }
             description={ frontmatter?.description ? frontmatter.description : "A blogpost by Martin Berg Alstad" }
-            current={ Links.projects }>
+            current={ links.projects }>
             <article>
                 <div className={ `max-h-[40rem] flex justify-center` }>
                     {

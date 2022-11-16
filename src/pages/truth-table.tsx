@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MouseEventHandler } from "react";
-import Layout, { Links } from "../components/layout";
+import Layout, { links } from "../components/layout";
 import Input from "../components/input";
 import { graphql, HeadProps } from "gatsby";
 import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
@@ -160,7 +160,7 @@ export default function TruthTablePage(): JSX.Element {
                 containerClass={ "!max-w-full overflow-x-hidden" }
                 titleAndNavClass={ "max-w-2xl mx-auto" }
                 footerClass={ "max-w-2xl left-1/2 -translate-x-1/2" }
-                current={ Links.truthTable }>
+                current={ links.truthTable }>
             <div className={ "pt-2" } id={ "truth-content" }>
                 <div className={ "max-w-2xl mx-auto" }>
                     <MyDisclosureContainer>

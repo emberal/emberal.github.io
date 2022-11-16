@@ -4,8 +4,9 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TitleComponent } from "../interfaces/interfaces";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
+import { Link } from "../interfaces/types";
 
-export const Links = {
+export const links: Record<Link, string> = {
     home: "/",
     projects: "/projects",
     contactMe: "/contact-me",
@@ -53,7 +54,7 @@ export default function Layout(
     /**
      * Scrolls the window to the top
      */
-    function backUp() {
+    function backUp(): void {
         document.body.scrollTop = 0; // Safari
         document.documentElement.scrollTop = 0; // Firefox, chromium, opera and the others
     }
@@ -66,7 +67,7 @@ export default function Layout(
     React.useEffect(() => {
         let isMounted = true;
 
-        function onScroll() {
+        function onScroll(): void {
             if (isMounted) {
                 const show = window.scrollY < 50;
                 if (show !== isTop) {
@@ -79,7 +80,7 @@ export default function Layout(
         document.addEventListener("scroll", _.throttle(onScroll, 100));
 
         return () => {
-            document.removeEventListener("scroll", onScroll);
+            document.removeEventListener("scroll", _.throttle(onScroll, 100));
             isMounted = false;
         };
     }, [isTop]);

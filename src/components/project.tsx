@@ -35,7 +35,7 @@ export default function ProjectCard(
 
     const { t } = useTranslation();
 
-    image = image ? getImage(image) : undefined;
+    image = getImage(image ?? null);
 
     return (
         <div key={ key } id={ id } className={ `${ className }` }>

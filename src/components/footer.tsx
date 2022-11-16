@@ -7,16 +7,15 @@ import MyMenu from "./menu";
 import Row from "./row";
 import { A } from "./link";
 import { Component } from "../interfaces/interfaces";
+import { Language } from "../interfaces/types";
 
 export default function Footer({ className }: Component): JSX.Element {
 
-    const { languages, originalPath } = useI18next();
+    const { originalPath } = useI18next();
     const { t } = useTranslation();
 
-    const langs = {
-        auto: 'auto',
-        eng: languages[0],
-        nor: languages[1]
+    const langs: Record<Language, Language> = {
+        auto: "auto", en: "en", nb: "nb", nn: "nn", no: "no",
     }
 
     /**
@@ -30,8 +29,8 @@ export default function Footer({ className }: Component): JSX.Element {
             langAuto = item === "true";
         }
         if (langAuto) {
-            const lang = navigator.language === "nb" || navigator.language === "nn" || navigator.language === "no" ?
-                langs.nor : langs.eng;
+            const lang = navigator.language === langs.no || navigator.language === langs.nb || navigator.language === langs.nn ?
+                langs.no : langs.en;
             localStorage.setItem("gatsby-i18next-language", lang);
         }
         else if (item === null) {
@@ -39,11 +38,11 @@ export default function Footer({ className }: Component): JSX.Element {
         }
     }
 
-    function setLangAuto() {
+    function setLangAuto(): void {
         localStorage.setItem("lang-follow-browser", "true");
     }
 
-    const langMenu = [
+    const langMenu: { readonly lang: Language, readonly text: string, readonly icon: React.ReactElement<HTMLElement> }[] = [
         {
             lang: 'auto',
             text: t("followBrowser"),
@@ -81,8 +80,8 @@ export default function Footer({ className }: Component): JSX.Element {
                                                     className={ `pl-2 pt-1 hover:underline` }
                                                     to={ originalPath } onClick={ setLangAuto }
                                                     language={
-                                                        navigator.language === "nb" || navigator.language === "nn" ||
-                                                        navigator.language === "no" ? langs.nor : langs.eng }>
+                                                        navigator.language === langs.no || navigator.language === langs.nb ||
+                                                        navigator.language === langs.nn ? langs.no : langs.en }>
                                                     { lang.text }
                                                 </I18Link> :
                                                 <I18Link

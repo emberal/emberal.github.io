@@ -1,6 +1,8 @@
-import { Operator } from "../classes/operator";
-
 export type Theme = "auto" | "dark" | "light";
+
+export type Language = "auto" | "en" | "no" | "nb" | "nn";
+
+export type Link = "home" | "projects" | "contactMe" | "links" | "pageNotFound" | "truthTable";
 
 export type Expression = {
     leading: string,
@@ -9,7 +11,12 @@ export type Expression = {
     right: Expression | null,
     trailing: string,
     atomic: string | null,
-}
+};
+
+export type Operator = {
+    operator: string,
+    weight: number
+};
 
 export type Table = boolean[][];
 
@@ -30,6 +37,6 @@ export type FetchResult = {
     expression: Expression | null,
     header: string[] | null,
     table: {
-        truthMatrix: Table
-    } | null
-}
+        truthMatrix: Table,
+    } | null,
+};

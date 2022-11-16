@@ -1,11 +1,12 @@
 import * as React from "react";
 import { MyLink } from "./link";
 import MyMenu from "./menu";
-import { ChevronDown, Globe, Moon, Sun } from "react-feather";
+import { ChevronDown, Globe, Icon, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
-import { Links } from "./layout";
+import { links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { Component, Theme } from "../interfaces/interfaces";
+import { Component } from "../interfaces/interfaces";
+import { Theme } from "../interfaces/types";
 
 interface NavbarProps extends Component {
     current?: string
@@ -13,91 +14,79 @@ interface NavbarProps extends Component {
 
 export default function Navbar({ current }: NavbarProps): JSX.Element {
 
-    // TODO use ENUM?
-    const THEME = {
-        AUTO: 'auto',
-        DARK: 'dark',
-        LIGHT: 'light',
-    } as { readonly AUTO: Theme, readonly DARK: Theme, readonly LIGHT: Theme };
+    const theme: Record<Theme, Theme> = {
+        auto: 'auto',
+        dark: 'dark',
+        light: 'light',
+    };
 
-    const [theme, setTheme] = React.useState(THEME.AUTO);
+    const [currentTheme, setCurrentTheme] = React.useState(theme.auto);
 
     React.useEffect(() => {
         const classList = document.documentElement.classList;
 
-        if (!('theme' in localStorage) || localStorage.theme === THEME.AUTO) {
+        if (!('theme' in localStorage) || localStorage.theme === theme.auto) {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
                 classList.add('dark');
             }
             else {
                 classList.remove('dark');
             }
-            localStorage.theme = THEME.AUTO; // If theme does not exist yet
+            localStorage.theme = theme.auto; // If theme does not exist yet
         }
-        else if (localStorage.theme === THEME.DARK) {
+        else if (localStorage.theme === theme.dark) {
             classList.add('dark');
         }
-        else if (localStorage.theme === THEME.LIGHT) {
+        else if (localStorage.theme === theme.light) {
             classList.remove('dark');
         }
-    }, [theme]);
+    }, [currentTheme]);
 
     const { t } = useTranslation();
 
     /**
      * Changes the theme to the specified one
-     * @param theme The desired theme, can be 'auto', 'dark' or 'light'
+     * @param {Theme} theme The desired theme, can be 'auto', 'dark' or 'light'
      */
     function changeTheme(theme: Theme): void {
-        switch (theme) {
-            case 'dark':
-                localStorage.theme = THEME.DARK;
-                setTheme(THEME.DARK);
-                break;
-            case 'light':
-                localStorage.theme = THEME.LIGHT;
-                setTheme(THEME.LIGHT);
-                break;
-            default:
-                localStorage.theme = THEME.AUTO;
-                setTheme(THEME.AUTO);
-        }
+        localStorage.theme = theme;
+        setCurrentTheme(theme);
     }
 
-    const navLinks = [
+    const navLinks: { to: string, name: string }[] = [
         {
-            to: Links.home,
+            to: links.home,
             name: t('home'),
         },
         {
-            to: Links.projects,
+            to: links.projects,
             name: t('projects'),
         },
         {
-            to: Links.contactMe,
+            to: links.contactMe,
             name: t('contactMe'),
         },
-    ] as { to: string, name: string }[];
+    ];
 
     const iconCss = "w-4 h-4";
 
-    const themeMenu = [
+    const themeMenu: { id: Theme, text: string, icon: React.ReactElement<Icon>; }[] = [
         {
-            id: THEME.AUTO,
+            id: theme.auto,
             text: t('followBrowser'),
             icon: <Globe className={ iconCss }/>
         },
         {
-            id: THEME.DARK,
+            id: theme.dark,
             text: t('dark'),
             icon: <Moon className={ iconCss }/>
         },
         {
-            id: THEME.LIGHT,
+            id: theme.light,
             text: t('light'),
             icon: <Sun className={ iconCss }/>
         },
-    ] as { id: Theme, text: string, icon: React.ReactElement<HTMLElement> }[];
+    ];
 
     return (
         <nav>
