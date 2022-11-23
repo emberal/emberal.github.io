@@ -65,7 +65,7 @@ export class Expression {
             }
 
             // If both are atomic
-            if (this.isAtomic() && other.isAtomic() && this.atomic === other.atomic && this.isNot() === other.isNot()) {
+            if (this.isAtomic() && other.isAtomic() && this.atomic === other.atomic && this.isInverse() === other.isInverse()) {
                 return true;
             }
             // If neither is atomic
@@ -154,18 +154,20 @@ export class Expression {
      */
     laws(): void { // TODO translate
         let exp = this.toString();
-        this.eliminationOfImplication();
-        exp = this.isChangedThenPush(exp, "Elimination of implication");
-        this.doubleNegation();
-        exp = this.isChangedThenPush(exp, "Double negation");
-        this.deMorgansLaws();
-        exp = this.isChangedThenPush(exp, "De Morgan's Laws");
-        this.absorptionLaw();
-        exp = this.isChangedThenPush(exp, "Absorption law");
-        this.associativeProperty();
-        exp = this.isChangedThenPush(exp, "Associative property");
-        this.distributiveProperty();
-        this.isChangedThenPush(exp, "Distributivity");
+
+        const mapOfLaws = new Map([
+            ["Elimination of implication", this.eliminationOfImplication.bind(this)],
+            ["Double negation", this.doubleNegation.bind(this)],
+            ["De Morgan's Laws", this.deMorgansLaws.bind(this)],
+            ["Absorption law", this.absorptionLaw.bind(this)],
+            ["Associative property", this.associativeProperty.bind(this)],
+            ["Distributive property", this.distributiveProperty.bind(this)],
+        ]);
+
+        mapOfLaws.forEach((method, law) => {
+            method();
+            exp = this.isChangedThenPush(exp, law);
+        });
     }
 
     /**
@@ -176,37 +178,41 @@ export class Expression {
         if (this.left && this.right) {
             const exp = this.toString();
             const removeBothSides = (exp: Expression): void => {
-                exp.leading = "";
-                exp.trailing = "";
+                exp.removeLeadingAndTrailing();
             };
 
-            if (this.operator === Operator.and && !this.isNot() || this.isAtomic()) {
+            if (this.operator === Operator.and && !this.isInverse() || this.isAtomic()) {
                 removeBothSides(this);
             }
             // One is atomic, and the other is not
-            else if (this.left.isAtomic() || this.right.isAtomic()) {
-                if (this.operator === this.left.operator && !this.left.isNot()) {
+            else if (this.eitherChildAtomic()) {
+                if (this.operator === this.left.operator && !this.left.isInverse()) {
                     removeBothSides(this.left);
                 }
-                else if (this.operator === this.right.operator && !this.right.isNot()) {
+                else if (this.operator === this.right.operator && !this.right.isInverse()) {
                     removeBothSides(this.right);
                 }
             }
             // Neither is atomic
-            else if (!(this.left.isAtomic() || this.right.isAtomic())) {
-                if (this.left.operator === this.right.operator && !this.left.isNot() && !this.right.isNot()) {
+            else if (!this.eitherChildAtomic()) {
+                if (this.left.operator === this.right.operator && !this.eitherChildInverse()) {
                     removeBothSides(this.left);
                     removeBothSides(this.right);
                 }
-                if (this.operator === this.left.operator && !this.left.isNot()) {
+                if (this.operator === this.left.operator && !this.left.isInverse()) {
                     removeBothSides(this.left);
                 }
-                else if (this.operator === this.right.operator && !this.right.isNot()) {
+                else if (this.operator === this.right.operator && !this.right.isInverse()) {
                     removeBothSides(this.right);
                 }
             }
             this.isChangedThenPush(exp, "Removal of parentheses");
         }
+    }
+
+    private removeLeadingAndTrailing(): void {
+        this.leading = "";
+        this.trailing = "";
     }
 
     /**
@@ -216,7 +222,7 @@ export class Expression {
      */
     distributiveProperty(): void {
 
-        if (this.left && this.right && !(this.left.isAtomic() || this.right.isAtomic())) {
+        if (this.left && this.right && !this.eitherChildAtomic()) {
 
             const setObjects = (left: Expression, right: Expression, common: Expression | null): void => {
                 this.right = new Expression({ left: left, operator: this.operator, right: right });
@@ -272,27 +278,26 @@ export class Expression {
     deMorgansLaws(): void {
 
         // Left and right side uses negation
-        if (this.left?.isNot() && this.right?.isNot()) {
+        if (this.bothChildrenInverse()) {
             let newOperator: Operator | null = null;
 
-            switch (this.operator) {
-                case Operator.and:
-                    newOperator = Operator.or;
-                    break;
-                case Operator.or:
-                    newOperator = Operator.and;
+            if (this.operator === Operator.and) {
+                newOperator = Operator.or;
+            }
+            else if (this.operator === Operator.or) {
+                newOperator = Operator.and;
             }
 
             if (newOperator) {
                 this.leading = "¬("
-                this.left.removeNot();
+                this.left?.removeNot();
                 this.operator = newOperator;
-                this.right.removeNot();
+                this.right?.removeNot();
                 this.trailing = ")";
             }
         }
         // The entire expression uses negation
-        else if (this.isNot()) {
+        else if (this.isInverse()) {
 
             const inverse = (): void => {
                 this.leading = "";
@@ -300,12 +305,10 @@ export class Expression {
                 this.operator = this.operator === Operator.and ? Operator.or : Operator.and;
 
                 if (this.left && !this.left.isAtomic()) {
-                    this.left.leading = "";
-                    this.left.trailing = "";
+                    this.left.removeLeadingAndTrailing();
                 }
                 else if (this.right && !this.right.isAtomic()) {
-                    this.right.leading = "";
-                    this.right.trailing = "";
+                    this.right.removeLeadingAndTrailing();
                 }
             };
 
@@ -320,16 +323,16 @@ export class Expression {
             };
 
             if (this.left && this.right) {
-                if (this.left.isNot()) {
+                if (this.left.isInverse()) {
                     setNot(this.left, this.right);
                 }
-                else if (this.right.isNot()) {
+                else if (this.right.isInverse()) {
                     setNot(this.right, this.left);
                 }
             }
         }
         // Left side uses negation, but right side does not
-        else if (this.left?.isNot() && !this.right?.isNot()) {
+        else if (this.left?.isInverse() && !this.right?.isInverse()) {
             this.left.deMorgansLaws();
         }
     }
@@ -338,8 +341,16 @@ export class Expression {
      * Checks if an expression has the not operator before it
      * @returns {boolean} Returns 'true' if it contains 'not', otherwise 'false'
      */
-    isNot(): boolean {
+    isInverse(): boolean {
         return this.numberOfChar(this.leading, "¬") % 2 === 1;
+    }
+
+    private bothChildrenInverse(): boolean {
+        return this.left !== null && this.right !== null && this.left.isInverse() && this.right.isInverse();
+    }
+
+    private eitherChildInverse(): boolean {
+        return this.left !== null && this.left.isInverse() || this.right !== null && this.right.isInverse();
     }
 
     /**
@@ -363,7 +374,7 @@ export class Expression {
      */
     commutativeProperty(): void {
 
-        const swap = () => {
+        const swapChildren = () => {
             const help = this.left;
             this.left = this.right;
             this.right = help;
@@ -371,8 +382,8 @@ export class Expression {
 
         if (this.left?.isAtomic() && this.right?.isAtomic() && this.left.atomic! >= this.right.atomic!) {
             let exp = this.toString();
-            if (this.left.atomic !== this.right.atomic || this.left.equalsAndOpposite(this.right) && !this.right.isNot()) {
-                swap();
+            if (this.left.atomic !== this.right.atomic || this.left.equalsAndOpposite(this.right) && !this.right.isInverse()) {
+                swapChildren();
                 this.isChangedThenPush(exp, "Commutative");
             }
         }
@@ -407,7 +418,7 @@ export class Expression {
         if (this.left && this.right) {
 
             const removeRight = (exp: Expression): void => {
-                if (exp.isNot() && exp.left) {
+                if (exp.isInverse() && exp.left) {
                     exp.left.leading = "¬";
                 }
                 exp.leading = "";
@@ -417,12 +428,12 @@ export class Expression {
             };
 
             // If both are atomic values
-            if (this.left.isAtomic() && this.right.isAtomic()) {
+            if (this.bothChildrenAtomic()) {
                 if (this.left.equals(this.right)) {
                     removeRight(this);
                 }
             }
-            else if (this.left.isAtomic() || this.right.isAtomic()) { // If one is atomic eg: A | (A & B)
+            else if (this.eitherChildAtomic()) { // If one is atomic eg: A | (A & B)
 
                 // TODO simplify
                 const removeRedundant = (left: Expression, right: Expression, removeLeft: boolean): void => {
@@ -441,7 +452,7 @@ export class Expression {
                         }
                         // Removed the entire right side
                         else if ((this.operator === Operator.or && right.operator === Operator.and || this.operator === Operator.and &&
-                            right.operator === Operator.or) && !right.isNot() && (leftEqualsLeft || leftEqualsRight)) {
+                            right.operator === Operator.or) && !right.isInverse() && (leftEqualsLeft || leftEqualsRight)) {
                             if (removeLeft) {
                                 this.left = this.right;
                             }
@@ -457,7 +468,7 @@ export class Expression {
                         }
                         // Removes the left side of the right side
                         else if (leftEqualsLeft && (this.operator !== Operator.implication || right.operator === Operator.and) &&
-                            !right.isNot() || left.equalsAndOpposite(right.left) &&
+                            !right.isInverse() || left.equalsAndOpposite(right.left) &&
                             this.operator === Operator.or && right.operator === Operator.and || left.equalsAndOpposite(right.right)) {
                             right.left = right.right;
                             removeRight(right);
@@ -480,12 +491,10 @@ export class Expression {
             }
             else { // Neither of the expressions are atomic, eg: (A & B) | (A & B)
                 if (this.left.equals(this.right)) {
-                    if (!this.left.isNot() && !this.right.isNot() ||
-                        this.left.isNot() && this.right.isNot()) {
-
+                    if (!this.eitherChildInverse() || this.bothChildrenInverse()) {
                         removeRight(this);
                     }
-                    if (!this.left.isNot()) {
+                    if (!this.left.isInverse()) {
                         this.left.leading = "";
                         this.left.trailing = "";
                     }
@@ -526,7 +535,7 @@ export class Expression {
     }
 
     private inverseEqual(exp1: Expression, exp2: Expression): boolean {
-        return exp1.isNot() === exp2.isNot();
+        return exp1.isInverse() === exp2.isInverse();
     }
 
     /**
@@ -584,7 +593,7 @@ export class Expression {
             case Operator.implication:
                 result = !left || right;
         }
-        return this.isNot() ? !result : result;
+        return this.isInverse() ? !result : result;
     }
 
     /**
@@ -593,6 +602,14 @@ export class Expression {
      */
     isAtomic(): boolean {
         return this.atomic !== null;
+    }
+
+    bothChildrenAtomic(): boolean {
+        return this.left !== null && this.right !== null && this.left.isAtomic() && this.right.isAtomic();
+    }
+
+    eitherChildAtomic(): boolean {
+        return this.left !== null && this.left.isAtomic() || this.right !== null && this.right?.isAtomic();
     }
 
     /**

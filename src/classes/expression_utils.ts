@@ -72,7 +72,7 @@ function simplifyRec(stringExp: string, simplify: boolean): Expression {
 
 function isAtomic(exp: string): boolean {
 
-    const regex = new RegExp(/[a-zA-ZæøåÆØÅ0-9\[\]]/);
+    const regex = /[a-zA-ZæøåÆØÅ0-9\[\]]/;
     let atomic = regex.test(exp);
     let nrOfAtomics = 0;
     let isSquareBracket = false;
@@ -194,7 +194,7 @@ export function isLegalExpression(stringExp: string, { // TODO Gonna need some c
 
     let error = "";
 
-    const regex = new RegExp(/[^a-zA-ZæøåÆØÅ0-9()⋁⋀➔¬\[\]]|]\[|\)\[|\)\(|\(\)/);
+    const regex = /[^a-zA-ZæøåÆØÅ0-9()⋁⋀➔¬\[\]]|]\[|\)\[|\)\(|\(\)/;
     const match = stringExp.match(regex);
     if (match) {
         return illegalCharError(match[0], stringExp.indexOf(match[0]), 0);
