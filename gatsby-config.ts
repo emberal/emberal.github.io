@@ -2,7 +2,7 @@ import path from "path";
 
 module.exports = {
     graphqlTypegen: true,
-    trailingSlash: "never",
+    // trailingSlash: "never", // Default is always
     siteMetadata: {
         title: `Martin Berg Alstad's website`,
         description: `Martin Berg Alstad's personal website and portfolio`,
@@ -65,7 +65,7 @@ module.exports = {
             options: {
                 host: `https://h600878.github.io/`,
                 sitemap: `https://h600878.github.io/sitemap/sitemap-index.xml`,
-                policy: [{userAgent: `*`, allow: `/`}]
+                policy: [{ userAgent: `*`, allow: `/` }]
             }
         },
         {

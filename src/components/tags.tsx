@@ -28,7 +28,7 @@ export function Tag({ title, value, hoverTitle, className, onClick, id }: Tag<HT
 
     if (onClick) {
         return (
-            <button title={ hoverTitle } id={ id }
+            <button title={ hoverTitle ?? undefined } id={ id }
                     className={ `${ className } ${ classes }` }
                     onClick={ onClick }>
                 { text }
@@ -37,7 +37,7 @@ export function Tag({ title, value, hoverTitle, className, onClick, id }: Tag<HT
     }
     else {
         return (
-            <div title={ hoverTitle } id={ id }
+            <div title={ hoverTitle ?? undefined } id={ id }
                  className={ `${ className } ${ classes }` }>
                 { text }
             </div>
@@ -248,7 +248,7 @@ export function TagsSelector(
                         allTag &&
                         <Tag title={ allTag }
                              onClick={ onClick ? () => onClick(allTag) : undefined }
-                             className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` }/>
+                             className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` } />
                     }
                     {
                         tagMap?.map(tag =>
@@ -257,7 +257,7 @@ export function TagsSelector(
                                      value={ tag.value }
                                      onClick={ onClick ? () => onClick(tag.key) : undefined }
                                      className={ `hover:border-primaryPurple w-max
-                                     ${ selectedTag === tag.key && "!border-primaryPurple" }` }/>
+                                     ${ selectedTag === tag.key && "!border-primaryPurple" }` } />
                             </div>
                         )
                     }
@@ -271,21 +271,21 @@ export function TagsSelector(
                             <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
                                 {
                                     hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
-                                    <button title={ t("clickToScroll") }>
+                                    <button title={ t("clickToScroll") ?? undefined }>
                                         <ChevronRight className={ chevronClasses }
-                                                      onClick={ () => scroll(defScrollLen) }/>
+                                                      onClick={ () => scroll(defScrollLen) } />
                                     </button>
                                 }
-                                <Tag title={ hideTagsText.toString() } onClick={ toggleTags }
+                                <Tag title={ hideTagsText?.toString() } onClick={ toggleTags }
                                      hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
                                      className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
-                                     "default-bg" } shadow-sm shadow-primaryPurple` }/>
+                                     "default-bg" } shadow-sm shadow-primaryPurple` } />
                             </Row>
                             {
                                 hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft &&
-                                <button className={ "absolute left-0" } title={ t("clickToScroll") }>
+                                <button className={ "absolute left-0" } title={ t("clickToScroll") ?? undefined }>
                                     <ChevronLeft className={ chevronClasses + " mt-[1px]" }
-                                                 onClick={ () => scroll(-defScrollLen) }/>
+                                                 onClick={ () => scroll(-defScrollLen) } />
                                 </button>
                             }
                         </>
@@ -320,7 +320,7 @@ export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Elem
             {
                 tags.map(tag =>
                     <div key={ tag }>
-                        <Tag title={ tag }/>
+                        <Tag title={ tag } />
                     </div>
                 )
             }

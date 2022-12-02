@@ -55,7 +55,7 @@ export default function ContactMePage(): JSX.Element {
 
     return (
         <Layout
-            title={ t("contactMe") }
+            title={ t("contactMe") ?? undefined }
             description={ t("contactMeDescription") /*TODO add translation*/ }
             current={ Links.contactMe }>
             <>

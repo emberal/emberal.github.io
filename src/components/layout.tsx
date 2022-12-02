@@ -15,7 +15,7 @@ export const Links = {
 }
 
 interface Layout extends TitleComponent {
-    headline?: string,
+    headline?: string | null,
     description: string,
     current?: string,
     titleAndNavClass?: string,

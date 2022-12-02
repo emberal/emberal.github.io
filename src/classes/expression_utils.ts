@@ -150,10 +150,10 @@ function getCenterOperatorIndex(stringExp: string): { operator: Operator, index:
 }
 
 interface isLegalExpressionTranslations {
-    illegalChar?: string,
-    missingChar?: string,
-    atIndex?: string,
-    expressionTooBig?: string
+    illegalChar?: string | null,
+    missingChar?: string | null,
+    atIndex?: string | null,
+    expressionTooBig?: string,
 }
 
 /**

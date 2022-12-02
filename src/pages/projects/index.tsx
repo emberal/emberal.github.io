@@ -185,7 +185,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
                                     containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ?
 
                                         <ProjectCard
-                                            title={ node.frontmatter?.title ?? undefined }
+                                            title={ node.frontmatter?.title }
                                             slug={ node.fields?.slug ?? undefined }
                                             description={ node.frontmatter?.description ?? undefined }
                                             tags={ node.frontmatter?.tags ?? undefined }
@@ -228,7 +228,7 @@ export const query = graphql`
                 }
             }
         }
-        allMdx(sort: {fields: frontmatter___uploaded, order: DESC}) {
+        allMdx(sort: {frontmatter: {uploaded: DESC}}) {
             nodes {
                 frontmatter {
                     title

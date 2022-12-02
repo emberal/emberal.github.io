@@ -9,6 +9,8 @@ import { Operator } from "../src/classes/operator";
  * Implication: ➔
  */
 
+// TODO split up into several test methods that test one method each
+
 test("Equals", () => {
     const innerLeft = new Expression({ atomic: "A" });
     const innerLeftParentheses = new Expression({ atomic: "A", leading: "(", trailing: ")" });

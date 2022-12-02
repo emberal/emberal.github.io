@@ -6,12 +6,12 @@ import { MouseEventHandler } from "react";
 interface MyDialog extends TitleComponent {
     description?: string,
     button?: React.ReactNode,
-    acceptButtonName?: string,
+    acceptButtonName?: string | null,
     acceptButtonId?: string,
-    cancelButtonName?: string,
+    cancelButtonName?: string | null,
     callback?: MouseEventHandler<HTMLButtonElement>,
     buttonClasses?: string,
-    buttonTitle?: string
+    buttonTitle?: string | null,
 }
 
 export default function MyDialog(
@@ -70,7 +70,7 @@ export default function MyDialog(
 
     return (
         <div className={ "w-fit h-fit" }>
-            <button onClick={ () => setIsOpen(true) } className={ buttonClasses } title={ buttonTitle }>
+            <button onClick={ () => setIsOpen(true) } className={ buttonClasses } title={ buttonTitle ?? undefined }>
                 { button }
             </button>
             { /*TODO fix not centered when scrolling and remove "hack"*/ }

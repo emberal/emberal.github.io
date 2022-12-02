@@ -21,8 +21,8 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
 
     return (
         <Layout
-            title={ frontmatter?.title ? frontmatter.title : "Blogpost" }
-            headline={ frontmatter?.title ?? undefined }
+            title={ frontmatter?.title ?? "Blogpost" }
+            headline={ frontmatter?.title }
             description={ frontmatter?.description ? frontmatter.description : "A blogpost by Martin Berg Alstad" }
             current={ Links.projects }>
             <article>
@@ -52,8 +52,8 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
 }
 
 export function Head({ data: { mdx } }: ProjectPostInterface): JSX.Element {
-    return <SEO title={ mdx?.frontmatter?.title ?? undefined }
-                description={ mdx?.frontmatter?.description ?? undefined }/>;
+    return <SEO title={ mdx?.frontmatter?.title }
+                description={ mdx?.frontmatter?.description }/>;
 }
 
 export const query = graphql`

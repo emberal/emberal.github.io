@@ -119,7 +119,7 @@ export default function Search(
                    trailing={
                        searched ?
                            <button className={ `absolute right-0 mr-1 p-1` } onClick={ clearSearch }
-                                   title={ t("clear") }>
+                                   title={ t("clear") ?? undefined }>
                                <X className={ iconClasses }/>
                            </button>
                            : undefined

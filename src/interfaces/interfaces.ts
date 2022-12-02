@@ -5,7 +5,7 @@ export interface Component {
     className?: string,
     style?: CSSProperties,
     id?: string,
-    name?: string,
+    name?: string | null,
     key?: string,
 }
 
@@ -14,19 +14,19 @@ export interface ChildComponent extends Component {
 }
 
 export interface TitleComponent extends ChildComponent {
-    title?: string,
+    title?: string | null,
 }
 
 export interface InputComponent<T> extends TitleComponent {
     onChange?: ChangeEventHandler<T>,
-    placeholder?: string,
+    placeholder?: string | null,
     required?: boolean,
     type?: string,
 }
 
 export interface ButtonComponent<T> extends ChildComponent {
     onClick?: MouseEventHandler<T>,
-    hoverTitle?: string,
+    hoverTitle?: string | null,
 }
 
 export interface LinkComponent extends TitleComponent {

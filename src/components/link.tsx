@@ -10,7 +10,7 @@ interface A extends LinkComponent {
 export function A({ to, title, children, newTab = true, rel, className, id }: A): JSX.Element {
     return (
         <a className={ `default-link ${ className }` } id={ id }
-           title={ title }
+           title={ title ?? undefined }
            href={ to }
            target={ newTab ? "_blank" : undefined }
            rel={ newTab ? `noopener ${ rel }` : undefined }>
@@ -22,7 +22,7 @@ export function A({ to, title, children, newTab = true, rel, className, id }: A)
 export function MyLink({ to, title, children, className, id }: LinkComponent): JSX.Element {
     return (
         <Link to={ to ?? "/" } id={ id }
-              title={ title }
+              title={ title ?? undefined }
               className={ `default-link ${ className }` }>
             { children }
         </Link>

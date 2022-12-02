@@ -21,7 +21,7 @@ export default function MyMenu(
     return ( // TODO transition
         <div className={ `${ className }` } id={ id }>
             <Menu>
-                <Menu.Button title={ title } className={ `flex-row-center ${ buttonClassName }` }>
+                <Menu.Button title={ title ?? undefined } className={ `flex-row-center ${ buttonClassName }` }>
                     { button }
                 </Menu.Button>
                 <Menu.Items

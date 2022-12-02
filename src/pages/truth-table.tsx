@@ -82,7 +82,7 @@ export default function TruthTablePage(): JSX.Element {
                 atIndex: t("atIndex"),
                 missingChar: t("missingChar"),
                 illegalChar: t("illegalChar"),
-                expressionTooBig: t("expressionTooBig"),
+                expressionTooBig: t("expressionTooBig") ?? undefined,
             });
             setErrorMessage(errorMsg);
 
@@ -205,41 +205,41 @@ export default function TruthTablePage(): JSX.Element {
                                placeholder={ "¬A & B -> C" }
                                type={ "text" }
                                onChange={ onTyping }
-                               leading={ <Search className={ "pl-2 absolute" }/> }
+                               leading={ <Search className={ "pl-2 absolute" } /> }
                                trailing={ typing ?
                                    <button className={ "absolute left-44 sm:left-[22rem]" }
-                                           title={ t("clear") }
+                                           title={ t("clear") ?? undefined }
                                            type={ "reset" }
                                            onClick={ clearSearch }>
-                                       <X/>
+                                       <X />
                                    </button> : undefined }
                         />
                         <input id={ "truth-input-button" }
                                title={ t("generate") + " (Enter)" }
                                type={ "submit" }
                                className={ "button min-w-50px h-10 ml-2" }
-                               value={ t("generate") }/>
+                               value={ t("generate") ?? undefined } />
                     </form>
 
                     <Row className={ "my-1 gap-2" }>
                         <span className={ "h-min" }>{ t("simplify") }: </span>
                         <MySwitch onChange={ setSimplifyEnabled } checked={ simplifyEnabled } title={ t("simplify") }
-                                  name={ t("toggleSimplify") } className={ "mx-1" }/>
+                                  name={ t("toggleSimplify") } className={ "mx-1" } />
 
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("filter") + " " + t("results") }
                                     button={
                                         hideValues.value === Hide.none ?
-                                            <Eye className={ "mx-1" }/> :
+                                            <Eye className={ "mx-1" } /> :
                                             <EyeOff className={ `mx-1 ${ hideValues.value === Hide.true ?
-                                                "text-green-500" : "text-red-500" }` }/>
+                                                "text-green-500" : "text-red-500" }` } />
                                     }
                                     children={
                                         hideOptions.map(option =>
                                             <div key={ option.value }>
                                                 <SingleMenuItem onClick={ () => setHideValues(option) }
                                                                 option={ option }
-                                                                currentValue={ hideValues }/>
+                                                                currentValue={ hideValues } />
                                             </div>
                                         )
                                     } itemsClassName={ "right-0" }
@@ -248,14 +248,18 @@ export default function TruthTablePage(): JSX.Element {
 
                         <div className={ "h-min relative" }>
                             <MyMenu title={ t("sort") + " " + t("results") }
-                                    button={ <Filter
-                                        className={ sortValues.value === Sort.trueFirst ?
-                                            "text-green-500" : sortValues.value === Sort.falseFirst ? "text-red-500" : "" }/> }
+                                    button={
+                                        <Filter
+                                            className={ sortValues.value === Sort.trueFirst ?
+                                                "text-green-500" :
+                                                sortValues.value === Sort.falseFirst ? "text-red-500" : "" }
+                                        />
+                                    }
                                     children={
                                         sortOptions.map(option => (
                                             <div key={ option.value }>
                                                 <SingleMenuItem option={ option } currentValue={ sortValues }
-                                                                onClick={ () => setSortValues(option) }/>
+                                                                onClick={ () => setSortValues(option) } />
                                             </div>
                                         ))
                                     }
@@ -267,7 +271,7 @@ export default function TruthTablePage(): JSX.Element {
                             search !== "" &&
                             <MyDialog title={ t("download") }
                                       description={ t("exportCurrentTable") + " (.xlsx)" }
-                                      button={ <><p className={ "sr-only" }>{ t("download") }</p><Download/></> }
+                                      button={ <><p className={ "sr-only" }>{ t("download") }</p><Download /></> }
                                       callback={ _exportToExcel }
                                       acceptButtonName={ t("download") }
                                       cancelButtonName={ t("cancel") }
@@ -276,7 +280,7 @@ export default function TruthTablePage(): JSX.Element {
                                       acceptButtonId={ "download-accept" }>
                                 <p>{ t("filename") }:</p>
                                 <Input className={ "border-rounded h-10" } id={ filenameId }
-                                       placeholder={ "Truth Table" }/>
+                                       placeholder={ "Truth Table" } />
                             </MyDialog>
                         }
 
@@ -364,7 +368,7 @@ export function Head({ data }: HeadProps<Queries.TruthTablePageQuery>): JSX.Elem
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.truthTables } description={ obj?.truthTablesDesc }/>;
+    return <SEO title={ obj?.truthTables } description={ obj?.truthTablesDesc } />;
 }
 
 export const query = graphql`
@@ -394,7 +398,7 @@ function SingleMenuItem({ option, currentValue, onClick }: SingleMenuItem): JSX.
                 className={ `hover:underline cursor-pointer last:mb-1 flex-row-center` }
                 onClick={ onClick }>
                 <Check
-                    className={ `${ currentValue.value !== option.value && "text-transparent" }` }/>
+                    className={ `${ currentValue.value !== option.value && "text-transparent" }` } />
                 { option.name }
             </div>
         </Menu.Item>
