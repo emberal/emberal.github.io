@@ -7,7 +7,7 @@ import SEO from "../components/seo";
 import { A } from "../components/link";
 import { ChildComponent } from "../interfaces/interfaces";
 
-const linkContent = [
+const linkContent: { key: number, icon?: React.ReactElement, text: string, url: string }[] = [
     {
         key: 0,
         icon: <GitHub />,
@@ -42,7 +42,7 @@ const linkContent = [
         text: "Pixelfed (Pixelfed.social)",
         url: "https://pixelfed.social/i/web/profile/261454857934868480",
     },
-] satisfies { key: number, icon?: JSX.Element, text: string, url: string }[];
+];
 
 /**
  * A page containing cards of several social links
@@ -86,7 +86,7 @@ function MyLink({ children, text, url, className }: MyLink): JSX.Element {
             <div
                 className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ children ? children : <LinkIcon /> }</div>
+                <div className={ "pr-2" }>{ children ?? <LinkIcon /> }</div>
                 <span>{ text }</span>
             </div>
         </A>
