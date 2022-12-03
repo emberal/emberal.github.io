@@ -16,7 +16,7 @@ export const links: Record<Link, string> = {
 }
 
 interface Layout extends TitleComponent {
-    headline?: string,
+    headline?: string | null,
     description: string,
     current?: string,
     titleAndNavClass?: string,

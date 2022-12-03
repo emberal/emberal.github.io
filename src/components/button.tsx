@@ -6,7 +6,7 @@ export function BackUpButton({ onClick, hoverTitle, id, className }: ButtonCompo
     return (
         <button id={ id }
                 className={ `fixed right-10 bottom-20 button h-9 z-50 ${ className }` }
-                title={ hoverTitle } onClick={ onClick }>
+                title={ hoverTitle ?? undefined } onClick={ onClick }>
             <ArrowUp/>
             <p className={ "sr-only" }>{ hoverTitle }</p>
         </button>

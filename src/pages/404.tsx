@@ -15,7 +15,7 @@ export default function NotFoundPage(): JSX.Element {
     const { t } = useTranslation();
 
     return (
-        <Layout title={ t("pageNotFound") } description={ "Error 404. Page not found!" }>
+        <Layout title={ t("pageNotFound") ?? undefined } description={ "Error 404. Page not found!" }>
             <p> { t("sorry") + " " } <span role="img" aria-label="Pensive emoji">😔</span>
                 { " " + t("pageWasNotFound") }
                 <br/><br/>

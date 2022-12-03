@@ -3,7 +3,7 @@ import { graphql, useStaticQuery } from "gatsby";
 import { TitleComponent } from "../interfaces/interfaces";
 
 interface SEO extends TitleComponent {
-    description?: string,
+    description?: string | null,
     blockCrawlers?: boolean,
 }
 

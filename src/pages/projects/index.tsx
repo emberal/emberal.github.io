@@ -171,28 +171,31 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
             title={ t("projects") }
             headline={ t("myProjects") }
             description={ t("projectsByMe") }
-            current={ links.projects }>
+            current={ Links.projects }>
+
             <div className={ "relative" }>
+
                 <Search onChange={ onSearch } collapse={ true }
-                        searchWithoutFocus={ true }/>
+                        searchWithoutFocus={ true } />
+
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
-                              onClick={ updateTagState }/>
+                              onClick={ updateTagState } />
                 {
                     allMdx.nodes.map(node =>
                         <div key={ node.id }>
                             <>
                                 {
-                                    containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) ?
-
+                                    containsSearchString(node.frontmatter?.title, node.frontmatter?.tags)
+                                        ?
                                         <ProjectCard
-                                            title={ node.frontmatter?.title ?? undefined }
+                                            title={ node.frontmatter?.title }
                                             slug={ node.fields?.slug ?? undefined }
                                             description={ node.frontmatter?.description ?? undefined }
-                                            tags={ node.frontmatter?.tags ?? undefined }
+                                            tags={ node.frontmatter?.tags }
                                             timeToRead={ Number.parseInt(node.fields?.timeToRead?.text ?? "1") }
                                             source={ node.frontmatter?.source ?? undefined }
                                             image={ node.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData }
-                                            imageAlt={ node.frontmatter?.hero_image_alt ?? undefined }/>
+                                            imageAlt={ node.frontmatter?.hero_image_alt ?? undefined } />
                                         :
                                         nodes.length === 0 &&
                                         <div className={ "absolute w-full mt-14" }>
@@ -214,7 +217,7 @@ export function Head({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.myProjects } description={ obj?.projectsByMe }/>;
+    return <SEO title={ obj?.myProjects } description={ obj?.projectsByMe } />;
 }
 
 export const query = graphql`
@@ -228,7 +231,7 @@ export const query = graphql`
                 }
             }
         }
-        allMdx(sort: {fields: frontmatter___uploaded, order: DESC}) {
+        allMdx(sort: {frontmatter: {uploaded: DESC}}) {
             nodes {
                 frontmatter {
                     title

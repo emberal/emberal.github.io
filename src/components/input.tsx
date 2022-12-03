@@ -83,7 +83,7 @@ export default function Input(
                 id={ id }
                 onFocus={ () => setIsFocused(true) }
                 onBlur={ () => setIsFocused(false) }
-                name={ name }
+                name={ name ?? undefined }
                 type={ type }
                 placeholder={ placeholder }
                 required={ required }
@@ -130,7 +130,7 @@ export function TextArea(
             <textarea id={ id }
                       className={ `pl-2 min-h-[3rem] default-bg focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
-                      name={ name }
+                      name={ name ?? undefined }
                       placeholder={ placeholder }
                       required={ required }
                       onInput={ () => setSetIsText(id, isText, setIsText) }
@@ -146,7 +146,7 @@ function HoverTitle(
         title,
         isActive = false,
         htmlFor
-    }: { title?: string, isActive?: boolean, htmlFor?: string }): JSX.Element {
+    }: { title?: string | null, isActive?: boolean, htmlFor?: string }): JSX.Element {
     return (
         <label className={ `absolute pointer-events-none
                  ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 

@@ -11,8 +11,8 @@ export default function MySwitch({ onChange, checked = true, title, name, classN
 
     return (
         <Switch checked={ checked }
-                onChange={ bool => onChange ? onChange(bool) : null }
-                title={ title }
+                onChange={ onChange }
+                title={ title ?? undefined }
                 className={ `${ checked ? "bg-primaryPurple" : "bg-gray-500" } 
                                        relative inline-flex h-6 w-11 items-center rounded-full my-2 ${ className }` }>
             <span className={ "sr-only" }>{ name }</span>
