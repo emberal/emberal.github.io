@@ -13,7 +13,7 @@ interface ProjectCard extends TitleComponent {
     slug?: string,
     source?: string,
     timeToRead?: number,
-    tags?: string,
+    tags?: string | null,
     image?: ImageDataLike,
     imageAlt?: string,
 }
@@ -41,30 +41,37 @@ export default function ProjectCard(
         <div key={ key } id={ id } className={ `${ className }` }>
             {
                 <article className={ "border-rounded border-gray-500 mb-10 shadow" }>
+
                     <div className={ "mx-2 mb-2" }>
+
                         <div className={ "flex-row-center my-3" }>
                             <Link
                                 className={ "default-link mr-2" }
                                 to={ slug }>
                                 <h2 className={ "text-xl" }>{ title }</h2>
                             </Link>
-                            <A title={ t("openInGitHub") } to={ source } className={ "!text-inherit" }><GitHub/></A>
+                            <A title={ t("openInGitHub") } to={ source } className={ "!text-inherit" }><GitHub /></A>
                         </div>
+
                         <div className={ "grid grid-flow-col justify-between mb-2" }>
                             <p>{ `${ timeToRead } ${ timeToRead === 1 ? t("minute") : t("minutes") } ${ t("read") }` }</p>
                         </div>
-                        <TagsRow tags={ splitCSV(tags ?? "") }/>
+
+                        <TagsRow tags={ splitCSV(tags ?? "") } />
                     </div>
+
                     <div className={ `max-h-[40rem] flex justify-center` }>
                         {
                             image && <GatsbyImage className={ `${ image.height > image.width * 2 && "w-72" }` }
                                                   alt={ imageAlt }
-                                                  image={ image }/>
+                                                  image={ image } />
                         }
                     </div>
+
                     <div className={ "mx-2 my-4" }>
                         <p>{ description }</p>
                     </div>
+
                 </article>
             }
         </div>
