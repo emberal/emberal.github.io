@@ -21,10 +21,10 @@ export default function Homepage(): JSX.Element {
             description={ t("aboutMeDesc") }
             current={ links.home }>
             <>
-                <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" }/>
+                <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" } />
                 <div className={ "w-full flex justify-center my-5" }>
                     <StaticImage className={ "max-w-sm border border-gray-500 rounded-3xl" } src={ "../images/me.jpg" }
-                                 alt={ t("aboutMePicAlt") }/>
+                                 alt={ t("aboutMePicAlt") } />
                 </div>
                 <p>
                     { t("aboutMeDesc") }
@@ -40,7 +40,7 @@ export function Head({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element {
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.home } description={ obj?.aboutMeDesc }/>;
+    return <SEO title={ obj?.home } description={ obj?.aboutMeDesc } />;
 }
 
 export const query = graphql`

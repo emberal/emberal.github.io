@@ -15,13 +15,13 @@ const urls = [
         id: 0,
         to: "https://www.linkedin.com/in/martin-b-2a69391a3",
         name: "LinkedIn",
-        icon: <Linkedin/>
+        icon: <Linkedin />
     },
     {
         id: 1,
         to: "https://github.com/h600878",
         name: "GitHub",
-        icon: <GitHub/>
+        icon: <GitHub />
     }
 ];
 
@@ -34,6 +34,7 @@ export default function ContactMePage(): JSX.Element {
 
     React.useEffect(() => {
         let isMounted = true;
+
         function submitKeys(e: KeyboardEvent): void {
             if (isMounted && e.ctrlKey && e.key === "Enter") {
                 // Activates button if ctrl and enter is clicked at the same time
@@ -70,30 +71,38 @@ export default function ContactMePage(): JSX.Element {
                         )
                     }
                 </div>
+
                 <form acceptCharset={ "UTF-8" }
                       id={ "form" }
                       target={ "_blank" }
                       action={ "https://formspree.io/f/mknykgbn" }
                       method={ "post" }>
+
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
-                        <FormInput title={ t("yourName") } name={ "name" } id={ "inputName" } type={ "text" }/>
-                        <FormInput title={ t("subject") } name={ "subject" } id={ "inputSubject" } type={ "text" }/>
+                        <FormInput title={ t("yourName") } name={ "name" } id={ "inputName" } type={ "text" } />
+                        <FormInput title={ t("subject") } name={ "subject" } id={ "inputSubject" } type={ "text" } />
                     </div>
-                    <FormInput title={ t("yourEmail") } name={ "_replyto" } id={ "inputEmail" } type={ "email" }/>
+
+                    <FormInput title={ t("yourEmail") } name={ "_replyto" } id={ "inputEmail" } type={ "email" } />
+
                     <TextArea title={ t("message") }
                               required={ true }
                               name={ "message" }
                               id={ "contact-me-text-area" }
                               className={ `pl-2 min-h-[3rem] h-24 dark:bg-gray-900 focus:border-primaryPurple outline-none
-                                   border-2 border-gray-500 ${ inputStyle }` }/>
-                    <input name="_gotcha" type="text" className={ "hidden" }/> { /*Honeypot spam filter*/ }
+                                   border-2 border-gray-500 ${ inputStyle }` }
+                    />
+
+                    <input name="_gotcha" type="text" className={ "hidden" } /> { /*Honeypot spam filter*/ }
+
                     <button id={ "submit-button" } className={ "float-right" }
                             title={ "Send" }
                             name={ "submit" }
                             type={ "submit" }>
-                        <Send/>
+                        <Send />
                         <p className={ "hidden" }>Send</p>
                     </button>
+
                 </form>
             </>
         </Layout>
@@ -106,7 +115,7 @@ export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Eleme
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.contactMe }/>; // TODO description
+    return <SEO title={ obj?.contactMe } />; // TODO description
 }
 
 export const query = graphql`
@@ -130,6 +139,6 @@ function FormInput({ name, type, title, className, id }: InputComponent<HTMLInpu
                id={ id }
                type={ type }
                title={ title }
-               required={ true }/>
+               required={ true } />
     );
 }

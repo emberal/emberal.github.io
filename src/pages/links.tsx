@@ -10,7 +10,7 @@ import { ChildComponent } from "../interfaces/interfaces";
 const linkContent = [
     {
         key: 0,
-        icon: <GitHub/>,
+        icon: <GitHub />,
         text: "GitHub",
         url: "https://github.com/h600878"
     },
@@ -21,19 +21,19 @@ const linkContent = [
     },
     {
         key: 2,
-        icon: <MessageSquare/>,
+        icon: <MessageSquare />,
         text: "Matrix",
         url: "https://matrix.to/#/@martials:matrix.org"
     },
     {
         key: 3,
-        icon: <Linkedin/>,
+        icon: <Linkedin />,
         text: "LinkedIn",
         url: "https://www.linkedin.com/in/martin-b-2a69391a3/"
     },
     {
         key: 4,
-        icon: <Instagram/>,
+        icon: <Instagram />,
         text: "Instagram",
         url: "https://www.instagram.com/martinalstad/",
     },
@@ -42,7 +42,7 @@ const linkContent = [
         text: "Pixelfed (Pixelfed.social)",
         url: "https://pixelfed.social/i/web/profile/261454857934868480",
     },
-];
+] satisfies { key: number, icon?: JSX.Element, text: string, url: string }[];
 
 /**
  * A page containing cards of several social links
@@ -59,6 +59,7 @@ export default function LinksPage(): JSX.Element {
             headline={ t("myLinks") }
             description={ t("linksDescription") }
             current={ links.links }>
+
             <div className={ "pt-5" }>
                 {
                     linkContent.map(link =>
@@ -85,7 +86,7 @@ function MyLink({ children, text, url, className }: MyLink): JSX.Element {
             <div
                 className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ children ? children : <LinkIcon/> }</div>
+                <div className={ "pr-2" }>{ children ? children : <LinkIcon /> }</div>
                 <span>{ text }</span>
             </div>
         </A>
@@ -98,7 +99,7 @@ export function Head({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element {
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.myLinks }/>; // TODO description
+    return <SEO title={ obj?.myLinks } />; // TODO description
 }
 
 export const query = graphql`

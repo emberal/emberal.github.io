@@ -85,7 +85,7 @@ export default function Input(
                 onBlur={ () => setIsFocused(false) }
                 name={ name ?? undefined }
                 type={ type }
-                placeholder={ placeholder }
+                placeholder={ placeholder ?? undefined }
                 required={ required }
                 onInput={ () => setSetIsText(id, isText, setIsText) }
                 onChange={ onChange }/>
@@ -131,7 +131,7 @@ export function TextArea(
                       className={ `pl-2 min-h-[3rem] default-bg focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
                       name={ name ?? undefined }
-                      placeholder={ placeholder }
+                      placeholder={ placeholder ?? undefined }
                       required={ required }
                       onInput={ () => setSetIsText(id, isText, setIsText) }
                       onFocus={ () => setIsFocused(true) }

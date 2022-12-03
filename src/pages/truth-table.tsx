@@ -208,9 +208,9 @@ export default function TruthTablePage(): JSX.Element {
                             <MyMenu title={ t("filter") + " " + t("results") }
                                     button={
                                         hideValues.value === "none" ?
-                                            <Eye className={ "mx-1" }/> :
+                                            <Eye className={ "mx-1" } /> :
                                             <EyeOff className={ `mx-1 ${ hideValues.value === "trueFirst" ?
-                                                "text-green-500" : "text-red-500" }` }/>
+                                                "text-green-500" : "text-red-500" }` } />
                                     }
                                     children={
                                         hideOptions.map(option =>
@@ -228,7 +228,7 @@ export default function TruthTablePage(): JSX.Element {
                             <MyMenu title={ t("sort") + " " + t("results") }
                                     button={ <Filter
                                         className={ sortValues.value === "trueFirst" ?
-                                            "text-green-500" : sortValues.value === "falseFirst" ? "text-red-500" : "" }/> }
+                                            "text-green-500" : sortValues.value === "falseFirst" ? "text-red-500" : "" } /> }
                                     children={
                                         sortOptions.map(option => (
                                             <div key={ option.value }>
@@ -321,7 +321,7 @@ export default function TruthTablePage(): JSX.Element {
                             <div id={ "table" } className={ "h-[45rem] overflow-auto" }>
 
                                 <TruthTable header={ fetchResult?.header ?? undefined }
-                                            table={ fetchResult?.table?.truthMatrix } id={ tableId }/>
+                                            table={ fetchResult?.table?.truthMatrix } id={ tableId } />
 
                             </div>
                         </div>

@@ -18,7 +18,7 @@ export default function NotFoundPage(): JSX.Element {
         <Layout title={ t("pageNotFound") ?? undefined } description={ "Error 404. Page not found!" }>
             <p> { t("sorry") + " " } <span role="img" aria-label="Pensive emoji">😔</span>
                 { " " + t("pageWasNotFound") }
-                <br/><br/>
+                <br /><br />
                 <MyLink to="/">{ t("home") }</MyLink>.
             </p>
         </Layout>
@@ -31,7 +31,7 @@ export function Head({ data }: HeadProps<Queries.NotFoundPageQuery>): JSX.Elemen
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.pageNotFound ?? "404: Page not found" } blockCrawlers={ true }/>;
+    return <SEO title={ obj?.pageNotFound ?? "404: Page not found" } blockCrawlers={ true } />;
 }
 
 export const query = graphql`

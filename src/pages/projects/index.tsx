@@ -171,7 +171,7 @@ export default function ProjectPage({ data: { allMdx } }: PageProps<Queries.Proj
             title={ t("projects") }
             headline={ t("myProjects") }
             description={ t("projectsByMe") }
-            current={ Links.projects }>
+            current={ links.projects }>
 
             <div className={ "relative" }>
 

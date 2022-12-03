@@ -30,11 +30,11 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
                     {
                         heroImage && frontmatter?.hero_image_alt &&
                         <GatsbyImage className={ heroImage.height > heroImage.width * 2 ? "w-72" : "" }
-                                     alt={ frontmatter.hero_image_alt } image={ heroImage }/>
+                                     alt={ frontmatter.hero_image_alt } image={ heroImage } />
                     }
                 </div>
                 <div className={ "my-2" }>
-                    <TagsRow tags={ splitCSV(frontmatter?.tags ?? "") }/>
+                    <TagsRow tags={ splitCSV(frontmatter?.tags ?? "") } />
                 </div>
 
                 <p>{ frontmatter?.description }</p>
@@ -43,7 +43,7 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
                     <A to={ frontmatter?.source ? frontmatter?.source : undefined }>GitHub</A>
                 </p>
                 <div>
-                    <br/>
+                    <br />
                     { children }
                 </div>
             </article>
@@ -53,7 +53,7 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
 
 export function Head({ data: { mdx } }: ProjectPostInterface): JSX.Element {
     return <SEO title={ mdx?.frontmatter?.title }
-                description={ mdx?.frontmatter?.description }/>;
+                description={ mdx?.frontmatter?.description } />;
 }
 
 export const query = graphql`

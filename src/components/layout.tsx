@@ -87,22 +87,30 @@ export default function Layout(
 
     return (
         <div className={ `default-bg default-text-black-white overflow-clip ${ className }` }>
+
             <div id={ "main-container" }
                  className={ `max-w-2xl mx-auto px-2 relative min-h-screen ${ containerClass }` /*Container*/ }>
+
                 <div className={ ` ${ titleAndNavClass }` }>
+
                     <h1
                         className={ `default-text font-bold text-4xl mb-6 pt-6` }>
                         { headline ?? title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
                     <Navbar current={ current }/>
+
                 </div>
+
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>
                     <Footer className={ footerClass }/>
                 </main>
+
             </div>
+
             { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") }/> }
+
         </div>
     );
 }

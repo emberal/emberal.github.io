@@ -267,7 +267,7 @@ export function TagsSelector(
                             </div>
                             <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
                                 {
-                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
+                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrolled.right &&
                                     <button title={ t("clickToScroll") ?? undefined }>
                                         <ChevronRight className={ chevronClasses }
                                                       onClick={ () => scroll(defScrollLen) } />
@@ -279,7 +279,7 @@ export function TagsSelector(
                                      "default-bg" } shadow-sm shadow-primaryPurple` } />
                             </Row>
                             {
-                                hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft &&
+                                hideTags && !("ontouchstart" in document.documentElement) && !isScrolled.left &&
                                 <button className={ "absolute left-0" } title={ t("clickToScroll") ?? undefined }>
                                     <ChevronLeft className={ chevronClasses + " mt-[1px]" }
                                                  onClick={ () => scroll(-defScrollLen) } />
