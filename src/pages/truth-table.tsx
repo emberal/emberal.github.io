@@ -1,8 +1,8 @@
 import * as React from "react";
-import { MouseEventHandler } from "react";
+import { type MouseEventHandler } from "react";
 import Layout, { links } from "../components/layout";
 import Input from "../components/input";
-import { graphql, HeadProps } from "gatsby";
+import { graphql, type HeadProps } from "gatsby";
 import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
 import TruthTable from "../components/truth-table";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -13,9 +13,9 @@ import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
-import { BookType, utils, write, writeFile } from "xlsx"
+import { type BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
-import { FetchResult } from "../interfaces/types";
+import type { FetchResult } from "../interfaces/types";
 
 // TODO move some code to new components
 export default function TruthTablePage(): JSX.Element {
@@ -73,7 +73,7 @@ export default function TruthTablePage(): JSX.Element {
             await fetch(`http://localhost:8080/simplify/table?exp=${ exp }&simplify=${ simplifyEnabled }`)
                 .then(res => res.json())
                 .then(res => result = res)
-                .catch(err => console.error(err));
+                .catch(err => console.error(err)); // TODO show error on screen
 
             setFetchResult(result);
         }

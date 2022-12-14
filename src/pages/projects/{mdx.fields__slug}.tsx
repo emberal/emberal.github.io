@@ -1,12 +1,12 @@
 import * as React from "react";
 import Layout, { links } from "../../components/layout";
 import { graphql } from "gatsby";
-import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, type IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 import SEO from "../../components/seo";
 import { A } from "../../components/link";
-import { ProjectPostInterface } from "../../interfaces/interfaces";
+import type { ProjectPostInterface } from "../../interfaces/interfaces";
 
 /**
  * A single post containing all the data from an mdx file

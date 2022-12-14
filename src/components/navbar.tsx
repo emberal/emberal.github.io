@@ -5,8 +5,8 @@ import { ChevronDown, Globe, Icon, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { Component } from "../interfaces/interfaces";
-import { Theme } from "../interfaces/types";
+import type { Component } from "../interfaces/interfaces";
+import type { Theme } from "../interfaces/types";
 
 interface NavbarProps extends Component {
     current?: string
@@ -14,30 +14,25 @@ interface NavbarProps extends Component {
 
 export default function Navbar({ current }: NavbarProps): JSX.Element {
 
-    const theme: Record<Theme, Theme> = {
-        auto: 'auto',
-        dark: 'dark',
-        light: 'light',
-    };
-
-    const [currentTheme, setCurrentTheme] = React.useState(theme.auto);
+    const [currentTheme, setCurrentTheme] = React.useState<Theme>("auto");
 
     React.useEffect(() => {
         const classList = document.documentElement.classList;
 
-        if (!('theme' in localStorage) || localStorage.theme === theme.auto) {
+        let theme: Theme = localStorage.theme;
+        if (!('theme' in localStorage) || theme === "auto") {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
                 classList.add('dark');
             }
             else {
                 classList.remove('dark');
             }
-            localStorage.theme = theme.auto; // If theme does not exist yet
+            theme = "auto"; // If theme does not exist yet
         }
-        else if (localStorage.theme === theme.dark) {
+        else if (theme === "dark") {
             classList.add('dark');
         }
-        else if (localStorage.theme === theme.light) {
+        else if (theme === "light") {
             classList.remove('dark');
         }
     }, [currentTheme]);
@@ -72,17 +67,17 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
 
     const themeMenu: { id: Theme, text: string, icon: React.ReactElement<Icon>; }[] = [
         {
-            id: theme.auto,
+            id: "auto",
             text: t('followBrowser'),
             icon: <Globe className={ iconCss }/>
         },
         {
-            id: theme.dark,
+            id: "dark",
             text: t('dark'),
             icon: <Moon className={ iconCss }/>
         },
         {
-            id: theme.light,
+            id: "light",
             text: t('light'),
             icon: <Sun className={ iconCss }/>
         },

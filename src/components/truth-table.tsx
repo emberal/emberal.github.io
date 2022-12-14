@@ -1,6 +1,6 @@
 import * as React from "react";
-import { Component } from "../interfaces/interfaces";
-import { Table } from "../interfaces/types";
+import type { Component } from "../interfaces/interfaces";
+import type { Table } from "../interfaces/types";
 
 interface TruthTable extends Component {
     table?: Table,

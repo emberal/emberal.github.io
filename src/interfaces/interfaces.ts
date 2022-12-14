@@ -1,5 +1,5 @@
-import { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactNode } from "react";
-import { IGatsbyImageData } from "gatsby-plugin-image";
+import type { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactNode } from "react";
+import type { IGatsbyImageData } from "gatsby-plugin-image";
 
 export interface Component {
     className?: string,

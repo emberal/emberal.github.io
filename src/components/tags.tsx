@@ -4,7 +4,7 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { throttle } from "lodash";
 import Row from "./row";
-import { ButtonComponent, Component } from "../interfaces/interfaces";
+import type { ButtonComponent, Component } from "../interfaces/interfaces";
 
 interface Tag<T> extends ButtonComponent<T> {
     title?: string,

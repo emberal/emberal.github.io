@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from "gatsby";
-import { LinkComponent } from "../interfaces/interfaces";
+import type { LinkComponent } from "../interfaces/interfaces";
 
 interface A extends LinkComponent {
     newTab?: boolean,

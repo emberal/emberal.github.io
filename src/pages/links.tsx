@@ -1,11 +1,11 @@
 import * as React from "react";
 import Layout, { links } from "../components/layout";
-import { graphql, HeadProps } from "gatsby";
+import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import SEO from "../components/seo";
 import { A } from "../components/link";
-import { ChildComponent } from "../interfaces/interfaces";
+import type { ChildComponent } from "../interfaces/interfaces";
 
 const linkContent: { key: number, icon?: React.ReactElement, text: string, url: string }[] = [
     {

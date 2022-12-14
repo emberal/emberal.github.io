@@ -1,6 +1,6 @@
 import * as React from "react";
 import Row from "./row";
-import { InputComponent } from "../interfaces/interfaces";
+import type { InputComponent } from "../interfaces/interfaces";
 
 function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStateAction<boolean>>): () => void {
     let isMounted = true;

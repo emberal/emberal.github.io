@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Menu } from "@headlessui/react";
-import { TitleComponent } from "../interfaces/interfaces";
+import type { TitleComponent } from "../interfaces/interfaces";
 
 interface MyMenu extends TitleComponent {
     button?: React.ReactNode,

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "./input";
-import { Component } from "../interfaces/interfaces";
+import type { Component } from "../interfaces/interfaces";
 
 interface Search extends Component {
     onChange?: () => void,

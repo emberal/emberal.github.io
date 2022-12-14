@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ChildComponent } from "../interfaces/interfaces";
+import type { ChildComponent } from "../interfaces/interfaces";
 
 export default function Row({ children, className, id }: ChildComponent): JSX.Element {
     return (
