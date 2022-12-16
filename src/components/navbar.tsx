@@ -18,20 +18,20 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
     React.useEffect(() => {
         const classList = document.documentElement.classList;
 
-        let theme: Theme = localStorage.theme;
-        if (!('theme' in localStorage) || theme === "auto") {
+        let localTheme: Theme = localStorage.theme;
+        if (!('theme' in localStorage) || localTheme === "auto") {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
                 classList.add('dark');
             }
             else {
                 classList.remove('dark');
             }
-            theme = "auto"; // If theme does not exist yet
+            localStorage.theme = "auto"; // If theme does not exist yet
         }
-        else if (theme === "dark") {
+        else if (localTheme === "dark") {
             classList.add('dark');
         }
-        else if (theme === "light") {
+        else if (localTheme === "light") {
             classList.remove('dark');
         }
     }, [theme]);
