@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Disclosure, Transition } from "@headlessui/react";
 import { ChevronUp } from "react-feather";
-import { ChildComponent, TitleComponent } from "../interfaces/interfaces";
+import type { ChildComponent, TitleComponent } from "../interfaces/interfaces";
 
 interface InfoBox extends TitleComponent {
     error?: boolean,

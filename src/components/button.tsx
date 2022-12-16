@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ArrowUp } from "react-feather";
-import { ButtonComponent } from "../interfaces/interfaces";
+import type { ButtonComponent } from "../interfaces/interfaces";
 
 export function BackUpButton({ onClick, hoverTitle, id, className }: ButtonComponent<HTMLButtonElement>) {
     return (

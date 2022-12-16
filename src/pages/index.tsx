@@ -1,7 +1,7 @@
 import * as React from "react"
 import Layout, { Links } from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
-import { graphql, HeadProps } from "gatsby";
+import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import SEO from "../components/seo";
 

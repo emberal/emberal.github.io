@@ -1,12 +1,12 @@
 import * as React from "react";
 import Layout, { Links } from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
-import { graphql, HeadProps } from "gatsby";
+import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import SEO from "../components/seo";
 import { A } from "../components/link";
-import { InputComponent } from "../interfaces/interfaces";
+import type { InputComponent } from "../interfaces/interfaces";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 

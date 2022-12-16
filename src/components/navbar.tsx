@@ -5,7 +5,7 @@ import { ChevronDown, Globe, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { Links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { Component, Theme } from "../interfaces/interfaces";
+import type { Component, Theme } from "../interfaces/interfaces";
 
 interface NavbarProps extends Component {
     current?: string
@@ -13,31 +13,25 @@ interface NavbarProps extends Component {
 
 export default function Navbar({ current }: NavbarProps): JSX.Element {
 
-    // TODO use ENUM?
-    const THEME = {
-        AUTO: 'auto',
-        DARK: 'dark',
-        LIGHT: 'light',
-    } as { readonly AUTO: Theme, readonly DARK: Theme, readonly LIGHT: Theme };
-
-    const [theme, setTheme] = React.useState(THEME.AUTO);
+    const [theme, setTheme] = React.useState<Theme>("auto");
 
     React.useEffect(() => {
         const classList = document.documentElement.classList;
 
-        if (!('theme' in localStorage) || localStorage.theme === THEME.AUTO) {
+        let theme: Theme = localStorage.theme;
+        if (!('theme' in localStorage) || theme === "auto") {
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) { // TODO auto change theme on browser change
                 classList.add('dark');
             }
             else {
                 classList.remove('dark');
             }
-            localStorage.theme = THEME.AUTO; // If theme does not exist yet
+            theme = "auto"; // If theme does not exist yet
         }
-        else if (localStorage.theme === THEME.DARK) {
+        else if (theme === "dark") {
             classList.add('dark');
         }
-        else if (localStorage.theme === THEME.LIGHT) {
+        else if (theme === "light") {
             classList.remove('dark');
         }
     }, [theme]);
@@ -49,20 +43,10 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
      * @param theme The desired theme, can be 'auto', 'dark' or 'light'
      */
     function changeTheme(theme: Theme): void {
-        switch (theme) {
-            case 'dark':
-                localStorage.theme = THEME.DARK;
-                setTheme(THEME.DARK);
-                break;
-            case 'light':
-                localStorage.theme = THEME.LIGHT;
-                setTheme(THEME.LIGHT);
-                break;
-            default:
-                localStorage.theme = THEME.AUTO;
-                setTheme(THEME.AUTO);
-        }
+        localStorage.theme = theme;
+        setTheme(theme);
     }
+
 
     const navLinks = [
         {
@@ -83,19 +67,19 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
 
     const themeMenu = [
         {
-            id: THEME.AUTO,
+            id: "auto",
             text: t('followBrowser'),
-            icon: <Globe className={ iconCss }/>
+            icon: <Globe className={ iconCss } />
         },
         {
-            id: THEME.DARK,
+            id: "dark",
             text: t('dark'),
-            icon: <Moon className={ iconCss }/>
+            icon: <Moon className={ iconCss } />
         },
         {
-            id: THEME.LIGHT,
+            id: "light",
             text: t('light'),
-            icon: <Sun className={ iconCss }/>
+            icon: <Sun className={ iconCss } />
         },
     ] as { id: Theme, text: string, icon: React.ReactElement<HTMLElement> }[];
 
@@ -113,7 +97,7 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
                     )
                 }
                 <li className={ "mr-6 w-fit relative" }>
-                    <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" }/></> }
+                    <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" } /></> }
                             buttonClassName={ "default-link text-lg" }
                             itemsClassName={ "right-0" }>
                         {

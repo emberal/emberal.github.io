@@ -1,7 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import * as React from "react";
-import { TitleComponent } from "../interfaces/interfaces";
-import { MouseEventHandler } from "react";
+import type { TitleComponent } from "../interfaces/interfaces";
+import type { MouseEventHandler } from "react";
 
 interface MyDialog extends TitleComponent {
     description?: string,

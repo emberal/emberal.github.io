@@ -1,8 +1,8 @@
 import * as React from "react";
-import { MouseEventHandler } from "react";
+import { type MouseEventHandler } from "react";
 import Layout, { Links } from "../components/layout";
 import Input from "../components/input";
-import { graphql, HeadProps } from "gatsby";
+import { graphql, type HeadProps } from "gatsby";
 import { Expression } from "../classes/expression";
 import { Check, Download, Eye, EyeOff, Filter, Search, X } from "react-feather";
 import TruthTable, { Hide, Sort } from "../components/truth-table";
@@ -15,7 +15,7 @@ import SEO from "../components/seo";
 import { Menu } from "@headlessui/react";
 import Row from "../components/row";
 import MyMenu from "../components/menu";
-import { BookType, utils, write, writeFile } from "xlsx"
+import { type BookType, utils, write, writeFile } from "xlsx"
 import MyDialog from "../components/myDialog";
 
 // TODO move some code to new components

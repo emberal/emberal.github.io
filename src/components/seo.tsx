@@ -1,6 +1,6 @@
 import * as React from "react";
 import { graphql, useStaticQuery } from "gatsby";
-import { TitleComponent } from "../interfaces/interfaces";
+import type { TitleComponent } from "../interfaces/interfaces";
 
 interface SEO extends TitleComponent {
     description?: string | null,

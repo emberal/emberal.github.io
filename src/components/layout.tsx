@@ -1,7 +1,7 @@
 import * as React from "react";
 import Footer from "./footer";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import { TitleComponent } from "../interfaces/interfaces";
+import type { TitleComponent } from "../interfaces/interfaces";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
 

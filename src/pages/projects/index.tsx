@@ -1,6 +1,6 @@
 import * as React from "react";
 import Layout, { Links } from "../../components/layout";
-import { graphql, HeadProps, PageProps } from "gatsby";
+import { graphql, type HeadProps, type PageProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TagsSelector } from "../../components/tags";
 import Search from "../../components/search";

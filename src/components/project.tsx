@@ -2,11 +2,11 @@ import * as React from "react";
 import { Link } from "gatsby";
 import { GitHub } from "react-feather";
 import { TagsRow } from "./tags";
-import { GatsbyImage, getImage, ImageDataLike } from "gatsby-plugin-image";
+import { GatsbyImage, getImage, type ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "../pages/projects";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { A } from "./link";
-import { TitleComponent } from "../interfaces/interfaces";
+import type { TitleComponent } from "../interfaces/interfaces";
 
 interface ProjectCard extends TitleComponent {
     description?: string,

@@ -6,7 +6,7 @@ import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
 import SEO from "../../components/seo";
 import { A } from "../../components/link";
-import { ProjectPostInterface } from "../../interfaces/interfaces";
+import type { ProjectPostInterface } from "../../interfaces/interfaces";
 
 /**
  * A single post containing all the data from an mdx file
