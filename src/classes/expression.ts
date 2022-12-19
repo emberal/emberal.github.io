@@ -72,7 +72,7 @@ export class Expression {
             else if (this.operator && !(this.isAtomic() || other.isAtomic()) && this.operator === other.operator) {
 
                 if (this.leading === other.leading && (this.left?.equals(other.left) && this.right?.equals(other.right) ||
-                    this.left?.equals(other.right))) {
+                    this.left?.equals(other.right) && this.right?.equals(other.left))) {
                     return true;
                 }
             }
@@ -123,7 +123,7 @@ export class Expression {
      * @returns {string} If it finds an atomic value, returns it.
      * @returns {null} If it doesn't find a value, returns null
      */
-    getAtomicValue(): string | null {
+    getAtomicValue(): string | null { // TODO remove
         if (this.isAtomic()) {
             return this.atomic;
         }
