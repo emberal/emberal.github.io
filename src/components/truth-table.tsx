@@ -158,10 +158,10 @@ export default function TruthTable(
                 const left = findExp(exp.left);
                 const right = findExp(exp.right);
 
-                let boolExp = exp.solve(left, right);
+                const boolExp = exp.solve(left, right);
 
                 if (exp === expressions[expressions.length - 1] && (hide === Hide.true && boolExp || hide === Hide.false && !boolExp)) {
-                    tBodyMatrix.splice(row);
+                    tBodyMatrix.splice(row, 1);
                 }
                 else {
                     tBodyMatrix[row][column] = boolExp ? "T" : "F";
