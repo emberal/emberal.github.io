@@ -38,15 +38,15 @@ export default function TruthTablePage(): JSX.Element {
     const [typing, setTyping] = React.useState(false);
 
     const hideOptions = [
-        { name: t("showAll") + " " + t("results"), value: "none" },
-        { name: t("hide") + " " + t("true") + " " + t("results"), value: "trueFirst" },
-        { name: t("hide") + " " + t("false") + " " + t("results"), value: "falseFirst" },
+        { name: t("showAll") + " " + t("results"), value: "NONE" },
+        { name: t("hide") + " " + t("true") + " " + t("results"), value: "TRUE" },
+        { name: t("hide") + " " + t("false") + " " + t("results"), value: "FALSE" },
     ];
 
     const sortOptions = [
-        { name: t("sortBy") + " " + t("default"), value: "defaultSort" },
-        { name: t("sortBy") + " " + t("true") + " " + t("first"), value: "trueFirst" },
-        { name: t("sortBy") + " " + t("false") + " " + t("first"), value: "falseFirst" },
+        { name: t("sortBy") + " " + t("default"), value: "DEFAULT" },
+        { name: t("sortBy") + " " + t("true") + " " + t("first"), value: "TRUE_FIRST" },
+        { name: t("sortBy") + " " + t("false") + " " + t("first"), value: "FALSE_FIRST" },
     ];
 
     /**
@@ -69,8 +69,9 @@ export default function TruthTablePage(): JSX.Element {
 
         if (exp && exp !== "") {
 
+            // TODO add loading animation
             let result: FetchResult | undefined;
-            await fetch(`http://localhost:8080/simplify/table?exp=${ exp }&simplify=${ simplifyEnabled }`)
+            await fetch(`https://api.martials.no/simplify-truths/simplify/table?exp=${ exp }&simplify=${ simplifyEnabled }`)
                 .then(res => res.json())
                 .then(res => result = res)
                 .catch(err => console.error(err)); // TODO show error on screen
