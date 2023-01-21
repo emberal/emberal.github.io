@@ -1,22 +1,27 @@
 ---
 title: "Forenkle sannhetsverdier og sannhetstabeller"
-description: "Forenkle sannhetsuttrykk eller bare opprett sannhetstabeller."
-hero-image: "./truth-tables.png"
+description: "Forenkle sannhetsuttrykk og opprett sannhetstabeller."
+hero-image: "./Simplify-truths-website.png"
 hero-image-alt: "Nettsiden med en sannhetstabell"
-tags: "TypeScript;GatsbyJS;ReactJS;Tailwind css;Nettside"
-source: "https://github.com/h600878/h600878.github.io"
+tags: "TypeScript;SolidJS;Tailwind css;Nettside;Java;API;Spring Boot;Raspberry Pi;Apache;Tomcat"
+source: "https://github.com/h600878/martials.no"
 uploaded: "2022-11-08"
 ---
 
-import { MyLink } from "../../src/components/link";
+import { A } from "../../src/components/link";
 
 Noen sannhetsverdier kan bli ganske store, og kompliserte. Derfor har jeg laget dette programmet for å forenkle uttrykk mest mulig.
 Programmet bruker flere kjente metoder for å skrive om uttrykkene. Hvilke uttrykk som er brukt og hvilke endringer de gjorde,
 kan vises i menyen under søkefeltet.
-<br/>
+<br />
 I tillegg til å bare forenkle uttrykk, kan man også generere en sannhetstabell med alle mulige verdier i uttrykket.
 Hvis man ikke ønsker å forenkle uttrykket, men bare generere tabellen, kan man enkelt skru av forenkling. I tillegg har
 man muligheten til å filtrere resultat, enten ved å skjule sanne eller usanne verdier. Eller ved å sortere etter sanne
 eller usanne først.
-
-<MyLink to={ "/truth-table" }>Lenke til siden.</MyLink>
+<br />
+Nettsiden er laget med TypeScript, SolidJS og Tailwind CSS. API-et er laget med Java og Spring Boot.
+Begge kjører på min egen raspberry pi 4, nettsiden er hostet på en apache2 tjener, mens API-et ligger på en tomcat tjener.
+<A to={ "https://martials.no/simplify-truths.html" }>Lenke til nettsiden.</A>
+<br />
+Spørringer kan gjøres mot API-et kan utføres med GET eller POST. API-et returnerer JSON.
+<A to={ "https://api.martials.no/simplify-truths" }>Lenke til API-docs</A>

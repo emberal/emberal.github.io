@@ -61,10 +61,10 @@ export default function ProjectCard(
                     </div>
 
                     <div className={ `max-h-[40rem] flex justify-center` }>
-                        {
-                            image && <GatsbyImage className={ `${ image.height > image.width * 2 && "w-72" }` }
-                                                  alt={ imageAlt }
-                                                  image={ image } />
+                        { image &&
+                            <GatsbyImage imgStyle={ { objectFit: "contain" } }
+                                         alt={ imageAlt }
+                                         image={ image } />
                         }
                     </div>
 
