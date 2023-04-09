@@ -3,7 +3,7 @@ import { Link } from "gatsby";
 import { GitHub } from "react-feather";
 import { TagsRow } from "./tags";
 import { GatsbyImage, getImage, type ImageDataLike } from "gatsby-plugin-image";
-import { splitCSV } from "../pages/projects";
+import { splitCSV } from "../utils/string";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { A } from "./link";
 import type { Component, TitleProps } from "../declarations/props";

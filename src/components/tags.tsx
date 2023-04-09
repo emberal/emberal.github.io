@@ -176,9 +176,9 @@ export const TagsSelector: Component<TagsSelectorProps> = (
         if (scrollContainer.current) {
             const left = isLeft();
             if (isScrolled.left !== left) {
-                setIsScrolled({ left, right: isScrolled.right });
+                setIsScrolled({ left: left, right: isScrolled.right });
             }
-            if (!isRight()) {
+            else if (!isRight()) {
                 setIsScrolled({ left: isScrolled.left, right: false });
             }
         }
@@ -193,7 +193,7 @@ export const TagsSelector: Component<TagsSelectorProps> = (
             if (isScrolled.right !== right) {
                 setIsScrolled({ left: isScrolled.left, right });
             }
-            if (!isLeft()) {
+            else if (!isLeft()) {
                 setIsScrolled({ left: false, right: isScrolled.right });
             }
         }
@@ -201,7 +201,7 @@ export const TagsSelector: Component<TagsSelectorProps> = (
 
     /**
      * Checks if the scrollContatiner is all the way to the left
-     * @returns {boolean} Returns 'true' if all the way to the left, otherwise 'false'
+     * @returns 'true' if all the way to the left, otherwise 'false'
      */
     function isLeft(): boolean {
         return scrollContainer.current !== null && scrollContainer.current.scrollLeft <= 3;
@@ -241,25 +241,21 @@ export const TagsSelector: Component<TagsSelectorProps> = (
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none] hide-scrollbar
                  cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
-                    {
-                        allTag &&
+                    { allTag &&
                         <Tag title={ allTag }
                              onClick={ () => onClick?.call(allTag) }
                              className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` } />
                     }
-                    {
-                        tagMap?.map(tag =>
-                            <div key={ tag.key }>
-                                <Tag title={ tag.key }
-                                     value={ tag.value }
-                                     onClick={ () => onClick?.call(tag.key) }
-                                     className={ `hover:border-primaryPurple w-max
+                    { tagMap?.map(tag =>
+                        <div key={ tag.key }>
+                            <Tag title={ tag.key }
+                                 value={ tag.value }
+                                 onClick={ () => onClick?.call(tag.key) }
+                                 className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key && "!border-primaryPurple" }` } />
-                            </div>
-                        )
-                    }
-                    {
-                        isOverflowing &&
+                        </div>
+                    ) }
+                    { isOverflowing &&
                         <>
                             <div id={ "invisible-box" }
                                  className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
@@ -293,7 +289,7 @@ export const TagsSelector: Component<TagsSelectorProps> = (
     );
 };
 
-interface TagsRow extends ComponentProps {
+interface TagsRowProps extends ComponentProps {
     tags: string[],
     sort?: boolean,
 }
@@ -304,9 +300,14 @@ interface TagsRow extends ComponentProps {
  * @param sort If 'true' will sort the string[] in ascending order
  * @param className Styling of the root element
  * @param id A unique id for the component
- * @constructor
  */
-export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Element {
+export const TagsRow: Component<TagsRowProps> = (
+    {
+        tags,
+        sort = true,
+        className,
+        id
+    }) => {
 
     if (sort) {
         tags.sort();
@@ -314,13 +315,11 @@ export function TagsRow({ tags, sort = true, className, id }: TagsRow): JSX.Elem
 
     return (
         <Row className={ `flex-wrap gap-1 ${ className }` } id={ id }>
-            {
-                tags.map(tag =>
-                    <div key={ tag }>
-                        <Tag title={ tag } />
-                    </div>
-                )
-            }
+            { tags.map(tag =>
+                <div key={ tag }>
+                    <Tag title={ tag } />
+                </div>
+            ) }
         </Row>
     );
-}
+};

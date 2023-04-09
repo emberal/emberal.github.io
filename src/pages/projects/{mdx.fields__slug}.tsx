@@ -3,10 +3,10 @@ import Layout, { Links } from "../../components/layout";
 import { graphql } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
-import { splitCSV } from "./index";
+import { splitCSV } from "../../utils/string";
 import Seo from "../../components/seo";
 import { A } from "../../components/link";
-import type { ProjectPostInterface } from "../../declarations/props";
+import type { Component, ProjectPostInterface } from "../../declarations/props";
 
 /**
  * A single post containing all the data from an mdx file
@@ -14,10 +14,18 @@ import type { ProjectPostInterface } from "../../declarations/props";
  * @returns {JSX.Element}
  * @constructor
  */
-export default function ProjectPost({ data: { mdx: { frontmatter } }, children }: ProjectPostInterface): JSX.Element {
+const ProjectPost: Component<ProjectPostInterface> = (
+    {
+        data: {
+            mdx: {
+                frontmatter
+            }
+        },
+        children
+    }) => {
 
     const heroImageData: IGatsbyImageData | undefined = frontmatter?.hero_image?.childImageSharp?.gatsbyImageData;
-    const heroImage = typeof heroImageData !== 'undefined' ? getImage(heroImageData) : undefined;
+    const heroImage = heroImageData ? getImage(heroImageData) : undefined;
 
     return (
         <Layout
@@ -27,8 +35,7 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
             current={ Links.projects }>
             <article>
                 <div className={ `max-h-[40rem] flex justify-center` }>
-                    {
-                        heroImage && frontmatter?.hero_image_alt &&
+                    { heroImage && frontmatter?.hero_image_alt &&
                         <GatsbyImage imgStyle={ { objectFit: "contain" } }
                                      alt={ frontmatter.hero_image_alt } image={ heroImage } />
                     }
@@ -50,12 +57,13 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
             </article>
         </Layout>
     );
-}
+};
 
-export function Head({ data: { mdx } }: ProjectPostInterface): JSX.Element {
-    return <Seo title={ mdx?.frontmatter?.title }
-                description={ mdx?.frontmatter?.description } />;
-}
+export default ProjectPost;
+
+export const Head: Component<ProjectPostInterface> = ({ data: { mdx } }) => (
+    <Seo title={ mdx?.frontmatter?.title } description={ mdx?.frontmatter?.description } />
+);
 
 export const query = graphql`
     query ($id: String, $language: String!) {

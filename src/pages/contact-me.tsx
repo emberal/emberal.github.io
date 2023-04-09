@@ -6,7 +6,8 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { InputProps } from "../declarations/props";
+import type { Component, InputProps } from "../declarations/props";
+import { getElementById } from "../utils/dom";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
@@ -15,13 +16,13 @@ const links = [
         id: 0,
         to: "https://www.linkedin.com/in/martin-b-2a69391a3",
         name: "LinkedIn",
-        icon: <Linkedin/>
+        icon: <Linkedin />
     },
     {
         id: 1,
         to: "https://github.com/h600878",
         name: "GitHub",
-        icon: <GitHub/>
+        icon: <GitHub />
     }
 ];
 
@@ -30,23 +31,22 @@ const links = [
  * @returns {JSX.Element}
  * @constructor
  */
-export default function ContactMePage(): JSX.Element {
+const ContactMePage: Component = () => {
 
     React.useEffect(() => {
         let isMounted = true;
+
         function submitKeys(e: KeyboardEvent): void {
             if (isMounted && e.ctrlKey && e.key === "Enter") {
                 // Activates button if ctrl and enter is clicked at the same time
-                const element = document.getElementById("submit-button");
-                if (element) {
-                    element.click();
-                }
+                const element = getElementById<HTMLButtonElement>("submit-button");
+                element?.click();
             }
         }
 
-        document.addEventListener("keyup", (e: KeyboardEvent) => submitKeys(e));
+        document.addEventListener("keyup", submitKeys);
         return () => {
-            document.removeEventListener("keyup", (e: KeyboardEvent) => submitKeys(e));
+            document.removeEventListener("keyup", submitKeys);
             isMounted = false;
         };
     });
@@ -76,29 +76,31 @@ export default function ContactMePage(): JSX.Element {
                       action={ "https://formspree.io/f/mknykgbn" }
                       method={ "post" }>
                     <div className={ "flex justify-between flex-col sm:flex-row" }>
-                        <FormInput title={ t("yourName") } name={ "name" } id={ "inputName" } type={ "text" }/>
-                        <FormInput title={ t("subject") } name={ "subject" } id={ "inputSubject" } type={ "text" }/>
+                        <FormInput title={ t("yourName") } name={ "name" } id={ "inputName" } type={ "text" } />
+                        <FormInput title={ t("subject") } name={ "subject" } id={ "inputSubject" } type={ "text" } />
                     </div>
-                    <FormInput title={ t("yourEmail") } name={ "_replyto" } id={ "inputEmail" } type={ "email" }/>
+                    <FormInput title={ t("yourEmail") } name={ "_replyto" } id={ "inputEmail" } type={ "email" } />
                     <TextArea title={ t("message") }
                               required={ true }
                               name={ "message" }
                               id={ "contact-me-text-area" }
                               className={ `pl-2 min-h-[3rem] h-24 dark:bg-gray-900 focus:border-primaryPurple outline-none
-                                   border-2 border-gray-500 ${ inputStyle }` }/>
-                    <input name="_gotcha" type="text" className={ "hidden" }/> { /*Honeypot spam filter*/ }
+                                  border-2 border-gray-500 ${ inputStyle }` } />
+                    <input name="_gotcha" type="text" className={ "hidden" } /> { /*Honeypot spam filter*/ }
                     <button id={ "submit-button" } className={ "float-right" }
                             title={ "Send" }
                             name={ "submit" }
                             type={ "submit" }>
-                        <Send/>
+                        <Send />
                         <p className={ "hidden" }>Send</p>
                     </button>
                 </form>
             </>
         </Layout>
     );
-}
+};
+
+export default ContactMePage;
 
 export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element {
     const locales = data?.locales?.edges[0]?.node?.data;
@@ -106,7 +108,7 @@ export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Eleme
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <Seo title={ obj?.contactMe }/>; // TODO description
+    return <Seo title={ obj?.contactMe } />; // TODO description
 }
 
 export const query = graphql`
@@ -130,6 +132,6 @@ function FormInput({ name, type, title, className, id }: InputProps<HTMLInputEle
                id={ id }
                type={ type }
                title={ title }
-               required={ true }/>
+               required={ true } />
     );
 }
