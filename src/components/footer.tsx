@@ -6,9 +6,9 @@ import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
 import Row from "./row";
 import { A } from "./link";
-import type { Component } from "../interfaces/interfaces";
+import type { Component } from "../declarations/props";
 
-export default function Footer({ className }: Component): JSX.Element {
+const Footer: Component = ({ className }) => {
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();
@@ -19,9 +19,7 @@ export default function Footer({ className }: Component): JSX.Element {
         nor: languages[1]
     }
 
-    /**
-     * Checks if language is set to follow browser
-     */
+    // Checks if language is set to follow browser
     if (typeof localStorage !== "undefined") { // TODO improve change in language from the browser, right now 2 reloads are required
         const item = localStorage.getItem("lang-follow-browser");
         let langAuto = false;
@@ -47,7 +45,7 @@ export default function Footer({ className }: Component): JSX.Element {
         {
             lang: 'auto',
             text: t("followBrowser"),
-            icon: <Globe className={ "w-5 h-5" }/>
+            icon: <Globe className={ "w-5 h-5" } />
         },
         {
             lang: 'en',
@@ -66,7 +64,7 @@ export default function Footer({ className }: Component): JSX.Element {
             <div className={ "w-fit mx-auto" }>
                 <MyMenu button={
                     <Row>
-                        Change language <ChevronUp className={ "w-5 h-5" }/>
+                        Change language <ChevronUp className={ "w-5 h-5" } />
                     </Row>
                 } itemsClassName={ "-top-24 rounded-t-xl !rounded-b-none" }>
                     {
@@ -109,3 +107,5 @@ export default function Footer({ className }: Component): JSX.Element {
         </div>
     );
 }
+
+export default Footer;

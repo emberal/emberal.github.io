@@ -1,13 +1,19 @@
 import * as React from "react";
 import { graphql, useStaticQuery } from "gatsby";
-import type { TitleComponent } from "../interfaces/interfaces";
+import type { Component, TitleProps } from "../declarations/props";
 
-interface SEO extends TitleComponent {
+interface SeoProps extends TitleProps {
     description?: string | null,
     blockCrawlers?: boolean,
 }
 
-export default function SEO({ title, description, blockCrawlers = false, children }: SEO): JSX.Element {
+const Seo: Component<SeoProps> = (
+    {
+        title,
+        description,
+        blockCrawlers = false,
+        children
+    }) => {
 
     const query = useStaticQuery(graphql`
         query {
@@ -23,11 +29,13 @@ export default function SEO({ title, description, blockCrawlers = false, childre
 
     return ( //TODO use HTML tag in gatsby-ssr.jsx
         <>
-            <meta lang={ query.site.siteMetadata.lang }/>
-            <meta name={ "description" } content={ description ?? query.site.siteMetadata.description }/>
-            { blockCrawlers && <meta name={ "robots" } content={ "noindex" }/> }
+            <meta lang={ query.site.siteMetadata.lang } />
+            <meta name={ "description" } content={ description ?? query.site.siteMetadata.description } />
+            { blockCrawlers && <meta name={ "robots" } content={ "noindex" } /> }
             <title>{ title && title + " | " } { query.site.siteMetadata.title }</title>
             { children }
         </>
     );
-}
+};
+
+export default Seo;

@@ -1,9 +1,10 @@
 import * as React from "react";
 import Footer from "./footer";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { TitleComponent } from "../interfaces/interfaces";
+import type { Component, TitleProps } from "../declarations/props";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
+import { backUp } from "../utils/dom";
 
 export const Links = {
     home: "/",
@@ -14,7 +15,7 @@ export const Links = {
     truthTable: "/truth-table",
 }
 
-interface Layout extends TitleComponent {
+interface LayoutProps extends TitleProps {
     headline?: string | null,
     description: string,
     current?: string,
@@ -36,7 +37,7 @@ interface Layout extends TitleComponent {
  * @returns {JSX.Element}
  * @constructor
  */
-export default function Layout(
+const Layout: Component<LayoutProps> = (
     {
         title,
         headline,
@@ -46,17 +47,9 @@ export default function Layout(
         titleAndNavClass,
         containerClass,
         footerClass,
-    }: Layout): JSX.Element {
+    }) => {
 
     const { t } = useTranslation();
-
-    /**
-     * Scrolls the window to the top
-     */
-    function backUp() {
-        document.body.scrollTop = 0; // Safari
-        document.documentElement.scrollTop = 0; // Firefox, chromium, opera and the others
-    }
 
     /**
      * Is true if the window is almost at the top
@@ -94,14 +87,16 @@ export default function Layout(
                         { headline ?? title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
-                    <Navbar current={ current }/>
+                    <Navbar current={ current } />
                 </div>
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>
-                    <Footer className={ footerClass }/>
+                    <Footer className={ footerClass } />
                 </main>
             </div>
-            { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") }/> }
+            { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") } /> }
         </div>
     );
-}
+};
+
+export default Layout;

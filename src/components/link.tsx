@@ -1,30 +1,37 @@
 import * as React from "react";
 import { Link } from "gatsby";
-import type { LinkComponent } from "../interfaces/interfaces";
+import type { Component, LinkProps } from "../declarations/props";
 
-interface A extends LinkComponent {
-    newTab?: boolean,
-    rel?: string,
-}
+export const A: Component<LinkProps> = (
+    {
+        to,
+        title,
+        children,
+        newTab = true,
+        rel,
+        className,
+        id
+    }) => (
+    <a className={ `default-link ${ className }` } id={ id }
+       title={ title ?? undefined }
+       href={ to }
+       target={ newTab ? "_blank" : undefined }
+       rel={ newTab ? `noopener ${ rel }` : undefined }>
+        { children }
+    </a>
+);
 
-export function A({ to, title, children, newTab = true, rel, className, id }: A): JSX.Element {
-    return (
-        <a className={ `default-link ${ className }` } id={ id }
-           title={ title ?? undefined }
-           href={ to }
-           target={ newTab ? "_blank" : undefined }
-           rel={ newTab ? `noopener ${ rel }` : undefined }>
-            { children }
-        </a>
-    );
-}
-
-export function MyLink({ to, title, children, className, id }: LinkComponent): JSX.Element {
-    return (
-        <Link to={ to ?? "/" } id={ id }
-              title={ title ?? undefined }
-              className={ `default-link ${ className }` }>
-            { children }
-        </Link>
-    );
-}
+export const MyLink: Component<LinkProps> = (
+    {
+        to,
+        title,
+        children,
+        className,
+        id
+    }) => (
+    <Link to={ to ?? "/" } id={ id }
+          title={ title ?? undefined }
+          className={ `default-link ${ className }` }>
+        { children }
+    </Link>
+);

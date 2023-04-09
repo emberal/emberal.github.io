@@ -5,13 +5,13 @@ import { ChevronDown, Globe, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { Links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { Component, Theme } from "../interfaces/interfaces";
+import type { Component, ComponentProps, Theme } from "../declarations/props";
 
-interface NavbarProps extends Component {
+interface NavbarProps extends ComponentProps {
     current?: string
 }
 
-export default function Navbar({ current }: NavbarProps): JSX.Element {
+const Navbar: Component<NavbarProps> = ({ current }) => {
 
     const [theme, setTheme] = React.useState<Theme>("auto");
 
@@ -48,7 +48,7 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
     }
 
 
-    const navLinks = [
+    const navLinks: { to: string, name: string }[] = [
         {
             to: Links.home,
             name: t('home'),
@@ -61,11 +61,11 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
             to: Links.contactMe,
             name: t('contactMe'),
         },
-    ] as { to: string, name: string }[];
+    ];
 
     const iconCss = "w-4 h-4";
 
-    const themeMenu = [
+    const themeMenu: { id: Theme, text: string, icon: React.ReactElement<HTMLElement> }[] = [
         {
             id: "auto",
             text: t('followBrowser'),
@@ -81,42 +81,40 @@ export default function Navbar({ current }: NavbarProps): JSX.Element {
             text: t('light'),
             icon: <Sun className={ iconCss } />
         },
-    ] as { id: Theme, text: string, icon: React.ReactElement<HTMLElement> }[];
+    ];
 
     return (
         <nav>
             <ul className={ "list-none flex gap-3 mb-2" }>
-                {
-                    navLinks.map(link =>
-                        <li key={ link.to } className={ "w-fit text-lg" }>
-                            <MyLink
-                                className={ `${ current === link.to && "after:content-['<']" }` }
-                                to={ link.to }> { link.name }
-                            </MyLink>
-                        </li>
-                    )
-                }
+                { navLinks.map(link =>
+                    <li key={ link.to } className={ "w-fit text-lg" }>
+                        <MyLink
+                            className={ `${ current === link.to && "after:content-['<']" }` }
+                            to={ link.to }> { link.name }
+                        </MyLink>
+                    </li>
+                ) }
                 <li className={ "mr-6 w-fit relative" }>
                     <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" } /></> }
                             buttonClassName={ "default-link text-lg" }
                             itemsClassName={ "right-0" }>
-                        {
-                            themeMenu.map(item =>
-                                <div key={ item.id }>
-                                    <Menu.Item>
-                                        <button onClick={ () => changeTheme(item.id) }>
+                        { themeMenu.map(item =>
+                            <div key={ item.id }>
+                                <Menu.Item>
+                                    <button onClick={ () => changeTheme(item.id) }>
                                             <span className={ `flex-row-center hover:underline` }>
                                                 { item.icon }
                                                 <p className={ "pl-2 w-max" }>{ item.text }</p>
                                             </span>
-                                        </button>
-                                    </Menu.Item>
-                                </div>
-                            )
-                        }
+                                    </button>
+                                </Menu.Item>
+                            </div>
+                        ) }
                     </MyMenu>
                 </li>
             </ul>
         </nav>
     );
-}
+};
+
+export default Navbar;

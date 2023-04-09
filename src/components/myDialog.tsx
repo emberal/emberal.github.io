@@ -1,9 +1,10 @@
 import { Dialog } from "@headlessui/react";
 import * as React from "react";
-import type { TitleComponent } from "../interfaces/interfaces";
+import type { Component, TitleProps } from "../declarations/props";
 import type { MouseEventHandler } from "react";
+import { getElementById } from "../utils/dom";
 
-interface MyDialog extends TitleComponent {
+interface MyDialogProps extends TitleProps {
     description?: string,
     button?: React.ReactNode,
     acceptButtonName?: string | null,
@@ -14,7 +15,7 @@ interface MyDialog extends TitleComponent {
     buttonTitle?: string | null,
 }
 
-export default function MyDialog(
+const MyDialog: Component<MyDialogProps> = (
     {
         title,
         description,
@@ -27,7 +28,7 @@ export default function MyDialog(
         buttonClasses,
         buttonTitle,
         acceptButtonId,
-    }: MyDialog): JSX.Element {
+    }) => {
 
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -37,10 +38,6 @@ export default function MyDialog(
         }
         setIsOpen(false);
     }
-
-    React.useEffect(() => {
-        setIsOpen(false);
-    }, [callback]);
 
     React.useEffect(() => {
 
@@ -58,10 +55,10 @@ export default function MyDialog(
 
         if (isOpen) {
             const id = "headlessui-dialog-:rd:"
-            const el = document.getElementById(id);
-            el?.addEventListener("keypress", e => click(e));
+            const el = getElementById(id);
+            el?.addEventListener("keypress", click);
             return () => {
-                el?.removeEventListener("keypress", e => click(e));
+                el?.removeEventListener("keypress", click);
                 isMounted = false;
             }
         }
@@ -77,7 +74,7 @@ export default function MyDialog(
             <Dialog open={ isOpen } onClose={ () => setIsOpen(false) }
                     className={ `absolute m-auto w-full h-screen flex justify-content [top:calc(-50vh+50%);] z-50 ${ className }` }>
 
-                <div className={ "fixed inset-0 bg-black/40" /*Backdrop*/ } aria-hidden={ true }/>
+                <div className={ "fixed inset-0 bg-black/40" /*Backdrop*/ } aria-hidden={ true } />
 
                 <div className={ "inline-flex items-center mx-auto" }>
                     <Dialog.Panel
@@ -99,4 +96,6 @@ export default function MyDialog(
             </Dialog>
         </div>
     );
-}
+};
+
+export default MyDialog;

@@ -2,7 +2,7 @@ import * as React from "react";
 import Layout from "../components/layout";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import SEO from "../components/seo";
+import Seo from "../components/seo";
 import { MyLink } from "../components/link";
 
 /**
@@ -31,7 +31,7 @@ export function Head({ data }: HeadProps<Queries.NotFoundPageQuery>): JSX.Elemen
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.pageNotFound ?? "404: Page not found" } blockCrawlers={ true }/>;
+    return <Seo title={ obj?.pageNotFound ?? "404: Page not found" } blockCrawlers={ true }/>;
 }
 
 export const query = graphql`

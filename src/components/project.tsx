@@ -6,9 +6,9 @@ import { GatsbyImage, getImage, type ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "../pages/projects";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { A } from "./link";
-import type { TitleComponent } from "../interfaces/interfaces";
+import type { Component, TitleProps } from "../declarations/props";
 
-interface ProjectCard extends TitleComponent {
+interface ProjectCardProps extends TitleProps {
     description?: string,
     slug?: string,
     source?: string,
@@ -18,12 +18,12 @@ interface ProjectCard extends TitleComponent {
     imageAlt?: string,
 }
 
-export default function ProjectCard(
+const ProjectCard: Component<ProjectCardProps> = (
     {
-        title = "",
+        title = "Project",
         description = "",
         slug = "/",
-        source,
+        source = "https://github.com/h600878",
         timeToRead = 1,
         tags,
         image,
@@ -31,7 +31,7 @@ export default function ProjectCard(
         className,
         key,
         id,
-    }: ProjectCard): JSX.Element {
+    }) => {
 
     const { t } = useTranslation();
 
@@ -76,4 +76,6 @@ export default function ProjectCard(
             }
         </div>
     );
-}
+};
+
+export default ProjectCard;

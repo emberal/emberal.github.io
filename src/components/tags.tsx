@@ -4,9 +4,10 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { throttle } from "lodash";
 import Row from "./row";
-import type { ButtonComponent, Component } from "../interfaces/interfaces";
+import type { ButtonProps, Component, ComponentProps } from "../declarations/props";
+import { isTouch } from "../utils/touch";
 
-interface Tag<T> extends ButtonComponent<T> {
+interface TagProps extends ButtonProps {
     title?: string,
     value?: number,
 }
@@ -21,7 +22,15 @@ interface Tag<T> extends ButtonComponent<T> {
  * @param id A unique id for the tag
  * @constructor
  */
-export function Tag({ title, value, hoverTitle, className, onClick, id }: Tag<HTMLButtonElement>): JSX.Element {
+export const Tag: Component<TagProps> = (
+    {
+        title,
+        value,
+        hoverTitle,
+        className,
+        onClick,
+        id
+    }) => {
 
     const text = <span className={ "mx-2 w-max" }>{ title + (value ? `(${ value })` : "") }</span>;
     const classes = "border-rounded border-gray-500";
@@ -35,17 +44,15 @@ export function Tag({ title, value, hoverTitle, className, onClick, id }: Tag<HT
             </button>
         );
     }
-    else {
-        return (
-            <div title={ hoverTitle ?? undefined } id={ id }
-                 className={ `${ className } ${ classes }` }>
-                { text }
-            </div>
-        );
-    }
-}
+    return (
+        <div title={ hoverTitle ?? undefined } id={ id }
+             className={ `${ className } ${ classes }` }>
+            { text }
+        </div>
+    );
+};
 
-interface TagsSelector extends Component {
+interface TagsSelectorProps extends ComponentProps {
     allTag?: string,
     tagMap?: { key: string, value: number }[],
     selectedTag?: string,
@@ -65,7 +72,7 @@ interface TagsSelector extends Component {
  * @param className Styling of the root element
  * @constructor
  */
-export function TagsSelector(
+export const TagsSelector: Component<TagsSelectorProps> = (
     {
         allTag = "All",
         selectedTag = "All",
@@ -73,31 +80,21 @@ export function TagsSelector(
         onClick,
         id,
         className
-    }: TagsSelector): JSX.Element {
+    }) => {
 
     const { t } = useTranslation();
 
-    /**
+    /*
      * If 'true' most tags will be hidden, only one row will be visible.
      * It is possible to scroll through all the tags.
      */
     const [hideTags, setHideTags] = React.useState(true);
-    /**
-     * The text displayed on the button to hide or unhide tags
-     */
+    // The text displayed on the button to hide or unhide tags
     const [hideTagsText, setHideTagsText] = React.useState(t("showMore"));
-    /**
-     * If the content in the container is wider than the container, this state is 'true'
-     */
+    // If the content in the container is wider than the container, this state is 'true'
     const [isOverflowing, setIsOverflowing] = React.useState(false);
-    /**
-     * If the container is scrolled all the way to the left, this is 'true', otherwise 'false'
-     */
-    const [isScrollLeft, setIsScrollLeft] = React.useState(true);
-    /**
-     * If the container is scrolled all the way to the right, this is 'true', otherwise 'false'
-     */
-    const [isScrollRight, setIsScrollRight] = React.useState(false);
+    // If the container is scrolled all the way to the left, this is 'true', otherwise 'false'
+    const [isScrolled, setIsScrolled] = React.useState({ left: true, right: false });
 
     /**
      * Update the tags and tagsText states, to the opposite one
@@ -145,7 +142,7 @@ export function TagsSelector(
     /**
      * The scrollable container the tags will be stored in
      */
-    const scrollContainer = React.useRef<HTMLElement>(null);
+    const scrollContainer = React.useRef<HTMLElement | null>(null);
     /**
      * The default scrollength when clicking on the arrows on the left and right side.
      * Default is half the size of the container, when loading the page.
@@ -178,11 +175,11 @@ export function TagsSelector(
     function checkScrollLeft(): void {
         if (scrollContainer.current) {
             const left = isLeft();
-            if (isScrollLeft !== left) {
-                setIsScrollLeft(left);
+            if (isScrolled.left !== left) {
+                setIsScrolled({ left, right: isScrolled.right });
             }
             if (!isRight()) {
-                setIsScrollRight(false);
+                setIsScrolled({ left: isScrolled.left, right: false });
             }
         }
     }
@@ -193,11 +190,11 @@ export function TagsSelector(
     function checkScrollRight(): void {
         if (scrollContainer.current) {
             const right = isRight();
-            if (isScrollRight !== right) {
-                setIsScrollRight(right);
+            if (isScrolled.right !== right) {
+                setIsScrolled({ left: isScrolled.left, right });
             }
             if (!isLeft()) {
-                setIsScrollLeft(false);
+                setIsScrolled({ left: false, right: isScrolled.right });
             }
         }
     }
@@ -212,7 +209,7 @@ export function TagsSelector(
 
     /**
      * Checks if the scrollContatiner is all the way to the right
-     * @returns {boolean} Returns 'true' if all the way to the right, otherwise 'false'
+     * @returns 'true' if all the way to the right, otherwise 'false'
      */
     function isRight(): boolean {
         return scrollContainer.current !== null && scrollContainer.current.scrollLeft >= scrollContainer.current.scrollWidth - 660;
@@ -226,8 +223,8 @@ export function TagsSelector(
 
     React.useEffect(() => {
         if (hideTags || !isOverflowing) {
-            setIsScrollLeft(true);
-            setIsScrollRight(false);
+            setIsScrolled({ left: true, right: isScrolled.right });
+            setIsScrolled({ left: isScrolled.left, right: false });
         }
     }, [hideTags, isOverflowing]);
 
@@ -247,7 +244,7 @@ export function TagsSelector(
                     {
                         allTag &&
                         <Tag title={ allTag }
-                             onClick={ onClick ? () => onClick(allTag) : undefined }
+                             onClick={ () => onClick?.call(allTag) }
                              className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` } />
                     }
                     {
@@ -255,7 +252,7 @@ export function TagsSelector(
                             <div key={ tag.key }>
                                 <Tag title={ tag.key }
                                      value={ tag.value }
-                                     onClick={ onClick ? () => onClick(tag.key) : undefined }
+                                     onClick={ () => onClick?.call(tag.key) }
                                      className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key && "!border-primaryPurple" }` } />
                             </div>
@@ -270,7 +267,7 @@ export function TagsSelector(
                             </div>
                             <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
                                 {
-                                    hideTags && !("ontouchstart" in document.documentElement) && !isScrollRight &&
+                                    hideTags && !isTouch() && !isScrolled.right &&
                                     <button title={ t("clickToScroll") ?? undefined }>
                                         <ChevronRight className={ chevronClasses }
                                                       onClick={ () => scroll(defScrollLen) } />
@@ -282,7 +279,7 @@ export function TagsSelector(
                                      "default-bg" } shadow-sm shadow-primaryPurple` } />
                             </Row>
                             {
-                                hideTags && !("ontouchstart" in document.documentElement) && !isScrollLeft &&
+                                hideTags && !isTouch() && !isScrolled.left &&
                                 <button className={ "absolute left-0" } title={ t("clickToScroll") ?? undefined }>
                                     <ChevronLeft className={ chevronClasses + " mt-[1px]" }
                                                  onClick={ () => scroll(-defScrollLen) } />
@@ -294,9 +291,9 @@ export function TagsSelector(
             </ScrollContainer>
         </div>
     );
-}
+};
 
-interface TagsRow extends Component {
+interface TagsRow extends ComponentProps {
     tags: string[],
     sort?: boolean,
 }

@@ -4,9 +4,9 @@ import { Send, Linkedin, GitHub } from "react-feather";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
-import SEO from "../components/seo";
+import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { InputComponent } from "../interfaces/interfaces";
+import type { InputProps } from "../declarations/props";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
@@ -106,7 +106,7 @@ export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Eleme
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.contactMe }/>; // TODO description
+    return <Seo title={ obj?.contactMe }/>; // TODO description
 }
 
 export const query = graphql`
@@ -123,7 +123,7 @@ export const query = graphql`
     }
 `;
 
-function FormInput({ name, type, title, className, id }: InputComponent<HTMLInputElement>): JSX.Element {
+function FormInput({ name, type, title, className, id }: InputProps<HTMLInputElement>): JSX.Element {
     return (
         <Input className={ `${ inputStyle } ${ className }` }
                name={ name }

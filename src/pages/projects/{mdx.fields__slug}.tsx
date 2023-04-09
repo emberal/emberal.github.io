@@ -4,9 +4,9 @@ import { graphql } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
 import { splitCSV } from "./index";
-import SEO from "../../components/seo";
+import Seo from "../../components/seo";
 import { A } from "../../components/link";
-import type { ProjectPostInterface } from "../../interfaces/interfaces";
+import type { ProjectPostInterface } from "../../declarations/props";
 
 /**
  * A single post containing all the data from an mdx file
@@ -53,7 +53,7 @@ export default function ProjectPost({ data: { mdx: { frontmatter } }, children }
 }
 
 export function Head({ data: { mdx } }: ProjectPostInterface): JSX.Element {
-    return <SEO title={ mdx?.frontmatter?.title }
+    return <Seo title={ mdx?.frontmatter?.title }
                 description={ mdx?.frontmatter?.description } />;
 }
 

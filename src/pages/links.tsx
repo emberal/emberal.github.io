@@ -3,9 +3,9 @@ import Layout, { Links } from "../components/layout";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
-import SEO from "../components/seo";
+import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { ChildComponent } from "../interfaces/interfaces";
+import type { ChildProps } from "../declarations/props";
 
 const linkContent = [
     {
@@ -74,7 +74,7 @@ export default function LinksPage(): JSX.Element {
     );
 }
 
-interface MyLink extends ChildComponent {
+interface MyLink extends ChildProps {
     text?: string,
     url?: string,
 }
@@ -98,7 +98,7 @@ export function Head({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element {
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.myLinks }/>; // TODO description
+    return <Seo title={ obj?.myLinks }/>; // TODO description
 }
 
 export const query = graphql`

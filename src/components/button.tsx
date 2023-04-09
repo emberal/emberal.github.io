@@ -1,14 +1,18 @@
 import * as React from "react";
 import { ArrowUp } from "react-feather";
-import type { ButtonComponent } from "../interfaces/interfaces";
+import type { ButtonProps, Component } from "../declarations/props";
 
-export function BackUpButton({ onClick, hoverTitle, id, className }: ButtonComponent<HTMLButtonElement>) {
-    return (
-        <button id={ id }
-                className={ `fixed right-10 bottom-20 button h-9 z-50 ${ className }` }
-                title={ hoverTitle ?? undefined } onClick={ onClick }>
-            <ArrowUp/>
-            <p className={ "sr-only" }>{ hoverTitle }</p>
-        </button>
-    );
-}
+export const BackUpButton: Component<ButtonProps> = (
+    {
+        onClick,
+        hoverTitle,
+        id,
+        className
+    }) => (
+    <button id={ id }
+            className={ `fixed right-10 bottom-20 button h-9 z-50 ${ className }` }
+            title={ hoverTitle ?? undefined } onClick={ onClick }>
+        <ArrowUp />
+        <p className={ "sr-only" }>{ hoverTitle }</p>
+    </button>
+);

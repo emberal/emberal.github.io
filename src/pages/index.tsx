@@ -3,7 +3,7 @@ import Layout, { Links } from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import SEO from "../components/seo";
+import Seo from "../components/seo";
 
 /**
  * The front page containing information about yours truly
@@ -40,7 +40,7 @@ export function Head({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element {
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.home } description={ obj?.aboutMeDesc }/>;
+    return <Seo title={ obj?.home } description={ obj?.aboutMeDesc }/>;
 }
 
 export const query = graphql`

@@ -5,7 +5,7 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TagsSelector } from "../../components/tags";
 import Search from "../../components/search";
 import ProjectCard from "../../components/project";
-import SEO from "../../components/seo";
+import Seo from "../../components/seo";
 
 /**
  * Takes a String in a csv format, separated by ";" and returns an array of strings
@@ -217,7 +217,7 @@ export function Head({ data }: HeadProps<Queries.ProjectPageQuery>): JSX.Element
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.myProjects } description={ obj?.projectsByMe } />;
+    return <Seo title={ obj?.myProjects } description={ obj?.projectsByMe } />;
 }
 
 export const query = graphql`
