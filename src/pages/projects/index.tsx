@@ -159,8 +159,7 @@ const ProjectPage: Component<PageProps<Queries.ProjectPageQuery>> = ({ data: { a
         <Layout
             title={ t("projects") }
             headline={ t("myProjects") }
-            description={ t("projectsByMe") }
-            current={ Links.projects }>
+            description={ t("projectsByMe") }>
 
             <div className={ "relative" }>
 

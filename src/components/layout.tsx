@@ -18,7 +18,6 @@ export const Links = {
 interface LayoutProps extends TitleProps {
     headline?: string | null,
     description: string,
-    current?: string,
     titleAndNavClass?: string,
     containerClass?: string,
     footerClass?: string,
@@ -30,7 +29,6 @@ interface LayoutProps extends TitleProps {
  * @param headline The title at the top of the screen, if undefined will use title instead
  * @param description Description used for metadata of the page
  * @param children The contents of the page
- * @param current Defines the current page using the layout
  * @param className Styling of the root element
  * @param titleAndNavClass Styling of the title and nav container
  * @param containerClass Styling of the main container
@@ -42,7 +40,6 @@ const Layout: Component<LayoutProps> = (
         title,
         headline,
         children,
-        current,
         className,
         titleAndNavClass,
         containerClass,
@@ -87,7 +84,7 @@ const Layout: Component<LayoutProps> = (
                         { headline ?? title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
-                    <Navbar current={ current } />
+                    <Navbar />
                 </div>
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>

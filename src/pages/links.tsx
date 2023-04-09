@@ -1,16 +1,16 @@
 import * as React from "react";
-import Layout, { Links } from "../components/layout";
+import Layout from "../components/layout";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { ChildProps } from "../declarations/props";
+import type { Component, LinkProps } from "../declarations/props";
 
 const linkContent = [
     {
         key: 0,
-        icon: <GitHub/>,
+        icon: <GitHub />,
         text: "GitHub",
         url: "https://github.com/h600878"
     },
@@ -21,19 +21,19 @@ const linkContent = [
     },
     {
         key: 2,
-        icon: <MessageSquare/>,
+        icon: <MessageSquare />,
         text: "Matrix",
         url: "https://matrix.to/#/@martials:matrix.org"
     },
     {
         key: 3,
-        icon: <Linkedin/>,
+        icon: <Linkedin />,
         text: "LinkedIn",
         url: "https://www.linkedin.com/in/martin-b-2a69391a3/"
     },
     {
         key: 4,
-        icon: <Instagram/>,
+        icon: <Instagram />,
         text: "Instagram",
         url: "https://www.instagram.com/martinalstad/",
     },
@@ -49,7 +49,7 @@ const linkContent = [
  * @returns {JSX.Element}
  * @constructor
  */
-export default function LinksPage(): JSX.Element {
+const LinksPage: Component = () => {
 
     const { t } = useTranslation();
 
@@ -57,49 +57,47 @@ export default function LinksPage(): JSX.Element {
         <Layout
             title={ t("links") }
             headline={ t("myLinks") }
-            description={ t("linksDescription") }
-            current={ Links.links }>
+            description={ t("linksDescription") }>
             <div className={ "pt-5" }>
-                {
-                    linkContent.map(link =>
-                        <div key={ link.key }>
-                            <MyLink text={ link.text } url={ link.url }>
-                                { link.icon }
-                            </MyLink>
-                        </div>
-                    )
-                }
+                { linkContent.map(link =>
+                    <div key={ link.key }>
+                        <MyLink title={ link.text } to={ link.url }>
+                            { link.icon }
+                        </MyLink>
+                    </div>
+                ) }
             </div>
         </Layout>
     );
-}
+};
 
-interface MyLink extends ChildProps {
-    text?: string,
-    url?: string,
-}
+export default LinksPage;
 
-function MyLink({ children, text, url, className }: MyLink): JSX.Element {
-    return (
-        <A to={ url } className={ `!text-inherit ${ className }` } rel={ text?.includes("Mastodon") ? "me" : "" }>
-            <div
-                className={ `bg-gradient-to-r from-primaryPurple border-gray-500
+const MyLink: Component<LinkProps> = (
+    {
+        children,
+        title,
+        to,
+        className
+    }) => (
+    <A to={ to } className={ `!text-inherit ${ className }` }>
+        <div
+            className={ `bg-gradient-to-r from-primaryPurple border-gray-500
                 hover:to-primaryPurple border rounded-2xl h-16 flex justify-center items-center my-2` }>
-                <div className={ "pr-2" }>{ children ? children : <LinkIcon/> }</div>
-                <span>{ text }</span>
-            </div>
-        </A>
-    );
-}
+            <div className={ "pr-2" }>{ children ? children : <LinkIcon /> }</div>
+            <span>{ title }</span>
+        </div>
+    </A>
+);
 
-export function Head({ data }: HeadProps<Queries.LinksPageQuery>): JSX.Element {
+export const Head: Component<HeadProps<Queries.LinksPageQuery>> = ({ data }) => {
     const locales = data?.locales?.edges[0]?.node?.data;
     let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <Seo title={ obj?.myLinks }/>; // TODO description
-}
+    return <Seo title={ obj?.myLinks } />; // TODO description
+};
 
 export const query = graphql`
     query LinksPage($language: String!) {

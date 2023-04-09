@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { Links } from "../../components/layout";
+import Layout from "../../components/layout";
 import { graphql } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
@@ -31,8 +31,7 @@ const ProjectPost: Component<ProjectPostInterface> = (
         <Layout
             title={ frontmatter?.title ?? "Blogpost" }
             headline={ frontmatter?.title }
-            description={ frontmatter?.description ? frontmatter.description : "A blogpost by Martin Berg Alstad" }
-            current={ Links.projects }>
+            description={ frontmatter?.description ? frontmatter.description : "A blogpost by Martin Berg Alstad" }>
             <article>
                 <div className={ `max-h-[40rem] flex justify-center` }>
                     { heroImage && frontmatter?.hero_image_alt &&

@@ -5,13 +5,9 @@ import { ChevronDown, Globe, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { Links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { Component, ComponentProps, Theme } from "../declarations/props";
+import type { Component, Theme } from "../declarations/props";
 
-interface NavbarProps extends ComponentProps {
-    current?: string
-}
-
-const Navbar: Component<NavbarProps> = ({ current }) => {
+const Navbar: Component = () => {
 
     const [theme, setTheme] = React.useState<Theme>("auto");
 
@@ -83,13 +79,18 @@ const Navbar: Component<NavbarProps> = ({ current }) => {
         },
     ];
 
+    let path = "/";
+    if (typeof location !== "undefined" && location.pathname.length > 1) {
+        path = location.pathname.substring(0, location.pathname.length - 1);
+    }
+
     return (
         <nav>
             <ul className={ "list-none flex gap-3 mb-2" }>
                 { navLinks.map(link =>
                     <li key={ link.to } className={ "w-fit text-lg" }>
                         <MyLink
-                            className={ `${ current === link.to && "after:content-['<']" }` }
+                            className={ `${ path === link.to && "after:content-['<']" }` }
                             to={ link.to }> { link.name }
                         </MyLink>
                     </li>

@@ -1,5 +1,5 @@
 import * as React from "react";
-import Layout, { Links } from "../components/layout";
+import Layout from "../components/layout";
 import { Send, Linkedin, GitHub } from "react-feather";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
@@ -56,8 +56,7 @@ const ContactMePage: Component = () => {
     return (
         <Layout
             title={ t("contactMe") ?? undefined }
-            description={ t("contactMeDescription") /*TODO add translation*/ }
-            current={ Links.contactMe }>
+            description={ t("contactMeDescription") /*TODO add translation*/ }>
             <>
                 <div className={ "flex justify-center pb-2" }>
                     {
@@ -102,14 +101,14 @@ const ContactMePage: Component = () => {
 
 export default ContactMePage;
 
-export function Head({ data }: HeadProps<Queries.ContactMePageQuery>): JSX.Element {
+export const Head: Component<HeadProps<Queries.ContactMePageQuery>> = ({ data }) => {
     const locales = data?.locales?.edges[0]?.node?.data;
     let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }
     return <Seo title={ obj?.contactMe } />; // TODO description
-}
+};
 
 export const query = graphql`
     query ContactMePage($language: String!) {
@@ -125,13 +124,18 @@ export const query = graphql`
     }
 `;
 
-function FormInput({ name, type, title, className, id }: InputProps<HTMLInputElement>): JSX.Element {
-    return (
-        <Input className={ `${ inputStyle } ${ className }` }
-               name={ name }
-               id={ id }
-               type={ type }
-               title={ title }
-               required={ true } />
-    );
-}
+const FormInput: Component<InputProps> = (
+    {
+        name,
+        type,
+        title,
+        className,
+        id
+    }) => (
+    <Input className={ `${ inputStyle } ${ className }` }
+           name={ name }
+           id={ id }
+           type={ type }
+           title={ title }
+           required={ true } />
+);
