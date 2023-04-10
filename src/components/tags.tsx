@@ -6,6 +6,7 @@ import { throttle } from "lodash";
 import Row from "./row";
 import type { ButtonProps, Component, ComponentProps } from "../declarations/props";
 import { isTouch } from "../utils/touch";
+import { For, Show } from "./flow";
 
 interface TagProps extends ButtonProps {
     title?: string,
@@ -32,7 +33,7 @@ export const Tag: Component<TagProps> = (
         id
     }) => {
 
-    const text = <span className={ "mx-2 w-max" }>{ title + (value ? `(${ value })` : "") }</span>;
+    const text = <span className={ "mx-2 w-max inline-block" }>{ title + (value ? `(${ value })` : "") }</span>;
     const classes = "border-rounded border-gray-500";
 
     if (onClick) {
@@ -241,48 +242,44 @@ export const TagsSelector: Component<TagsSelectorProps> = (
                 className={ `flex gap-1 mb-2 ${ hideTags ? `overflow-scroll [scrollbar-width:none] [-ms-overflow-style:none] hide-scrollbar
                  cursor-grab` : "flex-wrap" } ${ className }` }>
                 <>
-                    { allTag &&
-                        <Tag title={ allTag }
-                             onClick={ () => onClick?.call(allTag) }
-                             className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` } />
-                    }
-                    { tagMap?.map(tag =>
-                        <div key={ tag.key }>
-                            <Tag title={ tag.key }
-                                 value={ tag.value }
-                                 onClick={ () => onClick?.call(tag.key) }
-                                 className={ `hover:border-primaryPurple w-max
+                    <Tag title={ allTag }
+                         onClick={ () => onClick?.call(this, allTag) }
+                         className={ `hover:border-primaryPurple ${ selectedTag === allTag && "!border-primaryPurple" }` } />
+                    <For each={ tagMap }>{ tag =>
+                        <Tag title={ tag.key } key={ tag.key }
+                             value={ tag.value }
+                             onClick={ () => onClick?.call(this, tag.key) }
+                             className={ `hover:border-primaryPurple w-max
                                      ${ selectedTag === tag.key && "!border-primaryPurple" }` } />
-                        </div>
-                    ) }
-                    { isOverflowing &&
+                    }</For>
+                    <Show when={ isOverflowing }>
                         <>
                             <div id={ "invisible-box" }
                                  className={ `text-transparent min-w-max mx-2 ${ !hideTags && "hidden" }` }>
                                 { hideTags && t("showMore") }
                             </div>
                             <Row className={ `${ hideTags && "absolute right-0 gap-3" }` }>
-                                {
-                                    hideTags && !isTouch() && !isScrolled.right &&
+
+                                <Show when={ hideTags && !isTouch() && !isScrolled.right }>
                                     <button title={ t("clickToScroll") ?? undefined }>
                                         <ChevronRight className={ chevronClasses }
                                                       onClick={ () => scroll(defScrollLen) } />
                                     </button>
-                                }
+                                </Show>
+
                                 <Tag title={ hideTagsText?.toString() } onClick={ toggleTags }
                                      hoverTitle={ hideTags ? t("showMoreTags") : t("showLessTags") }
                                      className={ `hover:border-primaryPurple min-w-max ${ hideTags &&
                                      "default-bg" } shadow-sm shadow-primaryPurple` } />
                             </Row>
-                            {
-                                hideTags && !isTouch() && !isScrolled.left &&
+                            <Show when={ hideTags && !isTouch() && !isScrolled.left }>
                                 <button className={ "absolute left-0" } title={ t("clickToScroll") ?? undefined }>
                                     <ChevronLeft className={ chevronClasses + " mt-[1px]" }
                                                  onClick={ () => scroll(-defScrollLen) } />
                                 </button>
-                            }
+                            </Show>
                         </>
-                    }
+                    </Show>
                 </>
             </ScrollContainer>
         </div>
@@ -315,11 +312,11 @@ export const TagsRow: Component<TagsRowProps> = (
 
     return (
         <Row className={ `flex-wrap gap-1 ${ className }` } id={ id }>
-            { tags.map(tag =>
+            <For each={ tags }>{ tag =>
                 <div key={ tag }>
                     <Tag title={ tag } />
                 </div>
-            ) }
+            }</For>
         </Row>
     );
 };

@@ -6,6 +6,7 @@ import { Menu } from "@headlessui/react";
 import { Links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import type { Component, Theme } from "../declarations/props";
+import { For } from "./flow";
 
 const Navbar: Component = () => {
 
@@ -87,30 +88,31 @@ const Navbar: Component = () => {
     return (
         <nav>
             <ul className={ "list-none flex gap-3 mb-2" }>
-                { navLinks.map(link =>
+                <For each={ navLinks }>{ link =>
                     <li key={ link.to } className={ "w-fit text-lg" }>
-                        <MyLink
-                            className={ `${ path === link.to && "after:content-['<']" }` }
-                            to={ link.to }> { link.name }
+                        <MyLink className={ `${ path === link.to && "after:content-['<']" }` } to={ link.to }>
+                            { link.name }
                         </MyLink>
                     </li>
-                ) }
+                }</For>
                 <li className={ "mr-6 w-fit relative" }>
                     <MyMenu button={ <>{ t('theme') }<ChevronDown className={ "w-5 h-5" } /></> }
                             buttonClassName={ "default-link text-lg" }
                             itemsClassName={ "right-0" }>
-                        { themeMenu.map(item =>
+
+                        <For each={ themeMenu }>{ item =>
                             <div key={ item.id }>
                                 <Menu.Item>
                                     <button onClick={ () => changeTheme(item.id) }>
-                                            <span className={ `flex-row-center hover:underline` }>
-                                                { item.icon }
-                                                <p className={ "pl-2 w-max" }>{ item.text }</p>
-                                            </span>
+                                        <span className={ `flex-row-center hover:underline` }>
+                                            { item.icon }
+                                            <p className={ "pl-2 w-max" }>{ item.text }</p>
+                                        </span>
                                     </button>
                                 </Menu.Item>
                             </div>
-                        ) }
+                        }</For>
+
                     </MyMenu>
                 </li>
             </ul>

@@ -6,6 +6,7 @@ import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "re
 import Seo from "../components/seo";
 import { A } from "../components/link";
 import type { Component, LinkProps } from "../declarations/props";
+import { For } from "../components/flow";
 
 const linkContent = [
     {
@@ -59,13 +60,11 @@ const LinksPage: Component = () => {
             headline={ t("myLinks") }
             description={ t("linksDescription") }>
             <div className={ "pt-5" }>
-                { linkContent.map(link =>
-                    <div key={ link.key }>
-                        <MyLink title={ link.text } to={ link.url }>
-                            { link.icon }
-                        </MyLink>
-                    </div>
-                ) }
+                <For each={ linkContent }>{ link =>
+                    <MyLink title={ link.text } to={ link.url } key={ link.key }>
+                        { link.icon }
+                    </MyLink>
+                }</For>
             </div>
         </Layout>
     );

@@ -8,7 +8,6 @@ interface ComponentProps {
     style?: CSSProperties,
     id?: string,
     name?: string | null,
-    key?: string,
 }
 
 interface ChildProps extends ComponentProps {

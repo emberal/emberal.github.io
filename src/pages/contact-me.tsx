@@ -8,6 +8,7 @@ import Seo from "../components/seo";
 import { A } from "../components/link";
 import type { Component, InputProps } from "../declarations/props";
 import { getElementById } from "../utils/dom";
+import { For } from "../components/flow";
 
 const inputStyle = "w-full max-w-full h-10 min-h-fit max-h-64 resize-y rounded-lg mb-3 pt-2 shadow";
 
@@ -59,15 +60,13 @@ const ContactMePage: Component = () => {
             description={ t("contactMeDescription") /*TODO add translation*/ }>
             <>
                 <div className={ "flex justify-center pb-2" }>
-                    {
-                        links.map(link =>
-                            <div className={ "px-2" } key={ link.id }>
-                                <A title={ link.name } to={ link.to } className={ "!text-inherit" }>
-                                    { link.icon }
-                                </A>
-                            </div>
-                        )
-                    }
+                    <For each={ links }>{ link =>
+                        <div className={ "px-2" } key={ link.id }>
+                            <A title={ link.name } to={ link.to } className={ "!text-inherit" }>
+                                { link.icon }
+                            </A>
+                        </div>
+                    }</For>
                 </div>
                 <form acceptCharset={ "UTF-8" }
                       id={ "form" }

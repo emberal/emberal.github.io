@@ -1,14 +1,15 @@
 import * as React from "react";
-import Layout, { Links } from "../../components/layout";
+import Layout from "../../components/layout";
 import { graphql, type HeadProps, type PageProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { TagsSelector } from "../../components/tags";
 import Search from "../../components/search";
 import ProjectCard from "../../components/project";
 import Seo from "../../components/seo";
-import { splitCSV } from "../../utils/string";
-import { Component } from "../../declarations/props";
+import { removeNullValues, splitCSV } from "../../utils/util";
+import type { Component } from "../../declarations/props";
 import { getElementById } from "../../utils/dom";
+import { For, Show } from "../../components/flow";
 
 /**
  * Contains cards of all projects with some information, and links to the posts
@@ -146,15 +147,6 @@ const ProjectPage: Component<PageProps<Queries.ProjectPageQuery>> = ({ data: { a
         return searchTitleAndTags(title, tags) && (selectedTag === ALL_TAG || contains(tags, selectedTag));
     }
 
-    /**
-     * Removes all 'null' and 'undefined' values in an array
-     * @param arr An array of T
-     * @returns {<T>[]} An array of objects without any 'null' or 'undefined' values
-     */
-    function removeNullValues<T>(arr: (T | null | undefined)[]): T[] {
-        return arr.filter((element: T | null | undefined) => element) as T[];
-    }
-
     return (
         <Layout
             title={ t("projects") }
@@ -168,29 +160,26 @@ const ProjectPage: Component<PageProps<Queries.ProjectPageQuery>> = ({ data: { a
 
                 <TagsSelector id={ "tags" } allTag={ ALL_TAG } tagMap={ tagMap } selectedTag={ selectedTag }
                               onClick={ updateTagState } />
-                { allMdx.nodes.map(node =>
-                    <div key={ node.id }>
-                        <>
-                            { containsSearchString(node.frontmatter?.title, node.frontmatter?.tags)
-                                ?
-                                <ProjectCard
-                                    title={ node.frontmatter?.title }
-                                    slug={ node.fields?.slug ?? undefined }
-                                    description={ node.frontmatter?.description ?? undefined }
-                                    tags={ node.frontmatter?.tags }
-                                    timeToRead={ Number.parseInt(node.fields?.timeToRead?.text ?? "1") }
-                                    source={ node.frontmatter?.source ?? undefined }
-                                    image={ node.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData }
-                                    imageAlt={ node.frontmatter?.hero_image_alt ?? undefined } />
-                                :
-                                nodes.length === 0 &&
-                                <div className={ "absolute w-full mt-14" }>
-                                    <span className={ "flex justify-center" }>{ t("noResults") }</span>
-                                </div>
-                            }
-                        </>
-                    </div>
-                ) }
+                <For each={ allMdx.nodes }>{ node =>
+                    <Show key={ node.id }
+                          when={ containsSearchString(node.frontmatter?.title, node.frontmatter?.tags) }
+                          otherwiseWhen={ nodes.length === 0 }
+                          otherwise={
+                              <div className={ "absolute w-full mt-14" }>
+                                  <span className={ "flex justify-center" }>{ t("noResults") }</span>
+                              </div>
+                          }>
+                        <ProjectCard
+                            title={ node.frontmatter?.title }
+                            slug={ node.fields?.slug ?? undefined }
+                            description={ node.frontmatter?.description ?? undefined }
+                            tags={ node.frontmatter?.tags }
+                            timeToRead={ Number.parseInt(node.fields?.timeToRead?.text ?? "1") }
+                            source={ node.frontmatter?.source ?? undefined }
+                            image={ node.frontmatter?.hero_image?.childImageSharp?.gatsbyImageData }
+                            imageAlt={ node.frontmatter?.hero_image_alt ?? undefined } />
+                    </Show> }
+                </For>
             </div>
         </Layout>
     );

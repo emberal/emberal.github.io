@@ -5,6 +5,7 @@ import type { Component, TitleProps } from "../declarations/props";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
 import { backUp } from "../utils/dom";
+import { Show } from "./flow";
 
 export const Links = {
     home: "/",
@@ -48,9 +49,7 @@ const Layout: Component<LayoutProps> = (
 
     const { t } = useTranslation();
 
-    /**
-     * Is true if the window is almost at the top
-     */
+    // Is true if the window is almost at the top
     const [isTop, setIsTop] = React.useState(true);
 
     React.useEffect(() => {
@@ -91,7 +90,7 @@ const Layout: Component<LayoutProps> = (
                     <Footer className={ footerClass } />
                 </main>
             </div>
-            { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") } /> }
+            <Show when={ !isTop }>{ <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") } /> }</Show>
         </div>
     );
 };

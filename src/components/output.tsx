@@ -35,27 +35,25 @@ export const MyDisclosure: Component<MyDisclosureProps> = (
         isOpen
     }) => (
     <div id={ id } className={ `border-rounded dark:border-gray-900 default-bg default-text ${ className }` }>
-        <Disclosure defaultOpen={ defaultOpen }>
-            { ({ open }) =>
-                <>
-                    <Disclosure.Button onClick={ () => isOpen?.call(open) }
-                                       className={ `flex-row-center w-full justify-between px-2` }>
-                        <p className={ `py-1` }>{ title }</p>
-                        <ChevronUp className={ `w-5 ${ open && "transform rotate-180" } transition` } />
-                    </Disclosure.Button>
-                    <Transition
-                        enter="transition duration-100 ease-out"
-                        enterFrom="transform scale-95 opacity-0"
-                        enterTo="transform scale-100 opacity-100"
-                        leave="transition duration-75 ease-out"
-                        leaveFrom="transform scale-100 opacity-100"
-                        leaveTo="transform scale-95 opacity-0">
-                        <Disclosure.Panel>
-                            <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ children }</div>
-                        </Disclosure.Panel>
-                    </Transition>
-                </>
-            }
+        <Disclosure defaultOpen={ defaultOpen }>{ ({ open }) =>
+            <>
+                <Disclosure.Button onClick={ () => isOpen?.call(open) }
+                                   className={ `flex-row-center w-full justify-between px-2` }>
+                    <p className={ `py-1` }>{ title }</p>
+                    <ChevronUp className={ `w-5 ${ open && "transform rotate-180" } transition` } />
+                </Disclosure.Button>
+                <Transition
+                    enter="transition duration-100 ease-out"
+                    enterFrom="transform scale-95 opacity-0"
+                    enterTo="transform scale-100 opacity-100"
+                    leave="transition duration-75 ease-out"
+                    leaveFrom="transform scale-100 opacity-100"
+                    leaveTo="transform scale-95 opacity-0">
+                    <Disclosure.Panel>
+                        <div className={ "px-2 pb-2 dark:text-gray-400 text-gray-600" }>{ children }</div>
+                    </Disclosure.Panel>
+                </Transition>
+            </> }
         </Disclosure>
     </div>
 );

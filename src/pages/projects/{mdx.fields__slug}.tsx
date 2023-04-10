@@ -3,7 +3,7 @@ import Layout from "../../components/layout";
 import { graphql } from "gatsby";
 import { GatsbyImage, getImage, IGatsbyImageData } from "gatsby-plugin-image";
 import { TagsRow } from "../../components/tags";
-import { splitCSV } from "../../utils/string";
+import { splitCSV } from "../../utils/util";
 import Seo from "../../components/seo";
 import { A } from "../../components/link";
 import type { Component, ProjectPostInterface } from "../../declarations/props";
@@ -47,7 +47,7 @@ const ProjectPost: Component<ProjectPostInterface> = (
                 <p>{ frontmatter?.description }</p>
                 <p>
                     Kildekoden på{ " " }
-                    <A to={ frontmatter?.source ? frontmatter?.source : undefined }>GitHub</A>
+                    <A to={ frontmatter?.source ?? undefined }>GitHub</A>
                 </p>
                 <div>
                     <br />
