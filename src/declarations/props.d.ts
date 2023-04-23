@@ -1,39 +1,46 @@
-import type { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactNode } from "react";
+import type { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactElement, ReactNode } from "react";
 import type { IGatsbyImageData } from "gatsby-plugin-image";
 
-export interface Component {
+type Component<T = ComponentProps> = (props: T) => JSX.Element;
+
+interface ComponentProps {
     className?: string,
     style?: CSSProperties,
     id?: string,
     name?: string | null,
-    key?: string,
 }
 
-export interface ChildComponent extends Component {
+interface ChildProps extends ComponentProps {
     children?: ReactNode,
 }
 
-export interface TitleComponent extends ChildComponent {
+interface SingleChildProps<T extends HTMLElement = HTMLElement> extends ComponentProps {
+    children?: ReactElement<T>
+}
+
+interface TitleProps extends ChildProps {
     title?: string | null,
 }
 
-export interface InputComponent<T> extends TitleComponent {
+interface InputProps<T extends HTMLElement = HTMLInputElement> extends TitleProps {
     onChange?: ChangeEventHandler<T>,
     placeholder?: string | null,
     required?: boolean,
     type?: string,
 }
 
-export interface ButtonComponent<T> extends ChildComponent {
+interface ButtonProps<T extends HTMLElement = HTMLButtonElement> extends ChildProps {
     onClick?: MouseEventHandler<T>,
     hoverTitle?: string | null,
 }
 
-export interface LinkComponent extends TitleComponent {
+interface LinkProps extends TitleProps {
     to?: string,
+    rel?: string,
+    newTab?: boolean,
 }
 
-export interface ProjectPostInterface {
+interface ProjectPostInterface {
     readonly data: {
         readonly mdx: {
             readonly frontmatter: {
@@ -54,4 +61,4 @@ export interface ProjectPostInterface {
     readonly children: ReactNode,
 }
 
-export type Theme = "auto" | "dark" | "light";
+type Theme = "auto" | "dark" | "light";

@@ -1,9 +1,11 @@
 import * as React from "react";
 import Footer from "./footer";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { TitleComponent } from "../interfaces/interfaces";
+import type { Component, TitleProps } from "../declarations/props";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
+import { backUp } from "../utils/dom";
+import { Show } from "./flow";
 
 export const Links = {
     home: "/",
@@ -14,10 +16,9 @@ export const Links = {
     truthTable: "/truth-table",
 }
 
-interface Layout extends TitleComponent {
+interface LayoutProps extends TitleProps {
     headline?: string | null,
     description: string,
-    current?: string,
     titleAndNavClass?: string,
     containerClass?: string,
     footerClass?: string,
@@ -29,38 +30,26 @@ interface Layout extends TitleComponent {
  * @param headline The title at the top of the screen, if undefined will use title instead
  * @param description Description used for metadata of the page
  * @param children The contents of the page
- * @param current Defines the current page using the layout
  * @param className Styling of the root element
  * @param titleAndNavClass Styling of the title and nav container
  * @param containerClass Styling of the main container
  * @returns {JSX.Element}
  * @constructor
  */
-export default function Layout(
+const Layout: Component<LayoutProps> = (
     {
         title,
         headline,
         children,
-        current,
         className,
         titleAndNavClass,
         containerClass,
         footerClass,
-    }: Layout): JSX.Element {
+    }) => {
 
     const { t } = useTranslation();
 
-    /**
-     * Scrolls the window to the top
-     */
-    function backUp() {
-        document.body.scrollTop = 0; // Safari
-        document.documentElement.scrollTop = 0; // Firefox, chromium, opera and the others
-    }
-
-    /**
-     * Is true if the window is almost at the top
-     */
+    // Is true if the window is almost at the top
     const [isTop, setIsTop] = React.useState(true);
 
     React.useEffect(() => {
@@ -94,14 +83,16 @@ export default function Layout(
                         { headline ?? title }
                     </h1>
                     { /*TODO Popover or Menu (headlessUI) menu on small screens (hamburger menu)*/ }
-                    <Navbar current={ current }/>
+                    <Navbar />
                 </div>
                 <main>
                     <div className={ "pb-28" } id={ "main-content" }>{ children }</div>
-                    <Footer className={ footerClass }/>
+                    <Footer className={ footerClass } />
                 </main>
             </div>
-            { !isTop && <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") }/> }
+            <Show when={ !isTop }>{ <BackUpButton onClick={ backUp } hoverTitle={ t("goBackToTheTop") } /> }</Show>
         </div>
     );
-}
+};
+
+export default Layout;

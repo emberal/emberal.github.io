@@ -6,9 +6,10 @@ import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
 import Row from "./row";
 import { A } from "./link";
-import type { Component } from "../interfaces/interfaces";
+import type { Component } from "../declarations/props";
+import { For, Show } from "./flow";
 
-export default function Footer({ className }: Component): JSX.Element {
+const Footer: Component = ({ className }) => {
 
     const { languages, originalPath } = useI18next();
     const { t } = useTranslation();
@@ -19,9 +20,7 @@ export default function Footer({ className }: Component): JSX.Element {
         nor: languages[1]
     }
 
-    /**
-     * Checks if language is set to follow browser
-     */
+    // Checks if language is set to follow browser
     if (typeof localStorage !== "undefined") { // TODO improve change in language from the browser, right now 2 reloads are required
         const item = localStorage.getItem("lang-follow-browser");
         let langAuto = false;
@@ -47,7 +46,7 @@ export default function Footer({ className }: Component): JSX.Element {
         {
             lang: 'auto',
             text: t("followBrowser"),
-            icon: <Globe className={ "w-5 h-5" }/>
+            icon: <Globe className={ "w-5 h-5" } />
         },
         {
             lang: 'en',
@@ -65,38 +64,33 @@ export default function Footer({ className }: Component): JSX.Element {
         <div className={ `absolute text-center w-full bottom-0 mb-5 border-t border-gray-500 ${ className }` }>
             <div className={ "w-fit mx-auto" }>
                 <MyMenu button={
-                    <Row>
-                        Change language <ChevronUp className={ "w-5 h-5" }/>
-                    </Row>
+                    <Row>Change language <ChevronUp className={ "w-5 h-5" } /></Row>
                 } itemsClassName={ "-top-24 rounded-t-xl !rounded-b-none" }>
-                    {
-                        langMenu.map(lang =>
-                            <div key={ lang.lang }>
-                                <Menu.Item>
-                                    <div className={ "w-max flex-row-center" }>
-                                        <span>{ lang.icon }</span>
-                                        {
-                                            lang.lang === 'auto' && typeof navigator !== "undefined" ?
-                                                <I18Link
-                                                    className={ `pl-2 pt-1 hover:underline` }
-                                                    to={ originalPath } onClick={ setLangAuto }
-                                                    language={
-                                                        navigator.language === "nb" || navigator.language === "nn" ||
-                                                        navigator.language === "no" ? langs.nor : langs.eng }>
-                                                    { lang.text }
-                                                </I18Link> :
-                                                <I18Link
-                                                    className={ `pl-2 pt-1 hover:underline` }
-                                                    to={ originalPath } language={ lang.lang }
-                                                    onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
-                                                    { lang.text }
-                                                </I18Link>
-                                        }
-                                    </div>
-                                </Menu.Item>
+                    <For each={ langMenu }>{ lang =>
+                        <Menu.Item key={ lang.lang }>
+                            <div className={ "w-max flex-row-center" }>
+                                <span>{ lang.icon }</span>
+                                <Show when={ lang.lang === 'auto' && typeof navigator !== "undefined" }
+                                      otherwise={
+                                          <I18Link
+                                              className={ `pl-2 pt-1 hover:underline` }
+                                              to={ originalPath } language={ lang.lang }
+                                              onClick={ () => localStorage.setItem("lang-follow-browser", "false") }>
+                                              { lang.text }
+                                          </I18Link>
+                                      }>
+                                    <I18Link
+                                        className={ `pl-2 pt-1 hover:underline` }
+                                        to={ originalPath } onClick={ setLangAuto }
+                                        language={
+                                            navigator.language === "nb" || navigator.language === "nn" ||
+                                            navigator.language === "no" ? langs.nor : langs.eng }>
+                                        { lang.text }
+                                    </I18Link>
+                                </Show>
                             </div>
-                        )
-                    }
+                        </Menu.Item>
+                    }</For>
                 </MyMenu>
             </div>
 
@@ -109,3 +103,5 @@ export default function Footer({ className }: Component): JSX.Element {
         </div>
     );
 }
+
+export default Footer;

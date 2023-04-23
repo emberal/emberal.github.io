@@ -1,6 +1,7 @@
 import * as React from "react";
 import Row from "./row";
-import type { InputComponent } from "../interfaces/interfaces";
+import type { Component, InputProps } from "../declarations/props";
+import { getElementById } from "../utils/dom";
 
 function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStateAction<boolean>>): () => void {
     let isMounted = true;
@@ -11,19 +12,13 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
         }
     }
 
-    if (id) {
-        const el = document.getElementById(id);
-        if (el) {
-            el.addEventListener("pointerenter", () => hover(true));
-            el.addEventListener("pointerleave", () => hover(false));
-        }
-    }
+    const el = getElementById(id);
+    el?.addEventListener("pointerenter", () => hover(true));
+    el?.addEventListener("pointerleave", () => hover(false));
     return () => {
-        if (id) {
-            document.getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
-            document.getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
-            isMounted = false;
-        }
+        getElementById(id)?.removeEventListener("pointerenter", () => hover(true));
+        getElementById(id)?.removeEventListener("pointerleave", () => hover(false));
+        isMounted = false;
     }
 }
 
@@ -33,19 +28,19 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
  */
 function setSetIsText(id: string | undefined, isText: boolean, setIsText: React.Dispatch<React.SetStateAction<boolean>>): void {
     if (id) {
-        const el = document.getElementById(id) as HTMLInputElement | HTMLTextAreaElement;
-        if (el.value !== "" !== isText) {
+        const el = getElementById<HTMLInputElement | HTMLTextAreaElement>(id);
+        if (el && el.value !== "" !== isText) {
             setIsText(el.value !== "");
         }
     }
 }
 
-interface Input<T> extends InputComponent<T> {
+interface Input<T extends HTMLElement> extends InputProps<T> {
     leading?: React.ReactElement<HTMLElement>,
     trailing?: React.ReactElement<HTMLElement>,
 }
 
-export default function Input(
+const Input: Component<Input<HTMLInputElement>> = (
     {
         className,
         id,
@@ -57,19 +52,13 @@ export default function Input(
         onChange,
         leading,
         trailing
-    }: Input<HTMLInputElement>): JSX.Element {
+    }) => {
 
-    /**
-     * Is 'true' if the input element is in focus
-     */
+    // Is 'true' if the input element is in focus
     const [isFocused, setIsFocused] = React.useState(false);
-    /**
-     * Is 'true' if the user is hovering over the input element
-     */
+    // Is 'true' if the user is hovering over the input element
     const [isHover, setIsHover] = React.useState(false);
-    /**
-     * Is 'true' if the input element contains any characters
-     */
+    // Is 'true' if the input element contains any characters
     const [isText, setIsText] = React.useState(false);
 
     React.useEffect(() => {
@@ -81,7 +70,7 @@ export default function Input(
     return (
         <Row className={ "relative" }>
             { leading }
-            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id }/>
+            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id } />
             <input
                 className={ `default-bg focus:border-primaryPurple outline-none border-2 border-gray-500 
                 hover:border-t-primary-purple pl-2 ${ className }` }
@@ -93,13 +82,15 @@ export default function Input(
                 placeholder={ placeholder ?? undefined }
                 required={ required }
                 onInput={ () => setSetIsText(id, isText, setIsText) }
-                onChange={ onChange }/>
+                onChange={ onChange } />
             { trailing }
         </Row>
     );
 }
 
-export function TextArea(
+export default Input;
+
+export const TextArea: Component<InputProps<HTMLTextAreaElement>> = (
     {
         className,
         id,
@@ -108,19 +99,13 @@ export function TextArea(
         placeholder,
         required = false,
         onChange
-    }: InputComponent<HTMLTextAreaElement>): JSX.Element {
+    }) => {
 
-    /**
-     * Is 'true' if the textArea element is in focus
-     */
+    // Is 'true' if the textArea element is in focus
     const [isFocused, setIsFocused] = React.useState(false);
-    /**
-     * Is 'true' if the user is hovering over the textArea element
-     */
+    // Is 'true' if the user is hovering over the textArea element
     const [isHover, setIsHover] = React.useState(false);
-    /**
-     * Is 'true' if the textArea element contains any characters
-     */
+    // Is 'true' if the textArea element contains any characters
     const [isText, setIsText] = React.useState(false);
 
     React.useEffect(() => {
@@ -131,7 +116,7 @@ export function TextArea(
 
     return ( // TODO expand textArea when typing
         <div className={ "relative" }>
-            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id }/>
+            <HoverTitle title={ title } isActive={ isFocused || isHover || isText } htmlFor={ id } />
             <textarea id={ id }
                       className={ `pl-2 min-h-[3rem] default-bg focus:border-primaryPurple outline-none
                                    border-2 border-gray-500 hover:border-t-primary-purple ${ className }` }
@@ -141,24 +126,22 @@ export function TextArea(
                       onInput={ () => setSetIsText(id, isText, setIsText) }
                       onFocus={ () => setIsFocused(true) }
                       onBlur={ () => setIsFocused(false) }
-                      onChange={ onChange }/>
+                      onChange={ onChange } />
         </div>
     );
 }
 
-function HoverTitle(
+const HoverTitle: Component<{ title?: string | null, isActive?: boolean, htmlFor?: string }> = (
     {
         title,
         isActive = false,
         htmlFor
-    }: { title?: string | null, isActive?: boolean, htmlFor?: string }): JSX.Element {
-    return (
-        <label className={ `absolute pointer-events-none
+    }) => (
+    <label className={ `absolute pointer-events-none
                  ${ isActive ? "-top-2 left-3 default-bg text-sm" : "left-2 top-1" } 
             transition-all duration-150 text-gray-600 dark:text-gray-400` }
-               htmlFor={ htmlFor }>
-            <div className={ "z-50 relative" }>{ title }</div>
-            <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" }/>
-        </label>
-    );
-}
+           htmlFor={ htmlFor }>
+        <div className={ "z-50 relative" }>{ title }</div>
+        <div className={ "w-full h-2 default-bg absolute bottom-1/3 z-10" } />
+    </label>
+);

@@ -1,16 +1,17 @@
 import * as React from "react"
-import Layout, { Links } from "../components/layout";
+import Layout from "../components/layout";
 import { StaticImage } from "gatsby-plugin-image";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import SEO from "../components/seo";
+import Seo from "../components/seo";
+import type { Component } from "../declarations/props";
 
 /**
  * The front page containing information about yours truly
  * @returns {JSX.Element}
  * @constructor
  */
-export default function Homepage(): JSX.Element {
+const Homepage: Component = () => {
 
     const { t } = useTranslation();
 
@@ -18,30 +19,29 @@ export default function Homepage(): JSX.Element {
         <Layout
             title={ t("home") }
             headline={ t("welcome") }
-            description={ t("aboutMeDesc") }
-            current={ Links.home }>
+            description={ t("aboutMeDesc") }>
             <>
-                <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" }/>
+                <a rel={ "me" } href={ "https://snabelen.no/@Martials" } className={ "sr-only" } />
                 <div className={ "w-full flex justify-center my-5" }>
                     <StaticImage className={ "max-w-sm border border-gray-500 rounded-3xl" } src={ "../images/me.jpg" }
-                                 alt={ t("aboutMePicAlt") }/>
+                                 alt={ t("aboutMePicAlt") } />
                 </div>
-                <p>
-                    { t("aboutMeDesc") }
-                </p>
+                <p>{ t("aboutMeDesc") }</p>
             </>
         </Layout>
     );
-}
+};
 
-export function Head({ data }: HeadProps<Queries.HomepageQuery>): JSX.Element {
+export default Homepage;
+
+export const Head: Component<HeadProps<Queries.HomepageQuery>> = ({ data }) => {
     const locales = data?.locales?.edges[0]?.node?.data;
     let obj;
     if (locales) {
         obj = JSON.parse(locales);
     }
-    return <SEO title={ obj?.home } description={ obj?.aboutMeDesc }/>;
-}
+    return <Seo title={ obj?.home } description={ obj?.aboutMeDesc } />;
+};
 
 export const query = graphql`
     query Homepage($language: String!) {

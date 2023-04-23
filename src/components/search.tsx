@@ -2,32 +2,31 @@ import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "./input";
-import type { Component } from "../interfaces/interfaces";
+import type { Component, ComponentProps } from "../declarations/props";
+import { getElementById } from "../utils/dom";
 
-interface Search extends Component {
+interface SearchProps extends ComponentProps {
     onChange?: () => void,
     collapse?: boolean,
     searchWithoutFocus?: boolean,
 }
 
-export default function Search(
+const Search: Component<SearchProps> = (
     {
         onChange,
         collapse = false,
         searchWithoutFocus = false,
         className,
-        id
-    }: Search): JSX.Element {
+        id = "search",
+    }) => {
 
     const { t } = useTranslation();
 
-    /**
-     * Is 'true' if the searchbox is not empty
-     */
+    // Is 'true' if the searchbox is not empty
     const [searched, setSearched] = React.useState(false);
 
     function getSearchElement(): HTMLInputElement | null {
-        return document.getElementById("search") as HTMLInputElement | null;
+        return getElementById(id);
     }
 
     React.useEffect(() => {
@@ -48,7 +47,7 @@ export default function Search(
                 }
 
                 // Used to exit the box with 'Escape'
-                document.addEventListener("keyup", keyUpEvent => blurElement(keyUpEvent));
+                document.addEventListener("keyup", blurElement);
             }
 
             function blurElement(keyUpEvent: KeyboardEvent): void {
@@ -57,11 +56,11 @@ export default function Search(
                 }
             }
 
-            document.addEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
+            document.addEventListener("keypress", keyboardListener);
 
             return () => {
-                document.removeEventListener("keypress", keyboardEvent => keyboardListener(keyboardEvent));
-                document.removeEventListener("keyup", keyUpEvent => blurElement(keyUpEvent));
+                document.removeEventListener("keypress", keyboardListener);
+                document.removeEventListener("keyup", blurElement);
                 isMounted = false;
             };
         }
@@ -80,8 +79,7 @@ export default function Search(
      * Focuses the searchbar
      */
     function focusSearch(): void {
-        const element = getSearchElement();
-        element?.focus();
+        getSearchElement()?.focus();
     }
 
     /**
@@ -102,7 +100,7 @@ export default function Search(
 
     return (
         <div className={ `absolute right-0 -top-24 sm:-top-9` }>
-            <Input id={ "search" }
+            <Input id={ id }
                    type={ "search" }
                    name={ "search" }
                    placeholder={ t("search") }
@@ -114,17 +112,19 @@ export default function Search(
                                onClick={ focusSearch }
                                title={ t("search") + " (Enter)" }>
                            <p className={ "hidden" }>{ t("search") }</p>
-                           <SearchIcon className={ iconClasses }/>
+                           <SearchIcon className={ iconClasses } />
                        </button> }
                    trailing={
                        searched ?
                            <button className={ `absolute right-0 mr-1 p-1` } onClick={ clearSearch }
                                    title={ t("clear") ?? undefined }>
-                               <X className={ iconClasses }/>
+                               <X className={ iconClasses } />
                            </button>
                            : undefined
                    }
             />
         </div>
     );
-}
+};
+
+export default Search;
