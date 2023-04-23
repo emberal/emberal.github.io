@@ -3,5 +3,6 @@
  * @returns 'true' if the browser supports touch events, 'false' otherwise
  */
 export function isTouch(): boolean {
-    return "ontouchstart" in window || "ontouchstart" in document.documentElement;
+    return typeof window !== "undefined" && "ontouchstart" in window ||
+        typeof document !== "undefined" && "ontouchstart" in document.documentElement;
 }
