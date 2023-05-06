@@ -2,11 +2,10 @@ import * as React from "react";
 import { Search as SearchIcon, X } from "react-feather";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input from "./input";
-import type { Component, ComponentProps } from "../declarations/props";
 import { getElementById } from "../utils/dom";
 
 interface SearchProps extends ComponentProps {
-    onChange?: () => void,
+    onChange?: (value: string) => void,
     collapse?: boolean,
     searchWithoutFocus?: boolean,
 }
@@ -42,7 +41,7 @@ const Search: Component<SearchProps> = (
                         element.value += keyboardEvent.key;
                     }
                     if (onChange) {
-                        onChange();
+                        onChange(element.value);
                     }
                 }
 
@@ -91,8 +90,14 @@ const Search: Component<SearchProps> = (
             element.value = "";
             if (onChange) {
                 element.focus();
-                onChange();
+                onChange(element.value);
             }
+        }
+    }
+
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+        if (onChange) {
+            onChange(e.target.value);
         }
     }
 
@@ -106,7 +111,7 @@ const Search: Component<SearchProps> = (
                    placeholder={ t("search") }
                    className={ `sm:pl-6 pl-7 ${ collapse && !searched ? "focus:w-40 sm:w-6 w-8" : "w-40" }
                     rounded-xl shadow-sm shadow-primaryPurple transition-all duration-200 ease-in-out h-10 sm:h-7 ${ className }` }
-                   onChange={ onChange }
+                   onChange={ handleChange }
                    leading={
                        <button className={ `absolute mx-[0.40rem]` }
                                onClick={ focusSearch }

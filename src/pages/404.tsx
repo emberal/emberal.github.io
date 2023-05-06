@@ -4,7 +4,6 @@ import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Seo from "../components/seo";
 import { MyLink } from "../components/link";
-import type { Component } from "../declarations/props";
 
 /**
  * The page that is shown when a page does not exist

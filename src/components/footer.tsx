@@ -6,7 +6,6 @@ import { Link as I18Link } from "gatsby-plugin-react-i18next/dist/Link";
 import MyMenu from "./menu";
 import Row from "./row";
 import { A } from "./link";
-import type { Component } from "../declarations/props";
 import { For, Show } from "./flow";
 
 const Footer: Component = ({ className }) => {

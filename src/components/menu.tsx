@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Menu } from "@headlessui/react";
-import type { Component, TitleProps } from "../declarations/props";
 
 interface MyMenuProps extends TitleProps {
     button?: React.ReactNode,

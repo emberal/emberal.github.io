@@ -7,8 +7,6 @@ import Search from "../../components/search";
 import ProjectCard from "../../components/project";
 import Seo from "../../components/seo";
 import { removeNullValues, splitCSV } from "../../utils/util";
-import type { Component } from "../../declarations/props";
-import { getElementById } from "../../utils/dom";
 import { For, Show } from "../../components/flow";
 
 /**
@@ -106,8 +104,8 @@ const ProjectPage: Component<PageProps<Queries.ProjectPageQuery>> = ({ data: { a
     /**
      * Called when searching, and updates the state of the search object, stores it in lowercase
      */
-    function onSearch(): void {
-        setSearchState(getElementById<HTMLInputElement>("search")?.value.toLowerCase() ?? "");
+    function onSearch(value: string): void {
+        setSearchState(value.toLowerCase() ?? "");
     }
 
     React.useEffect(() => { // TODO use filter directly, without .map?

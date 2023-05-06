@@ -1,21 +1,20 @@
-import type { ChangeEventHandler, CSSProperties, MouseEventHandler, ReactElement, ReactNode } from "react";
-import type { IGatsbyImageData } from "gatsby-plugin-image";
+type Setter<T> = import("react").Dispatch<import("react").SetStateAction<T>>;
 
 type Component<T = ComponentProps> = (props: T) => JSX.Element;
 
 interface ComponentProps {
     className?: string,
-    style?: CSSProperties,
+    style?: import("react").CSSProperties,
     id?: string,
     name?: string | null,
 }
 
 interface ChildProps extends ComponentProps {
-    children?: ReactNode,
+    children?: import("react").ReactNode,
 }
 
 interface SingleChildProps<T extends HTMLElement = HTMLElement> extends ComponentProps {
-    children?: ReactElement<T>
+    children?: import("react").ReactElement<T>
 }
 
 interface TitleProps extends ChildProps {
@@ -23,14 +22,14 @@ interface TitleProps extends ChildProps {
 }
 
 interface InputProps<T extends HTMLElement = HTMLInputElement> extends TitleProps {
-    onChange?: ChangeEventHandler<T>,
+    onChange?: import("react").ChangeEventHandler<T>,
     placeholder?: string | null,
     required?: boolean,
     type?: string,
 }
 
 interface ButtonProps<T extends HTMLElement = HTMLButtonElement> extends ChildProps {
-    onClick?: MouseEventHandler<T>,
+    onClick?: import("react").MouseEventHandler<T>,
     hoverTitle?: string | null,
 }
 
@@ -46,7 +45,7 @@ interface ProjectPostInterface {
             readonly frontmatter: {
                 readonly hero_image: {
                     readonly childImageSharp: {
-                        readonly gatsbyImageData?: IGatsbyImageData
+                        readonly gatsbyImageData?: import("gatsby-plugin-image").IGatsbyImageData
                     }
                 },
                 readonly title?: string | null,
@@ -58,7 +57,7 @@ interface ProjectPostInterface {
             }
         }
     },
-    readonly children: ReactNode,
+    readonly children: import("react").ReactNode,
 }
 
 type Theme = "auto" | "dark" | "light";

@@ -1,6 +1,5 @@
 import * as React from "react";
 import { graphql, useStaticQuery } from "gatsby";
-import type { Component, TitleProps } from "../declarations/props";
 
 interface SeoProps extends TitleProps {
     description?: string | null,

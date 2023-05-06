@@ -1,6 +1,5 @@
 import * as React from "react";
 import { ArrowUp } from "react-feather";
-import type { ButtonProps, Component } from "../declarations/props";
 
 export const BackUpButton: Component<ButtonProps> = (
     {

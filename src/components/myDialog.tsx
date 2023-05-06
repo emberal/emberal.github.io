@@ -1,6 +1,5 @@
 import { Dialog } from "@headlessui/react";
 import * as React from "react";
-import type { Component, TitleProps } from "../declarations/props";
 import type { MouseEventHandler } from "react";
 import { getElementById } from "../utils/dom";
 

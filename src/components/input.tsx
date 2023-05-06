@@ -1,6 +1,5 @@
 import * as React from "react";
 import Row from "./row";
-import type { Component, InputProps } from "../declarations/props";
 import { getElementById } from "../utils/dom";
 
 function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStateAction<boolean>>): () => void {

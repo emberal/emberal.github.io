@@ -6,7 +6,6 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import Input, { TextArea } from "../components/input";
 import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { Component, InputProps } from "../declarations/props";
 import { getElementById } from "../utils/dom";
 import { For } from "../components/flow";
 

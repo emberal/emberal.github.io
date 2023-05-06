@@ -5,7 +5,6 @@ import { useTranslation } from "gatsby-plugin-react-i18next";
 import { GitHub, MessageSquare, Linkedin, Instagram, Link as LinkIcon } from "react-feather";
 import Seo from "../components/seo";
 import { A } from "../components/link";
-import type { Component, LinkProps } from "../declarations/props";
 import { For } from "../components/flow";
 
 const linkContent = [

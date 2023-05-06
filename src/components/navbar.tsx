@@ -5,7 +5,6 @@ import { ChevronDown, Globe, Moon, Sun } from "react-feather";
 import { Menu } from "@headlessui/react";
 import { Links } from "./layout";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { Component, Theme } from "../declarations/props";
 import { For } from "./flow";
 
 const Navbar: Component = () => {

@@ -1,7 +1,6 @@
 import * as React from "react";
 import Footer from "./footer";
 import { useTranslation } from "gatsby-plugin-react-i18next";
-import type { Component, TitleProps } from "../declarations/props";
 import Navbar from "./navbar";
 import { BackUpButton } from "./button";
 import { backUp } from "../utils/dom";

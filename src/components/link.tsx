@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Link } from "gatsby";
-import type { Component, LinkProps } from "../declarations/props";
 
 export const A: Component<LinkProps> = (
     {

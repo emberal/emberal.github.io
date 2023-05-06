@@ -1,6 +1,5 @@
 import { Switch } from "@headlessui/react";
 import * as React from "react";
-import type { Component, TitleProps } from "../declarations/props";
 
 interface MySwitchProps extends TitleProps {
     onChange?: React.Dispatch<React.SetStateAction<boolean>>,

@@ -1,6 +1,5 @@
 import * as React from "react";
 import Seo from "../components/seo";
-import type { Component } from "../declarations/props";
 
 const TruthTablePage: Component = () => {
 

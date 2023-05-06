@@ -4,7 +4,6 @@ import ScrollContainer from "react-indiana-drag-scroll";
 import { ChevronLeft, ChevronRight } from "react-feather";
 import { throttle } from "lodash";
 import Row from "./row";
-import type { ButtonProps, Component, ComponentProps } from "../declarations/props";
 import { isTouch } from "../utils/touch";
 import { For, Show } from "./flow";
 

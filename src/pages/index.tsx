@@ -4,7 +4,6 @@ import { StaticImage } from "gatsby-plugin-image";
 import { graphql, type HeadProps } from "gatsby";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import Seo from "../components/seo";
-import type { Component } from "../declarations/props";
 
 /**
  * The front page containing information about yours truly

@@ -6,7 +6,6 @@ import { GatsbyImage, getImage, type ImageDataLike } from "gatsby-plugin-image";
 import { splitCSV } from "../utils/util";
 import { useTranslation } from "gatsby-plugin-react-i18next";
 import { A } from "./link";
-import type { Component, TitleProps } from "../declarations/props";
 
 interface ProjectCardProps extends TitleProps {
     description?: string,
@@ -29,7 +28,6 @@ const ProjectCard: Component<ProjectCardProps> = (
         image,
         imageAlt = "",
         className,
-        key,
         id,
     }) => {
 
@@ -38,7 +36,7 @@ const ProjectCard: Component<ProjectCardProps> = (
     image = image ? getImage(image) : undefined;
 
     return (
-        <div key={ key } id={ id } className={ `${ className }` }>
+        <div id={ id } className={ `${ className }` }>
 
             <article className={ "border-rounded border-gray-500 mb-10 shadow" }>
 
