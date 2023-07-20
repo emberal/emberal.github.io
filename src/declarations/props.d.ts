@@ -1,20 +1,20 @@
-type Setter<T> = import("react").Dispatch<import("react").SetStateAction<T>>;
+type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
-type Component<T = ComponentProps> = (props: T) => JSX.Element;
+type Component<T = ComponentProps> = React.FC<T>
 
 interface ComponentProps {
     className?: string,
-    style?: import("react").CSSProperties,
+    style?: React.CSSProperties,
     id?: string,
     name?: string | null,
 }
 
 interface ChildProps extends ComponentProps {
-    children?: import("react").ReactNode,
+    children?: React.ReactNode,
 }
 
 interface SingleChildProps<T extends HTMLElement = HTMLElement> extends ComponentProps {
-    children?: import("react").ReactElement<T>
+    children?: React.ReactElement<T>
 }
 
 interface TitleProps extends ChildProps {
@@ -22,14 +22,14 @@ interface TitleProps extends ChildProps {
 }
 
 interface InputProps<T extends HTMLElement = HTMLInputElement> extends TitleProps {
-    onChange?: import("react").ChangeEventHandler<T>,
+    onChange?: React.ChangeEventHandler<T>,
     placeholder?: string | null,
     required?: boolean,
     type?: string,
 }
 
 interface ButtonProps<T extends HTMLElement = HTMLButtonElement> extends ChildProps {
-    onClick?: import("react").MouseEventHandler<T>,
+    onClick?: React.MouseEventHandler<T>,
     hoverTitle?: string | null,
 }
 
@@ -57,7 +57,7 @@ interface ProjectPostInterface {
             }
         }
     },
-    readonly children: import("react").ReactNode,
+    readonly children: React.ReactNode,
 }
 
 type Theme = "auto" | "dark" | "light";
