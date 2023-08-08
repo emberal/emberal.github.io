@@ -1,0 +1,15 @@
+---
+title: "API for å forenkle TimeEdit iCalendar filer"
+description: "Et API som forenkler tittel i iCalendar filer fra TimeEdit, slik at de er leslige."
+hero-image: "./Calendar before and after.png"
+hero-image-alt: "En kalender før og etter APIet har blitt brukt. Venstre side er før, høyre etter."
+tags: "API;Kotlin;Spring Boot;Tomcat;iCal4j;CI/CD"
+source: "https://github.com/h600878/hvl_ics_simplifier"
+uploaded: "2023-08-08"
+---
+
+Ble lei av hvor vanskelig det var å lese iCalendar filer fra HVL sin kalender i TimeEdit, så jeg lagde et API som gjør det enklere.
+Data for tittelen blir hentet fra den gamle tittelen.
+For å finne hvilken type hendselse det er, sjekkes beskrivelsen og lokasjonen.
+
+APIet er skrevet i Kotlin med Spring boot, og hosted på en selvhostet tomcat server.

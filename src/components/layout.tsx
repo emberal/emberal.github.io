@@ -44,7 +44,7 @@ const Layout: Component<LayoutProps> = (
         titleAndNavClass,
         containerClass,
         footerClass,
-    }) => {
+    }): React.JSX.Element => {
 
     const { t } = useTranslation();
 

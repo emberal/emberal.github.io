@@ -5,10 +5,10 @@ import * as React from "react";
  * @param each The list of elements
  * @param children Each element in the list
  */
-export function For<T extends readonly any[], U extends JSX.Element>({ each, children }: {
+export function For<T extends readonly any[], U extends React.JSX.Element>({ each, children }: {
     each: T | undefined | null,
     children: (value: T[number], index: number) => U
-}): JSX.Element {
+}): React.JSX.Element {
     return <>{ each?.map(children) }</>;
 }
 
@@ -19,12 +19,12 @@ export function For<T extends readonly any[], U extends JSX.Element>({ each, chi
  * @param otherwise The component to render if the condition is false
  * @param otherwiseWhen The condition to check if the otherwise component should be rendered
  */
-export function Show<T, U extends JSX.Element>({ when, children, otherwise = null, otherwiseWhen }: {
+export function Show<T, U extends React.JSX.Element>({ when, children, otherwise = null, otherwiseWhen }: {
     when: T | undefined | null,
     children: U | null,
     otherwise?: U | null,
     otherwiseWhen?: T | null
-}): JSX.Element | null {
+}): React.JSX.Element | null {
     if (when) {
         return children;
     }

@@ -21,20 +21,23 @@ const Footer: Component = ({ className }) => {
 
     // Checks if language is set to follow browser
     if (typeof localStorage !== "undefined") { // TODO improve change in language from the browser, right now 2 reloads are required
-        const item = localStorage.getItem("lang-follow-browser");
+        const followBrowser = localStorage.getItem("lang-follow-browser");
         let langAuto = false;
 
-        if (item) {
-            langAuto = item === "true";
+        if (followBrowser) {
+            langAuto = followBrowser === "true";
         }
         if (langAuto) {
-            const lang = navigator.language === "nb" || navigator.language === "nn" || navigator.language === "no" ?
-                langs.nor : langs.eng;
+            const lang = getLang();
             localStorage.setItem("gatsby-i18next-language", lang);
         }
-        else if (item === null) {
+        else if (followBrowser === null) {
             setLangAuto();
         }
+    }
+
+    function getLang() {
+        return ["nb", "nn", "no"].includes(navigator.language) ? langs.nor : langs.eng;
     }
 
     function setLangAuto() {
@@ -81,9 +84,7 @@ const Footer: Component = ({ className }) => {
                                     <I18Link
                                         className={ `pl-2 pt-1 hover:underline` }
                                         to={ originalPath } onClick={ setLangAuto }
-                                        language={
-                                            navigator.language === "nb" || navigator.language === "nn" ||
-                                            navigator.language === "no" ? langs.nor : langs.eng }>
+                                        language={ getLang() }>
                                         { lang.text }
                                     </I18Link>
                                 </Show>

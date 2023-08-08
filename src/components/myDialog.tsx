@@ -48,7 +48,7 @@ const MyDialog: Component<MyDialogProps> = (
          */
         function click(e: KeyboardEvent): void {
             if (isMounted && e.key === "Enter") {
-                (document.getElementById(acceptButtonId ?? "") as HTMLButtonElement | null)?.click();
+                getElementById<HTMLButtonElement>(acceptButtonId ?? "")?.click(); // TODO use ref
             }
         }
 

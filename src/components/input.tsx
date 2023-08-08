@@ -2,7 +2,7 @@ import * as React from "react";
 import Row from "./row";
 import { getElementById } from "../utils/dom";
 
-function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStateAction<boolean>>): () => void {
+function setupEventListener(id: string, setIsHover: Setter<boolean>): () => void {
     let isMounted = true;
 
     function hover(hover: boolean): void {
@@ -25,7 +25,7 @@ function setupEventListener(id: string, setIsHover: React.Dispatch<React.SetStat
  * Sets isText to 'true' or 'false' using the setIsText function.
  * if the value of the input element is not empty and it's different from the current value
  */
-function setSetIsText(id: string | undefined, isText: boolean, setIsText: React.Dispatch<React.SetStateAction<boolean>>): void {
+function setSetIsText(id: string | undefined, isText: boolean, setIsText: Setter<boolean>): void {
     if (id) {
         const el = getElementById<HTMLInputElement | HTMLTextAreaElement>(id);
         if (el && el.value !== "" !== isText) {
@@ -61,7 +61,7 @@ const Input: Component<Input<HTMLInputElement>> = (
     const [isText, setIsText] = React.useState(false);
 
     React.useEffect(() => {
-        if (id && title) {
+        if (id && title) { // TODO use ref instead of id
             setupEventListener(id, setIsHover);
         }
     }, []);
@@ -108,7 +108,7 @@ export const TextArea: Component<InputProps<HTMLTextAreaElement>> = (
     const [isText, setIsText] = React.useState(false);
 
     React.useEffect(() => {
-        if (id && title) {
+        if (id && title) { // TODO use ref instead of id
             setupEventListener(id, setIsHover);
         }
     }, []);

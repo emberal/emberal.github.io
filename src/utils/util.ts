@@ -3,7 +3,7 @@
  * @param csv A String representation of a csv file, with ; as separator
  * @returns {string[]} An array of strings, in the order the strings in the 'csv' string was
  */
-export const splitCSV = (csv: string) => csv.split(";");
+export const splitCSV = (csv: string): string[] => csv.split(";");
 
 /**
  * Removes all 'null' and 'undefined' values in an array
