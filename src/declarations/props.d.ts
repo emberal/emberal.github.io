@@ -1,6 +1,6 @@
 type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
-type Component<T = ComponentProps> = React.FC<T>
+type Component<T = ComponentProps> = React.FC<T>;
 
 interface ComponentProps {
     className?: string,
