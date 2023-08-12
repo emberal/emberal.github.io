@@ -7,7 +7,7 @@ module.exports = {
         title: `Martin Berg Alstad's website`,
         description: `Martin Berg Alstad's personal website and portfolio`,
         lang: `en`,
-        siteUrl: `https://h600878.github.io/`,
+        siteUrl: `https://emberal.github.io/`,
     },
     plugins: [
         {
@@ -63,17 +63,17 @@ module.exports = {
         {
             resolve: 'gatsby-plugin-robots-txt',
             options: {
-                host: `https://h600878.github.io/`,
-                sitemap: `https://h600878.github.io/sitemap/sitemap-index.xml`,
+                host: `https://emberal.github.io/`,
+                sitemap: `https://emberal.github.io/sitemap/sitemap-index.xml`,
                 policy: [{ userAgent: `*`, allow: `/` }]
             }
         },
         {
             resolve: 'gatsby-plugin-security-txt',
             options: {
-                contact: 'https://h600878.github.io/contact-me',
+                contact: 'https://emberal.github.io/contact-me',
                 expires: '2032-10-14T23:59:59z',
-                canonical: 'https://h600878.github.io/.well-known/security.txt',
+                canonical: 'https://emberal.github.io/.well-known/security.txt',
                 languages: 'en, no',
             },
         },
@@ -102,7 +102,7 @@ module.exports = {
                 defaultLanguage: `en`,
                 fallbackLanguage: 'no',
                 redirect: true,
-                siteUrl: `https://h600878.github.io/`,
+                siteUrl: `https://emberal.github.io/`,
                 i18nextOptions: {
                     interpolation: {
                         escapeValue: false
