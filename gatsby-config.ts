@@ -94,25 +94,6 @@ module.exports = {
             }
         },
         "i18next",
-        {
-            resolve: `gatsby-plugin-react-i18next`,
-            options: {
-                localeJsonSourceName: `locale`,
-                languages: [`en`, `no`],
-                defaultLanguage: `en`,
-                fallbackLanguage: 'no',
-                redirect: true,
-                siteUrl: `https://emberal.github.io/`,
-                i18nextOptions: {
-                    interpolation: {
-                        escapeValue: false
-                    },
-                    keySeparator: false,
-                    nsSeparator: false
-                },
-                pages: [],
-            }
-        },
         'gatsby-plugin-postcss',
     ],
 };
