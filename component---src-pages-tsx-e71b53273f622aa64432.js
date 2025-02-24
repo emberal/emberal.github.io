@@ -1,2 +1,0 @@
-"use strict";(self.webpackChunkmartials_website=self.webpackChunkmartials_website||[]).push([[246],{7459:function(e,t,n){n.r(t),n.d(t,{Head:function(){return r}});var a=n(6540);t.default=()=>"object"!=typeof window?a.createElement("div",null,"Server"):(window.location.replace("https://martials.no"),a.createElement("div",null,"Bye"));const r=()=>a.createElement("meta",{"http-equiv":"refresh",content:"0;url=https://martials.no"})}}]);
-//# sourceMappingURL=component---src-pages-tsx-e71b53273f622aa64432.js.map
