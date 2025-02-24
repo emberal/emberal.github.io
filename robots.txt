@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://h600878.github.io/sitemap/sitemap-index.xml
-Host: https://h600878.github.io
+Sitemap: https://emberal.github.io/sitemap/sitemap-index.xml
+Host: https://emberal.github.io
